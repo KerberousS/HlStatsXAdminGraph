@@ -11,7 +11,7 @@ import java.util.List;
 
 public class getAdminTime {
 
-    public static String adminLink = "http://hlstatsx.strefagier.com.pl/hlstats.php?mode=playersessions&player=322";
+    public static String adminLink = "http://hlstatsx.strefagier.com.pl/hlstats.php?mode=playersessions&player=755";
     public static Elements adminTimes;
     public static List<String> list = new ArrayList<String>();
 
