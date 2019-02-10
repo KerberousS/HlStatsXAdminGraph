@@ -1,32 +1,35 @@
 package getInfo;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
-public class AdminTimeCollectorGetDate {
+public class SummarizeTime {
 
-    public LocalDateTime adminTimeModify;
+    public long sum;
 
     public static void main(String[] args) {
-        AdminTimeCollectorGetDate gatDate = new AdminTimeCollectorGetDate();
-        gatDate.getNowDate();
+        SummarizeTime sum = new SummarizeTime();
+        sum.summarizeTimes();
     }
-    public String getNowDate() {
-        LocalDateTime a = LocalDateTime.now();
+    public long summarizeTimes() {
+        AdminTimeCollector atc = new AdminTimeCollector();
+        try {
+            List<String> times = atc.collectTimes();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formatDateTime = a.format(formatter);
-        System.out.println(formatDateTime);
-
-        return formatDateTime;
+            long sum = 0;
+            for (int i=1; i < times.size(); i++) {
+                Long l = Long.parseLong(times.get(i));
+                sum += l;
+                return sum;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(sum);
+        return sum;
     }
 }

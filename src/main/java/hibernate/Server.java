@@ -7,15 +7,15 @@ import java.util.Set;
 @Entity
 @Table(name = "SERVER",
 uniqueConstraints =  {@UniqueConstraint(columnNames = {"SERVER_ID"})})
-public class Servers {
+public class Server {
 
     private Integer serverId;
     private String serverName;
 
-    private Servers server;
-    private Set<Admins> admins = new HashSet<Admins>(0);
+    private Server server;
+    private Set<Admin> admins = new HashSet<Admin>(0);
 
-    public Servers(Integer serverId, String serverName) {
+    public Server(Integer serverId, String serverName) {
         this.serverId = serverId;
         this.serverName = serverName;
     }
@@ -37,7 +37,7 @@ public class Servers {
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "servers")
-    public Set<Admins> getAdmins() {
+    public Set<Admin> getAdmins() {
         return admins;
     }
 }

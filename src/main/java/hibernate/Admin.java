@@ -7,24 +7,24 @@ import java.util.Set;
 @Entity
 @Table(name = "ADMIN",
 uniqueConstraints =  {@UniqueConstraint(columnNames = {"ADMIN_ID"})})
-public class Admins {
+public class Admin {
 
     private Integer adminID;
     private String adminName;
     private String adminLink;
     private String adminColor;
 
-    private Servers server;
-    private Set<Admins> admins = new HashSet<Admins>(0);
+    private Server server;
+    private Set<Admin> admins = new HashSet<Admin>(0);
 
-    public Admins(Integer adminID, String adminServer, String adminName, String adminLink, String adminColor) {
+    public Admin(Integer adminID, String adminServer, String adminName, String adminLink, String adminColor) {
         this.adminID = adminID;
         this.adminName = adminName;
         this.adminLink = adminLink;
         this.adminColor = getAdminColor();
     }
     @Id
-    @Column(name="ADMIN_ID")
+    @Column(name="ADMIN_ID", unique = true, nullable = false)
     public Integer getAdminID() { return adminID; }
     public void setAdminID(Integer adminID) {
         this.adminID = adminID;
@@ -52,12 +52,12 @@ public class Admins {
         this.adminColor = adminColor;
     }
 
-    public void setServer(Servers server) {
+    public void setServer(Server server) {
         this.server = server;
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "ADMIN_ID")
-    public Set<Admins> getAdmins() {
+    public Set<Admin> getAdmins() {
         return admins;
     }
     }

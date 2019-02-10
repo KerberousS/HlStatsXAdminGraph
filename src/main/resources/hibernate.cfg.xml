@@ -22,9 +22,9 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <!-- Annotated entity classes -->
-        <mapping class="hibernate.Admins"/>
-        <mapping class="hibernate.Servers"/>
-        <mapping class="hibernate.Times"/>
+        <mapping class="hibernate.Admin"/>
+        <mapping class="hibernate.Server"/>
+        <mapping class="hibernate.Time"/>
 
     </session-factory>
 </hibernate-configuration>
