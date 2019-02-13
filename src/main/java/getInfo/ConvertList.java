@@ -9,18 +9,15 @@ import java.util.List;
 public class ConvertList {
 
     public static void main(String[] args) {
-        ConvertList convert = new ConvertList();
-
-        convert.convertStringToDates();
     }
 
-    public List<String> joinDatesLists() {
+    public List<String> joinDatesLists(String HLSTATS_ADMIN_NUMBER) {
         AdminTimeCollector atc = new AdminTimeCollector();
 
         List<String> dateTimes = new ArrayList<>();
         try {
-            List<String> a = atc.collectTimes();
-            List<String> b = atc.collectDates();
+            List<String> a = atc.collectTimes(HLSTATS_ADMIN_NUMBER);
+            List<String> b = atc.collectDates(HLSTATS_ADMIN_NUMBER);
 
             for (int i = 0; i<a.size(); i++) {
                 for (i = 0; i < b.size(); i++) {
@@ -37,10 +34,10 @@ public class ConvertList {
             return dateTimes;
     }
 
-    public List<LocalDateTime> convertStringToDates() {
+    public List<LocalDateTime> convertStringToDates(String HLSTATS_ADMIN_NUMBER) {
 
         ConvertList conv = new ConvertList();
-        List<String> dateStrings = conv.joinDatesLists();
+        List<String> dateStrings = conv.joinDatesLists(HLSTATS_ADMIN_NUMBER);
         List<LocalDateTime> dates = new ArrayList<>(32);
 
             DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

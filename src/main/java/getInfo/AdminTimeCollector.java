@@ -12,32 +12,38 @@ import java.util.List;
 public class AdminTimeCollector {
 
     public static final String HLSTATS_DEFAULT_URL = "http://hlstatsx.strefagier.com.pl/hlstats.php?mode=playersessions&player=";
-    public static String HLSTATS_ADMIN_NUMBER = "2195";
-    public static String ADMIN_LINK_FINAL = HLSTATS_DEFAULT_URL + HLSTATS_ADMIN_NUMBER;
     public static List<String> list = new ArrayList<String>();
 
     public static void main(String[] args) throws IOException {
-        AdminTimeCollector gat = new AdminTimeCollector();
-        gat.collectTimes();
     }
-    public Elements acquireHlStatsTimes() throws IOException {
-        Document doc = Jsoup.connect(ADMIN_LINK_FINAL).get();
+
+    public Elements acquireHlStatsTimes(String HLSTATS_ADMIN_NUMBER) throws IOException {
+        Document doc = Jsoup.connect(HLSTATS_DEFAULT_URL + HLSTATS_ADMIN_NUMBER).get();
         //Elements hlStatsTimes = doc.select("td:contains(0d)");
         Elements hlStatsTimes = doc.select("td:nth-child(4)");
 
-        hlStatsTimes.remove(0); // The first collected element is TAG HEADER, it should be removed
+
+        try {
+            hlStatsTimes.remove(0); //The first collected element is TAG HEADER, this line removes it from the list
+        } catch (Exception e) {
+            //Can't find any time for this player, either the ID is wrong or the Player hasn't played in the last 28 days
+        }
         return hlStatsTimes;
     }
-    public Elements acquireHlStatsDates() throws IOException {
-        Document doc = Jsoup.connect(ADMIN_LINK_FINAL).get();
-        Elements hlStatsDates = doc.select("td:first-child"); //@FIXME Broken if there are minus "-" points
+    public Elements acquireHlStatsDates(String HLSTATS_ADMIN_NUMBER) throws IOException {
+        Document doc = Jsoup.connect(HLSTATS_DEFAULT_URL + HLSTATS_ADMIN_NUMBER).get();
+        Elements hlStatsDates = doc.select("td:first-child");
 
-        hlStatsDates.remove(0); // The first collected element is TAG HEADER, it should be removed
+        try {
+            hlStatsDates.remove(0); //The first collected element is TAG HEADER, this line removes it from the list
+        } catch (Exception e) {
+            //Can't find any time for this player, either the ID is wrong or the Player hasn't played in the last 28 days
+        }
         return hlStatsDates;
     }
-        public List<String>  collectDates() throws IOException {
+        public List<String>  collectDates(String HLSTATS_ADMIN_NUMBER) throws IOException {
             AdminTimeCollector gat = new AdminTimeCollector();
-            Elements dates = gat.acquireHlStatsDates();
+            Elements dates = gat.acquireHlStatsDates(HLSTATS_ADMIN_NUMBER);
 
             List<String> adminDateList = new ArrayList<String>();
 
@@ -47,16 +53,15 @@ public class AdminTimeCollector {
 
                 String serverConnectionDate = splitDateCloseHTMLTag[0];
 
-                //System.out.println(serverConnectionDate);
                 adminDateList.add(serverConnectionDate);
             }
-            System.out.println(adminDateList);
+
             return adminDateList;
         }
 
-            public List<String> collectTimes() throws IOException {
+            public List<String> collectTimes(String HLSTATS_ADMIN_NUMBER) throws IOException {
                 AdminTimeCollector gat = new AdminTimeCollector();
-                Elements times = gat.acquireHlStatsTimes();
+                Elements times = gat.acquireHlStatsTimes(HLSTATS_ADMIN_NUMBER);
 
                 List<String> adminTimeList = new ArrayList<String>();
 
@@ -66,11 +71,10 @@ public class AdminTimeCollector {
 
                     String serverConnectionTime = splitTimeCloseHTMLTag[0];
 
-                    //System.out.println(serverConnectionTime);
                     list.add(serverConnectionTime);
                     adminTimeList.add(serverConnectionTime);
                 }
-                System.out.println(adminTimeList);
+
                 return adminTimeList;
             }
-        }
+}

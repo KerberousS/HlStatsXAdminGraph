@@ -15,16 +15,15 @@ public class SummarizeTime {
     public int sum;
 
     public static void main(String[] args) {
-        SummarizeTime sum = new SummarizeTime();
-
-        System.out.println(sum.sumTimeString());
     }
-    public int timesToSeconds() {
+
+    public int timesToSeconds(String HLSTATS_ADMIN_NUMBER) {
         AdminTimeCollector atc = new AdminTimeCollector();
 
         try {
-            List<String> times = atc.collectTimes();
+            List<String> times = atc.collectTimes(HLSTATS_ADMIN_NUMBER);
 
+            sum = 0;
             for (String t : times) {
                 String[] splitTimes = t.split(":");
 
@@ -36,7 +35,6 @@ public class SummarizeTime {
                 int minuteToSeconds = minuteInteger * 60;
 
                 sum += secondsInteger + hourToSeconds + minuteToSeconds;
-                System.out.println(sum);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,19 +42,28 @@ public class SummarizeTime {
         return sum;
     }
 
-    public String sumTimeString() {
+    public String sumTimeString(String HLSTATS_ADMIN_NUMBER) {
 
         SummarizeTime sum = new SummarizeTime();
-        int sum1 = sum.timesToSeconds();
+        int sum1 = sum.timesToSeconds(HLSTATS_ADMIN_NUMBER);
 
-       int days = sum1 /  86400;
-       int hours = (sum1 % 86400) / 3600;
-       int minutes = (sum1 % 3600) / 60;
-       int seconds = sum1 % 60;
+        if (sum1 > 0)
+        {
+            int days = sum1 / 86400;
+            int hours = (sum1 % 86400) / 3600;
+            int minutes = (sum1 % 3600) / 60;
+            int seconds = sum1 % 60;
 
-       String daysTime = (days + "d");
-       String times = (hours + "h" + " " + minutes + "m" + " " + seconds + "s");
-       String sumTime = daysTime + " " + times;
-       return sumTime;
+            String daysTime = (days + "d");
+            String times = (hours + "h" + " " + minutes + "m" + " " + seconds + "s");
+            String sumTime = daysTime + " " + times;
+
+            return sumTime;
+        }
+        else {
+            String sumTime = "The player hasn't played for the last 28 days or the player ID is wrong";
+
+            return sumTime;
+        }
     }
 }

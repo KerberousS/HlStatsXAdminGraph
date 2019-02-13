@@ -1,5 +1,7 @@
 package hibernate;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,23 +11,25 @@ import java.util.Set;
 uniqueConstraints =  {@UniqueConstraint(columnNames = {"SERVER_ID"})})
 public class Server {
 
-    private Integer serverId;
+    private Long serverID;
     private String serverName;
 
-    private Server server;
     private Set<Admin> admins = new HashSet<Admin>(0);
+    private Set<Server> servers = new HashSet<Server>(0);
 
-    public Server(Integer serverId, String serverName) {
-        this.serverId = serverId;
+    public Server(long serverID, String serverName) {
+        this.serverID = serverID;
         this.serverName = serverName;
     }
+
     @Id
-    @Column(name = "SERVER_ID")
-    public Integer getServerID() {
-        return serverId;
+    @GeneratedValue(generator="increment")
+    @GenericGenerator(name="increment", strategy = "increment")
+    public long getServerID() {
+        return serverID;
     }
-    public void setServerID(Integer serverId) {
-        this.serverId = serverId;
+    public void setServerID(long userID) {
+        this.serverID = serverID;
     }
 
     @Column(name = "SERVER_NAME", length = 50, nullable = false)
@@ -39,5 +43,10 @@ public class Server {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "servers")
     public Set<Admin> getAdmins() {
         return admins;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "SERVER_NAME")
+    public Set<Server> getServers() {
+        return servers;
     }
 }

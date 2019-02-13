@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane fx:controller="javaFX.addserverwindowController"
+          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
+          styleClass="grid">
+    <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
+
+    <Label text="Type in a new server name:"
+           GridPane.columnIndex="0" GridPane.rowIndex="1" />
+
+    <TextField fx:id="serverNameTextField"
+               GridPane.columnIndex="0" GridPane.rowIndex="2" />
+
+    <HBox spacing="10" alignment="bottom_left" fx:id="cancelbutton"
+          GridPane.columnIndex="1" GridPane.rowIndex="3">
+        <Button text="Cancel"
+                onAction="#handleCancelButton" />
+    </HBox>
+
+    <HBox spacing="10" alignment="bottom_left" fx:id="addnewserverbutton"
+          GridPane.columnIndex="2" GridPane.rowIndex="3">
+        <Button text="Confirm"
+                onAction="#handleAddNewServerButton" />
+    </HBox>
+
+    <Text fx:id="actiontarget"
+          GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+    <stylesheets>
+        <URL value="@addserverwindow.css" />
+    </stylesheets>
+
+</GridPane>
