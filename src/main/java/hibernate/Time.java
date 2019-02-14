@@ -3,7 +3,7 @@ package hibernate;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -21,9 +21,17 @@ public class Time {
 
     // 'I' or 'O'
     private char inOut;
+    public Time(Integer adminTimeID, Date adminTimeDate, Date adminTimeHours, LocalDateTime adminTimeModify) {
+        this.adminTimeID = adminTimeID;
+        this.adminTimeDate = adminTimeDate;
+        this.adminTimeHours = adminTimeHours;
+        this.adminTimeModify = adminTimeModify;
+    }
 
     @Id
-    @Column(name="ADMINTIME_ID")
+    @GeneratedValue(generator="increment")
+    @GenericGenerator(name="increment", strategy = "increment")
+    @Column(name = "TIME_ID", length = 50, nullable = false)
     public Integer getAdminTimeID() { return adminTimeID; }
     public void setAdminTimeID(Integer adminID) {
         this.adminTimeID = adminTimeID;
@@ -47,5 +55,5 @@ public class Time {
 
     @Column(name="ADMINTIME_MODIFIED")
     public LocalDateTime getAdminTimeModify() { return adminTimeModify; }
-    public void setAdminTimeModify() { this.adminTimeModify = adminTimeModify; }
+    public void setAdminTimeModify(LocalDateTime adminTimeModify) { this.adminTimeModify = adminTimeModify; }
     }

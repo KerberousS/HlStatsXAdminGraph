@@ -16,7 +16,7 @@ public class testDB {
         String testServerName = "Test Server Name";
 
         System.out.println("\n=======CREATE RECORDS=======\n");
-        ServerOperations.createServerRecord(1, testServerName);
+        ServerOperations.createServerRecord(testServerName);
 
         System.out.println("\n=======READ RECORDS=======\n");
         List ListViewServers = ServerOperations.displayRecords();
@@ -27,8 +27,8 @@ public class testDB {
         }
 
         System.out.println("\n=======UPDATE RECORDS=======\n");
-        int updateId = 1;
-        ServerOperations.updateRecord(updateId, testServerName);
+//        int updateId = 1;
+        ServerOperations.updateRecord(testServerName);
         System.out.println("\n=======READ RECORDS AFTER UPDATION=======\n");
         List updateServer = ServerOperations.displayRecords();
         if(updateServer != null & updateServer.size() > 0) {
@@ -38,8 +38,8 @@ public class testDB {
         }
 
         System.out.println("\n=======DELETE RECORD=======\n");
-        int deleteId = 5;
-        ServerOperations.deleteRecord(deleteId);
+        String deleteName = "Test server";
+        ServerOperations.deleteRecord(deleteName);
         System.out.println("\n=======READ RECORDS AFTER DELETION=======\n");
         List deleteServerRecord = ServerOperations.displayRecords();
         for(Object serverObj : deleteServerRecord) {

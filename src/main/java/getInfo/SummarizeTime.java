@@ -17,11 +17,10 @@ public class SummarizeTime {
     public static void main(String[] args) {
     }
 
-    public int timesToSeconds(String HLSTATS_ADMIN_NUMBER) {
+    public int timesToSeconds(String adminHlstatsNumber) {
         AdminTimeCollector atc = new AdminTimeCollector();
 
-        try {
-            List<String> times = atc.collectTimes(HLSTATS_ADMIN_NUMBER);
+            List<String> times = atc.collectTimes(adminHlstatsNumber);
 
             sum = 0;
             for (String t : times) {
@@ -36,16 +35,13 @@ public class SummarizeTime {
 
                 sum += secondsInteger + hourToSeconds + minuteToSeconds;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return sum;
     }
 
-    public String sumTimeString(String HLSTATS_ADMIN_NUMBER) {
+    public String sumTimeString(String adminHlstatsNumber) {
 
         SummarizeTime sum = new SummarizeTime();
-        int sum1 = sum.timesToSeconds(HLSTATS_ADMIN_NUMBER);
+        int sum1 = sum.timesToSeconds(adminHlstatsNumber);
 
         if (sum1 > 0)
         {

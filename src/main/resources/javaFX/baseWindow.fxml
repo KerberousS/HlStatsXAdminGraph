@@ -6,41 +6,32 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane fx:controller="javaFX.baseWindowController"
+<GridPane fx:id="basewindow" fx:controller="javaFX.baseWindowController"
           xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
           styleClass="grid">
     <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
 
-    <Text id="title" text="Welcome to HlStatsX Admin Graph Tool, please type in your admins HlStatsX ID"
+    <Text id="title" text="Welcome to HlStatsX Admin Graph Tool, please Select a server that you want to check"
           GridPane.columnIndex="0" GridPane.rowIndex="0"
           GridPane.columnSpan="2"/>
 
     <Label text="Select server:"
            GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
-    <ChoiceBox fx:id="serverDropdown"
+    <ComboBox fx:id="serverDropdown"
                GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
     <HBox spacing="10" alignment="bottom_left"
           GridPane.columnIndex="3" GridPane.rowIndex="1">
-        <Button text="Add Server"
-                onAction="#handleAddServerButton" />
+        <Button text="Manage Servers"
+                onAction="#handleManageServerButton" />
     </HBox>
-
-    <Label text="User ID:"
-           GridPane.columnIndex="0" GridPane.rowIndex="2" />
-
-    <TextField fx:id="adminIDTextField"
-            GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
     <HBox spacing="10" alignment="bottom_right"
           GridPane.columnIndex="1" GridPane.rowIndex="3">
-        <Button text="Sum time for admin"
-                onAction="#handleSumTimeButton" />
+        <Button text="Choose this server"
+                onAction="#handleChooseServerButton" />
     </HBox>
-
-    <Text fx:id="actiontarget"
-          GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
     <stylesheets>
         <URL value="@basewindow.css" />

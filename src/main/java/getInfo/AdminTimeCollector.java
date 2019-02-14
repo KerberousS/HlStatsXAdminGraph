@@ -14,14 +14,15 @@ public class AdminTimeCollector {
     public static final String HLSTATS_DEFAULT_URL = "http://hlstatsx.strefagier.com.pl/hlstats.php?mode=playersessions&player=";
     public static List<String> list = new ArrayList<String>();
 
-    public static void main(String[] args) throws IOException {
-    }
-
-    public Elements acquireHlStatsTimes(String HLSTATS_ADMIN_NUMBER) throws IOException {
-        Document doc = Jsoup.connect(HLSTATS_DEFAULT_URL + HLSTATS_ADMIN_NUMBER).get();
+    public Elements acquireHlStatsTimes(String adminHlstatsNumber) {
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(HLSTATS_DEFAULT_URL + adminHlstatsNumber).get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //Elements hlStatsTimes = doc.select("td:contains(0d)");
         Elements hlStatsTimes = doc.select("td:nth-child(4)");
-
 
         try {
             hlStatsTimes.remove(0); //The first collected element is TAG HEADER, this line removes it from the list
@@ -30,8 +31,13 @@ public class AdminTimeCollector {
         }
         return hlStatsTimes;
     }
-    public Elements acquireHlStatsDates(String HLSTATS_ADMIN_NUMBER) throws IOException {
-        Document doc = Jsoup.connect(HLSTATS_DEFAULT_URL + HLSTATS_ADMIN_NUMBER).get();
+    public Elements acquireHlStatsDates(String adminHlstatsNumber) {
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(HLSTATS_DEFAULT_URL + adminHlstatsNumber).get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Elements hlStatsDates = doc.select("td:first-child");
 
         try {
@@ -41,9 +47,9 @@ public class AdminTimeCollector {
         }
         return hlStatsDates;
     }
-        public List<String>  collectDates(String HLSTATS_ADMIN_NUMBER) throws IOException {
+        public List<String>  collectDates(String adminHlstatsNumber) {
             AdminTimeCollector gat = new AdminTimeCollector();
-            Elements dates = gat.acquireHlStatsDates(HLSTATS_ADMIN_NUMBER);
+            Elements dates = gat.acquireHlStatsDates(adminHlstatsNumber);
 
             List<String> adminDateList = new ArrayList<String>();
 
@@ -59,9 +65,9 @@ public class AdminTimeCollector {
             return adminDateList;
         }
 
-            public List<String> collectTimes(String HLSTATS_ADMIN_NUMBER) throws IOException {
+            public List<String> collectTimes(String adminHlstatsNumber) {
                 AdminTimeCollector gat = new AdminTimeCollector();
-                Elements times = gat.acquireHlStatsTimes(HLSTATS_ADMIN_NUMBER);
+                Elements times = gat.acquireHlStatsTimes(adminHlstatsNumber);
 
                 List<String> adminTimeList = new ArrayList<String>();
 

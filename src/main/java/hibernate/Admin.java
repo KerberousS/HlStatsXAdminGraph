@@ -56,8 +56,11 @@ public class Admin {
         this.server = server;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ADMIN_ID")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "adminID")
     public Set<Admin> getAdmins() {
         return admins;
+    }
+    public void setAdmins(Set<Admin> admins) {
+        this.admins = admins;
     }
     }
