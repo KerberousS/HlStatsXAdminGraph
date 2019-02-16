@@ -32,14 +32,18 @@
                 onAction="#handleDeleteServerButton" />
     </HBox>
 
-    <HBox spacing="10" alignment="bottom_left" fx:id="closebutton"
+    <HBox spacing="10" alignment="bottom_left" fx:id="closeButton"
           GridPane.columnIndex="0" GridPane.rowIndex="2">
         <Button text="Go back"
                 onAction="#handleCloseButton" />
     </HBox>
 
+    <Text fx:id="Error"
+               GridPane.columnIndex="0" GridPane.rowIndex="5">
+    </Text>
+
     <stylesheets>
-        <URL value="@basewindow.css" />
+        <URL value="@../basewindow.css" />
     </stylesheets>
 
 </GridPane>

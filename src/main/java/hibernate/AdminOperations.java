@@ -6,14 +6,12 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
-import org.hibernate.service.ServiceRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerOperations {
+public class AdminOperations {
 
         static Session sessionObj;
         static SessionFactory sessionFactory;
@@ -24,7 +22,7 @@ public class ServerOperations {
 ////        Configuration configObj = new Configuration()
 ////                .addPackage("getInfo.hibernate") //the fully qualified package name
 ////                .addAnnotatedClass(Admin.class)
-////                .addAnnotatedClass(Server.class)
+////                .addAnnotatedClass(Admin.class)
 ////                .addAnnotatedClass(Time.class)
 ////                .configure("hibernate.cfg.xml");
 ////
@@ -43,16 +41,16 @@ public class ServerOperations {
                         new MetadataSources(standardRegistry).getMetadataBuilder().build();
                 sessionFactory = metaData.getSessionFactoryBuilder().build();
         } catch (Throwable th) {
-                System.err.println("Enitial SessionFactory creation failed" + th);
+                System.err.println("Iniitial SessionFactory creation failed" + th);
                 throw new ExceptionInInitializerError(th);
         }
         return sessionFactory;
 }
 
-            // Method 1: This Method Used To Create A New Server Record In The Database Table
-        public static void createServerRecord(String serverName) {
+            // Method 1: This Method Used To Create A New Admin Record In The Database Table
+        public static void createAdminRecord(String adminName, String adminLink, String adminColor, String adminServer) {
                 long count = 0;
-                Server serverObj = null;
+                Admin adminObj = null;
                 try {
                 // Getting Session Object From SessionFactory
                 sessionObj = buildSessionFactory().openSession();
@@ -62,9 +60,12 @@ public class ServerOperations {
                 // Creating Transaction Entities
 //                for(int j = 101; j <= 105; j++) {
 //                count = count + 1;
-                serverObj = new Server();
-                serverObj.setServerName(serverName);
-                sessionObj.save(serverObj);
+                adminObj = new Admin();
+                adminObj.setAdminName(adminName);
+                adminObj.setAdminLink(adminLink);
+                adminObj.setAdminColor(adminColor);
+                adminObj.setAdminServer(adminServer);
+                sessionObj.save(adminObj);
 
                 // Committing The Transactions To The Database
                 sessionObj.getTransaction().commit();
@@ -84,15 +85,21 @@ public class ServerOperations {
 
         // Method 2: This Method Is Used To Display The Records From The Database Table
         @SuppressWarnings("unchecked")
-        public static List displayRecords() {
-                List<Server> serversList = new ArrayList();
+        public static List displayRecords(String adminServer) {
+                List<Admin> adminsList = new ArrayList();
                 try {
                 // Getting Session Object From SessionFactory
                 sessionObj = buildSessionFactory().openSession();
                 // Getting Transaction Object From Session Object
                 sessionObj.beginTransaction();
 
-                serversList = sessionObj.createQuery("SELECT S.serverName FROM Server S").getResultList();
+                String sqlQuery = "SELECT Admin"  +
+                        "WHERE adminServer = :server";
+                Query queryObj = sessionObj.createQuery(sqlQuery);
+                queryObj.setParameter("server", adminServer);
+                queryObj.executeUpdate();
+
+                adminsList = sessionObj.createQuery("SELECT A.adminName FROM Admin A").getResultList();
                 } catch(Exception sqlException) {
                 if(null != sessionObj.getTransaction()) {
                 System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
@@ -104,11 +111,11 @@ public class ServerOperations {
                 sessionObj.close();
                 }
                 }
-                return serversList;
+                return adminsList;
                 }
 
         // Method 3: This Method Is Used To Update A Record In The Database Table
-        public static void updateRecord(String server_name) {
+        public static void updateRecord(String admin_name) {
                 try {
                 // Getting Session Object From SessionFactory
                 sessionObj = buildSessionFactory().openSession();
@@ -116,12 +123,12 @@ public class ServerOperations {
                 sessionObj.beginTransaction();
 
                 // Creating Transaction Entity
-                Server serObj = sessionObj.get(Server.class, server_name);
-                serObj.setServerName(server_name);
+                Admin serObj = sessionObj.get(Admin.class, admin_name);
+                serObj.setAdminName(admin_name);
 
                 // Committing The Transactions To The Database
                 sessionObj.getTransaction().commit();
-                System.out.println("\nServer of name ?= " + server_name + " Was Successfully Updated In The Database!\n");
+                System.out.println("\nAdmin of name ?= " + admin_name + " Was Successfully Updated In The Database!\n");
                 } catch(Exception sqlException) {
                 if(null != sessionObj.getTransaction()) {
                 System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
@@ -136,19 +143,19 @@ public class ServerOperations {
         }
 
         // Method 4(a): This Method Is Used To Delete A Particular Record From The Database Table
-        public static void deleteRecord(String serverName) {
+        public static void deleteRecord(String adminName) {
                 try {
                 // Getting Session Object From SessionFactory
                 sessionObj = buildSessionFactory().openSession();
                 // Getting Transaction Object From Session Object
                 sessionObj.beginTransaction();
 
-                Server servObj = findRecordByName(serverName);
+                Admin servObj = findRecordByName(adminName);
                 sessionObj.delete(servObj);
 
                 // Committing The Transactions To The Database
                 sessionObj.getTransaction().commit();
-                System.out.println("\nServer With Name?= " + serverName + " Was Successfully Deleted From The Database!\n");
+                System.out.println("\nAdmin With Name?= " + adminName + " Was Successfully Deleted From The Database!\n");
                 } catch(Exception sqlException) {
                 if(null != sessionObj.getTransaction()) {
                 System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
@@ -163,15 +170,15 @@ public class ServerOperations {
         }
 
             // Method 4(b): This Method To Find Particular Record In The Database Table
-            public static Server findRecordByName(String find_serverName) {
-                    Server findserverObj = null;
+            public static Admin findRecordByName(String find_adminName) {
+                    Admin findadminObj = null;
                     try {
                     // Getting Session Object From SessionFactory
                     sessionObj = buildSessionFactory().openSession();
                     // Getting Transaction Object From Session Object
                     sessionObj.beginTransaction();
 
-                    findserverObj = sessionObj.load(Server.class, find_serverName);
+                    findadminObj = sessionObj.load(Admin.class, find_adminName);
                     } catch(Exception sqlException) {
                     if(null != sessionObj.getTransaction()) {
                     System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
@@ -179,24 +186,24 @@ public class ServerOperations {
                     }
                     sqlException.printStackTrace();
                     }
-                    return findserverObj;
+                    return findadminObj;
                     }
 
         // Method 4(c): This Method Is Used To Delete A Particular Record By Name From The Database Table
-        public static void deleteRecordByName(String serverName) {
+        public static void deleteRecordByName(String adminName, String adminServer) {
                 try {
                         // Getting Session Object From SessionFactory
                         sessionObj = buildSessionFactory().openSession();
                         // Getting Transaction Object From Session Object
                         sessionObj.beginTransaction();
 
-                        Query queryObj = sessionObj.createQuery("delete from Server where serverName=:name");
-                        queryObj.setParameter("name", serverName);
+                        Query queryObj = sessionObj.createQuery("delete from Admin where adminName=:name");
+                        queryObj.setParameter("name", adminName);
                         queryObj.executeUpdate();
 
                         // Committing The Transactions To The Database
                         sessionObj.getTransaction().commit();
-                        System.out.println("\nServer With Name?= " + serverName + " Was Successfully Deleted From The Database!\n");
+                        System.out.println("\nAdmin With Name?= " + adminName + " Was Successfully Deleted From The Database!\n");
                 } catch(Exception sqlException) {
                         if(null != sessionObj.getTransaction()) {
                                 System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
@@ -211,23 +218,25 @@ public class ServerOperations {
         }
 
         // Method 4(c): This Method Is Used To Delete A Particular Record By Name From The Database Table
-        public static void updateRecordByName (String serverName, String newServerName) {
+        public static void updateAdminNameRecordByName (String adminName, String newAdminName, String adminServer) {
                 try {
                         // Getting Session Object From SessionFactory
                         sessionObj = buildSessionFactory().openSession();
                         // Getting Transaction Object From Session Object
                         sessionObj.beginTransaction();
 
-                        String sqlQuery = "UPDATE Server set serverName = :newServerName "  +
-                                "WHERE serverName = :name";
+                        String sqlQuery = "UPDATE Admin set adminName = :newAdminName "  +
+                                "WHERE adminName = :name" +
+                                "WHERE adminServer = :server";
                         Query queryObj = sessionObj.createQuery(sqlQuery);
-                        queryObj.setParameter("newServerName", newServerName);
-                        queryObj.setParameter("name", serverName);
+                        queryObj.setParameter("newAdminName", newAdminName);
+                        queryObj.setParameter("name", adminName);
+                        queryObj.setParameter("server", adminServer);
                         queryObj.executeUpdate();
 
                         // Committing The Transactions To The Database
                         sessionObj.getTransaction().commit();
-                        System.out.println("\nServer With Name?= " + serverName + " Was Successfully Updated! New name of the server is: " + newServerName + "\n");
+                        System.out.println("\nAdmin With Name?= " + adminName + " Was Successfully Updated! New name of the admin is: " + newAdminName + "\n");
                 } catch(Exception sqlException) {
                         if(null != sessionObj.getTransaction()) {
                                 System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
@@ -240,6 +249,39 @@ public class ServerOperations {
                         }
                 }
         }
+
+        public static void updateAdminLinkRecordByName (String adminName, String newAdminLink, String adminServer) {
+                try {
+                        // Getting Session Object From SessionFactory
+                        sessionObj = buildSessionFactory().openSession();
+                        // Getting Transaction Object From Session Object
+                        sessionObj.beginTransaction();
+
+                        String sqlQuery = "UPDATE Admin set adminLink = :newAdminLink "  +
+                                "WHERE adminName = :name" +
+                                "WHERE adminServer = :server";
+                        Query queryObj = sessionObj.createQuery(sqlQuery);
+                        queryObj.setParameter("newAdminName", newAdminLink);
+                        queryObj.setParameter("name", adminName);
+                        queryObj.setParameter("server", adminServer);
+                        queryObj.executeUpdate();
+
+                        // Committing The Transactions To The Database
+                        sessionObj.getTransaction().commit();
+                        System.out.println("\nAdmin With Name?= " + adminName + " Was Successfully Updated! New link of the admin is: " + newAdminLink + "\n");
+                } catch(Exception sqlException) {
+                        if(null != sessionObj.getTransaction()) {
+                                System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
+                                sessionObj.getTransaction().rollback();
+                        }
+                        sqlException.printStackTrace();
+                } finally {
+                        if(sessionObj != null) {
+                                sessionObj.close();
+                        }
+                }
+        }
+
             // Method 5: This Method Is Used To Delete All Records From The Database Table
             public static void deleteAllRecords() {
                     try {
@@ -248,7 +290,7 @@ public class ServerOperations {
                     // Getting Transaction Object From Session Object
                     sessionObj.beginTransaction();
             
-                    Query queryObj = sessionObj.createQuery("DELETE FROM Server");
+                    Query queryObj = sessionObj.createQuery("DELETE FROM Admin");
                     queryObj.executeUpdate();
             
                     // Committing The Transactions To The Database

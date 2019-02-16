@@ -1,13 +1,13 @@
-import hibernate.ConfigOperations;
+package hibernate;
+
 import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class testJDBCConnection {
+public class TestJDBCConnection {
 
-    @Test
-    public String main() {
+    public String TestConnection() {
         ConfigOperations config = new ConfigOperations();
         String jdbcURL = config.getDatabaseUrl();
         String user = config.getDatabaseUsername();
@@ -21,7 +21,7 @@ public class testJDBCConnection {
 
             System.out.println("Connection successful");
 
-            status = "Connection successful";
+            status = "Connection Established";
         } catch (Exception e) {
             e.printStackTrace();
             status = "An error has occured, please check your configuration";

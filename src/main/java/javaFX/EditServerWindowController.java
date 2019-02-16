@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class EditServerWindowController implements Initializable {
     private TextField serverNameTextField;
 
     @FXML
-    private Text chosenServerName;
+    private Text serverName;
 
     @FXML
     private HBox cancelbutton;
@@ -33,9 +34,14 @@ public class EditServerWindowController implements Initializable {
     private HBox addnewserverbutton;
 
     @FXML
+    private Text updateStatus;
+
+    private String chosenServerName = ManageServerWindowController.chosenServerName;
+
+    @FXML
     protected void handleCancelButton(ActionEvent event) {
         try {
-            Parent manageServerWindow = FXMLLoader.load(getClass().getResource("manageservers.fxml"));
+            Parent manageServerWindow = FXMLLoader.load(getClass().getResource("ManageServers.fxml"));
             editServerWindow.getChildren().setAll(manageServerWindow);
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,12 +50,26 @@ public class EditServerWindowController implements Initializable {
 
     @FXML
     protected void handleEditServerButton(ActionEvent event) {
-        String serverName = serverNameTextField.getText();
-        System.out.println(serverName);
+        String newServerName = serverNameTextField.getText();
 
-
-        ServerOperations serverOperations = new ServerOperations();
-        serverOperations.updateRecord(serverName);
+        try {
+            if (newServerName.isEmpty()) {
+                updateStatus.setText("Parameters can't be blank!");
+                updateStatus.setFill(Color.RED);
+            }
+            else if (chosenServerName.equals(newServerName))
+            {
+                updateStatus.setText("You haven't changed any parameters!");
+                updateStatus.setFill(Color.RED);
+            } else if (!chosenServerName.equals(newServerName)) {
+                ServerOperations serverOperations = new ServerOperations();
+                serverOperations.updateRecordByName(ManageServerWindowController.chosenServerName, newServerName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            updateStatus.setText("Something went terribly wrong!");
+            updateStatus.setFill(Color.RED);
+        }
     }
 
     @Override // This method is called by the FXMLLoader when initialization is complete
@@ -58,8 +78,6 @@ public class EditServerWindowController implements Initializable {
         assert cancelbutton != null : "fx:id=\"cancelbutton\" was not injected: check your FXML file 'basewindow.fxml'.";
         assert addnewserverbutton != null : "fx:id=\"addnewserverbutton\" was not injected: check your FXML file 'basewindow.fxml'.";
 
-        String serverName = new ManageServerWindowController().getSelectedServer();
-        System.out.println(serverName);
-        chosenServerName.setText("Server name: " + serverName);
+        serverName.setText(ManageServerWindowController.chosenServerName);
     }
 }

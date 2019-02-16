@@ -3,6 +3,7 @@ package javaFX;
 import getInfo.SummarizeTime;
 import hibernate.Server;
 import hibernate.ServerOperations;
+import hibernate.TestJDBCConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,10 +27,13 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class baseWindowController implements Initializable {
+public class BaseWindowController implements Initializable {
 
     @FXML
     private GridPane basewindow;
+
+    @FXML
+    private Text databaseStatus;
 
     @FXML
     private ComboBox<Object> serverDropdown;
@@ -37,31 +41,13 @@ public class baseWindowController implements Initializable {
     @FXML
     private HBox chooseServerButton;
 
-//    @FXML
-//    protected void handleSumTimeButton(ActionEvent event) {
-//        String adminID = adminIDTextField.getText();
-//
-//        SummarizeTime st = new SummarizeTime();
-//        String sumTime = st.sumTimeString(adminID);
-//        actiontarget.setFill(Color.FIREBRICK);
-//        actiontarget.setText(sumTime);
-//    }
+    public static String choosenServer;
 
     @FXML
     protected void handleManageServerButton(ActionEvent event) {
         try {
-            Parent manageServerWindow = FXMLLoader.load(getClass().getResource("manageservers.fxml"));
+            Parent manageServerWindow = FXMLLoader.load(getClass().getResource("ManageServers.fxml"));
             basewindow.getChildren().setAll(manageServerWindow);
-
-//            //Initialize
-//            Scene scene = new Scene(grid, 600, 400);
-//            Stage newserverstage = new Stage();
-//            newserverstage.setScene(scene);
-//            newserverstage.show();
-//            newserverstage.setTitle("Add a new server");
-//
-//            // Hide this current window (if this is what you want)
-//            ((Node)(event.getSource())).getScene().getWindow().hide();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -69,13 +55,41 @@ public class baseWindowController implements Initializable {
 
     @FXML
     protected void handleChooseServerButton(ActionEvent event) {
-        //@TODO: Choose the server and find admins from it
+        try {
+            Parent adminsWindow = FXMLLoader.load(getClass().getResource("Admins.fxml"));
+            basewindow.getChildren().setAll(adminsWindow);
+
+            choosenServer = serverDropdown.getSelectionModel().getSelectedItem().toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    @FXML
+    protected void handleConfigureDatabaseButton(ActionEvent event) {
+        try {
+            Parent databaseConfigWindow = FXMLLoader.load(getClass().getResource("DatabaseConfiguration.fxml"));
+            basewindow.getChildren().setAll(databaseConfigWindow);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-       assert serverDropdown != null : "fx:id=\"serverDropdown\" was not injected: check your FXML file 'basewindow.fxml'.";
+       assert serverDropdown != null : "fx:id=\"serverDropdown\" was not injected: check your FXML file 'BaseWindow.fxml'.";
+
+       //Set database status
+        TestJDBCConnection testDB = new TestJDBCConnection();
+        String status = testDB.TestConnection();
+        if (status=="Connection Established"){
+            databaseStatus.setText("Database status: " + status);
+            databaseStatus.setFill(Color.GREEN);
+        }
+        else {
+            databaseStatus.setText("Database status: " + status);
+            databaseStatus.setFill(Color.RED);
+        }
 
         //Initialize server list for server dropdown
         List ListviewServers = ServerOperations.displayRecords();

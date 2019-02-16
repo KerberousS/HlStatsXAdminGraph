@@ -9,34 +9,44 @@ import java.util.Set;
 uniqueConstraints =  {@UniqueConstraint(columnNames = {"ADMIN_ID"})})
 public class Admin {
 
-    private Integer adminID;
-    private String adminName;
-    private String adminLink;
-    private String adminColor;
-
-    private Server server;
-    private Set<Admin> admins = new HashSet<Admin>(0);
-
-    public Admin(Integer adminID, String adminServer, String adminName, String adminLink, String adminColor) {
-        this.adminID = adminID;
-        this.adminName = adminName;
-        this.adminLink = adminLink;
-        this.adminColor = getAdminColor();
-    }
     @Id
-    @Column(name="ADMIN_ID", unique = true, nullable = false)
-    public Integer getAdminID() { return adminID; }
-    public void setAdminID(Integer adminID) {
-        this.adminID = adminID;
-    }
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ADMIN_ID", length = 50, nullable = false)
+    private Long adminID;
 
     @Column(name="ADMIN_NAME", unique = true, nullable = false)
+    private String adminName;
+
+    @Column(name="ADMIN_LINK", unique = true, nullable = false)
+    private String adminLink;
+
+    @Column(name="ADMIN_COLOR", unique = true, nullable = false)
+    private String adminColor;
+
+    @Column(name="ADMIN_SERVER", nullable = false)
+    private String adminServer;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "adminID")
+    private Set<Admin> admins = new HashSet<Admin>(0);
+
+    public Admin() {
+        this.adminName = adminName;
+        this.adminLink = adminLink;
+        this.adminColor = adminColor;
+        this.adminServer = adminServer;
+    }
+
+    public Long getAdminID() { return adminID; }
+    public void setAdminID(Long adminID) {
+        this.adminID = adminID;
+    }
+
     public String getAdminName() { return adminName; }
     public void setAdminName(String adminName) {
         this.adminName = adminName;
     }
 
-    @Column(name="ADMIN_LINK", unique = true, nullable = false)
+
     public String getAdminLink() {
         return adminLink;
     }
@@ -44,7 +54,7 @@ public class Admin {
         this.adminLink = adminLink;
     }
 
-    @Column(name="ADMIN_COLOR", unique = true, nullable = false)
+
     public String getAdminColor() {
         return adminColor;
     }
@@ -52,11 +62,12 @@ public class Admin {
         this.adminColor = adminColor;
     }
 
-    public void setServer(Server server) {
-        this.server = server;
+    public String getAdminServer() { return adminServer; }
+    public void setAdminServer(String adminServer) {
+        this.adminServer = adminServer;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "adminID")
+
     public Set<Admin> getAdmins() {
         return admins;
     }

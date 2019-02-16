@@ -6,13 +6,16 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane fx:id="addServerWindow" fx:controller="javaFX.AddServerWindowController"
+<GridPane fx:id="editServerWindow" fx:controller="javaFX.EditServerWindowController"
           xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
           styleClass="grid">
     <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
 
-    <Label text="Type in a new server name:"
+    <Label text="Type in a new server name for server:"
            GridPane.columnIndex="0" GridPane.rowIndex="1" />
+
+    <Text fx:id="serverName"
+          GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
     <TextField fx:id="serverNameTextField"
                GridPane.columnIndex="0" GridPane.rowIndex="2" />
@@ -25,12 +28,15 @@
 
     <HBox spacing="10" alignment="bottom_left" fx:id="addnewserverbutton"
           GridPane.columnIndex="1" GridPane.rowIndex="3">
-        <Button text="Confirm"
-                onAction="#handleAddNewServerButton" />
+        <Button text="Edit Server"
+                onAction="#handleEditServerButton" />
     </HBox>
 
+    <Text fx:id="updateStatus"
+          GridPane.columnIndex="0" GridPane.rowIndex="4" />
+
     <stylesheets>
-        <URL value="@basewindow.css" />
+        <URL value="@../basewindow.css" />
     </stylesheets>
 
 </GridPane>

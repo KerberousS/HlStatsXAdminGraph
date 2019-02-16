@@ -6,29 +6,38 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane fx:id="basewindow" fx:controller="javaFX.baseWindowController"
+<GridPane fx:id="basewindow" fx:controller="javaFX.BaseWindowController"
           xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
           styleClass="grid">
     <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
 
-    <Text id="title" text="Welcome to HlStatsX Admin Graph Tool, please Select a server that you want to check"
+    <Text id="title" text="Welcome to HlStatsX Admin Graph Tool"
           GridPane.columnIndex="0" GridPane.rowIndex="0"
           GridPane.columnSpan="2"/>
 
-    <Label text="Select server:"
-           GridPane.columnIndex="0" GridPane.rowIndex="1" />
-
-    <ComboBox fx:id="serverDropdown"
-               GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <Text fx:id="databaseStatus"
+          GridPane.columnIndex="0" GridPane.rowIndex="1"/>
 
     <HBox spacing="10" alignment="bottom_left"
-          GridPane.columnIndex="3" GridPane.rowIndex="1">
+          GridPane.columnIndex="2" GridPane.rowIndex="1">
+        <Button text="Configure Database"
+                onAction="#handleConfigureDatabaseButton" />
+    </HBox>
+
+    <Label text="Select server:"
+           GridPane.columnIndex="0" GridPane.rowIndex="2" />
+
+    <ComboBox fx:id="serverDropdown"
+               GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+    <HBox spacing="10" alignment="bottom_left"
+          GridPane.columnIndex="2" GridPane.rowIndex="2">
         <Button text="Manage Servers"
                 onAction="#handleManageServerButton" />
     </HBox>
 
     <HBox spacing="10" alignment="bottom_right"
-          GridPane.columnIndex="1" GridPane.rowIndex="3">
+          GridPane.columnIndex="1" GridPane.rowIndex="4">
         <Button text="Choose this server"
                 onAction="#handleChooseServerButton" />
     </HBox>

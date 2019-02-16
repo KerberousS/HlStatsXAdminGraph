@@ -1,8 +1,18 @@
 .root {
      -fx-background-color: #ffa500
 }
+#title {
+    -fx-font-size: 2em;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-margin-top: 0.67em;
+    -fx-margin-bottom: 0.67em;
+    -fx-margin-left: 0;
+    -fx-margin-right: 0;
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
 .label {
-    -fx-font-size: 12px;
+    -fx-font-size: 1em;
     -fx-font-weight: bold;
     -fx-text-fill: #333333;
     -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );

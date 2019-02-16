@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane fx:id="addAdminWindow" fx:controller="javaFX.AddAdminWindowController"
+          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
+          styleClass="grid">
+    <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
+
+    <Label text="Type in a new admin name:"
+           GridPane.columnIndex="0" GridPane.rowIndex="1" />
+
+    <TextField fx:id="adminNameTextField"
+               GridPane.columnIndex="0" GridPane.rowIndex="2" />
+
+    <Label text="Admins HlStatsX ID:"
+           GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+    <TextField fx:id="adminLinkTextField"
+               GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+    <Label text="Admins Color:"
+           GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+    <ColorPicker fx:id="adminColorPicker"
+               GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+    <HBox spacing="10" alignment="bottom_left" fx:id="cancelButton"
+          GridPane.columnIndex="0" GridPane.rowIndex="5">
+        <Button text="Cancel"
+                onAction="#handleCancelButton" />
+    </HBox>
+
+    <HBox spacing="10" alignment="bottom_left" fx:id="editAdminButton"
+          GridPane.columnIndex="1" GridPane.rowIndex="5">
+        <Button text="Edit Admin"
+                onAction="#handleEditAdminButton" />
+    </HBox>
+
+    <Text fx:id="updateStatus"
+          GridPane.columnIndex="0" GridPane.rowIndex="6" />
+
+    <stylesheets>
+        <URL value="@../basewindow.css" />
+    </stylesheets>
+
+</GridPane>

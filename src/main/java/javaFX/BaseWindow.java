@@ -8,16 +8,16 @@ import javafx.fxml.FXMLLoader;
 
 import java.io.IOException;
 
-public class baseWindow extends Application {
+public class BaseWindow extends Application {
     public static void main(String[] args) {
-        Application.launch(baseWindow.class, args);
+        Application.launch(BaseWindow.class, args);
     }
 
         @Override
         public void start(Stage primaryStage) {
             //Base settings
             try {
-                Parent grid = FXMLLoader.load(getClass().getResource("baseWindow.fxml"));
+                Parent grid = FXMLLoader.load(getClass().getResource("BaseWindow.fxml"));
 
                 //Initialize
                 Scene scene = new Scene(grid, 800, 600);
