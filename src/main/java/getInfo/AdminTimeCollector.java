@@ -71,14 +71,18 @@ public class AdminTimeCollector {
 
                 List<String> adminTimeList = new ArrayList<String>();
 
-                for (Element time : times) {
-                    String[] splitTimeOpenHTMLTag = time.toString().split("nbsp;");
-                    String[] splitTimeCloseHTMLTag = splitTimeOpenHTMLTag[1].split("h</");
+                if (!times.isEmpty()) {
+                    for (Element time : times) {
+                        String[] splitTimeOpenHTMLTag = time.toString().split("nbsp;");
+                        String[] splitTimeCloseHTMLTag = splitTimeOpenHTMLTag[1].split("h</");
 
-                    String serverConnectionTime = splitTimeCloseHTMLTag[0];
+                        String serverConnectionTime = splitTimeCloseHTMLTag[0];
 
-                    list.add(serverConnectionTime);
-                    adminTimeList.add(serverConnectionTime);
+                        list.add(serverConnectionTime);
+                        adminTimeList.add(serverConnectionTime);
+                    }
+                } else {
+                    adminTimeList.add("00:00:00"); //Add single no time element if the player hasnt played
                 }
 
                 return adminTimeList;

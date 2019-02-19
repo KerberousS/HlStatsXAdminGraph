@@ -44,12 +44,13 @@
     </PieChart>
 
     <LineChart fx:id="lineChart" visible="false"
+               prefHeight="1280" prefWidth="1024"
                GridPane.columnIndex="0" GridPane.rowIndex="1">
         <xAxis>
             <CategoryAxis label="Days" fx:id="xLineAxis" />
         </xAxis>
         <yAxis>
-            <NumberAxis fx:id="yLineLineAxis" label="Times" side="LEFT" upperBound="160.0" />
+            <NumberAxis fx:id="yLineAxis" label="Times (in seconds)" side="LEFT" upperBound="160.0" />
         </yAxis>
     </LineChart>
 
@@ -57,9 +58,9 @@
                GridPane.columnIndex="0" GridPane.rowIndex="1">
         <xAxis>
             <CategoryAxis label="Days" fx:id="xAreaAxis" />
-        </xAxis>
+        </xAxis> 
         <yAxis>
-            <NumberAxis fx:id="yAreaAxis" label="Times" side="LEFT" upperBound="160.0" />
+            <NumberAxis fx:id="yAreaAxis" label="Times (in seconds)" side="LEFT" upperBound="160.0" />
         </yAxis>
     </AreaChart>
 
@@ -69,7 +70,7 @@
             <NumberAxis label="Days" fx:id="xBubbleAxis" />
         </xAxis>
         <yAxis>
-            <NumberAxis fx:id="yBubbleAxis" label="Times" side="LEFT" upperBound="160.0" />
+            <NumberAxis fx:id="yBubbleAxis" label="Times (in seconds)" side="LEFT" upperBound="160.0" />
         </yAxis>
     </BubbleChart>
 
@@ -79,7 +80,7 @@
             <NumberAxis label="Days" fx:id="xScatterAxis" />
         </xAxis>
         <yAxis>
-            <NumberAxis fx:id="yScatterAxis" label="Times" side="LEFT" upperBound="160.0" />
+            <NumberAxis fx:id="yScatterAxis" label="Times (in seconds)" side="LEFT" upperBound="160.0" />
         </yAxis>
     </ScatterChart>
 
@@ -89,7 +90,7 @@
             <CategoryAxis label="Days" fx:id="xBarAxis" />
         </xAxis>
         <yAxis>
-            <NumberAxis fx:id="yBarAxis" label="Times" side="LEFT" upperBound="160.0" />
+            <NumberAxis fx:id="yBarAxis" label="Times (in seconds)" side="LEFT" upperBound="160.0" />
         </yAxis>
     </BarChart>
 

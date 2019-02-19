@@ -1,5 +1,6 @@
 package javaFX;
 
+import getInfo.AdminTimeCollector;
 import getInfo.SummarizeTime;
 import hibernate.Admin;
 import hibernate.AdminOperations;
@@ -42,7 +43,7 @@ public class ChartsWindowController implements Initializable {
 
     @FXML
     private Text Error;
-    
+
     @FXML
     private TableColumn columnAdminName;
 
@@ -56,7 +57,13 @@ public class ChartsWindowController implements Initializable {
     private PieChart pieChart;
 
     @FXML
-    private LineChart lineChart;
+    private CategoryAxis xLineAxis;
+
+    @FXML
+    private NumberAxis yLineAxis;
+
+    @FXML
+    private LineChart<String, Number> lineChart;
 
     @FXML
     private AreaChart areaChart;
@@ -112,6 +119,7 @@ public class ChartsWindowController implements Initializable {
                 max += sum.timesToSeconds(a.getAdminLink());
             }
             pieChart.setData(pieChartData);
+            lineChart.setVisible(false);
             pieChart.setVisible(true);
             pieChart.setTitle("Admins Times");
             final Double finalMax = max;
@@ -121,7 +129,7 @@ public class ChartsWindowController implements Initializable {
                         e -> {
                             caption.setTranslateX(e.getSceneX());
                             caption.setTranslateY(e.getSceneY());
-                            double dataValue = data.getPieValue()/finalMax*100;
+                            double dataValue = data.getPieValue() / finalMax * 100;
                             String result = String.format("%.2f", dataValue);
                             caption.setText(result + "%");
                         });
@@ -133,11 +141,31 @@ public class ChartsWindowController implements Initializable {
 
     @FXML
     protected void generateLineChart(ActionEvent event) {
+        //TODO: Fix this
         try {
-            //TODO: Generate Line Chart
-        } catch (Exception e) {
-            e.printStackTrace();
+            List<Admin> admins = AdminOperations.displayFullRecords(choosenServer);
+            SummarizeTime sum = new SummarizeTime();
+
+            for (Admin a : admins) {
+                XYChart.Series<String, Number> lineChartData = new XYChart.Series<>();
+                List<Integer> times = sum.last28TimesList(a.getAdminLink());
+                List<String> dates = sum.last28DaysList();
+                lineChartData.setName(a.getAdminName());
+                for (int i = 0; i < times.size(); i++) {
+                    lineChartData.getData().add(new XYChart.Data<>(dates.get(i), times.get(i)));
+//                    System.out.println(times.get(i) + " // " + dates.get(i));
+                }
+                System.out.println(lineChartData.getData());
+                lineChart.getData().add(lineChartData);
+            }
+
+        } catch (Exception e)
+        {
+        e.printStackTrace();
         }
+        lineChart.setTitle("Admins Line Graph");
+        pieChart.setVisible(false);
+        lineChart.setVisible(true);
     }
 
     @FXML
