@@ -1,5 +1,8 @@
 package hibernate;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,10 +33,12 @@ public class Admin {
     private Set<Admin> admins = new HashSet<Admin>(0);
 
     public Admin() {
+    }
+
+    public Admin(String adminName, String adminLink, String adminColor) {
         this.adminName = adminName;
         this.adminLink = adminLink;
         this.adminColor = adminColor;
-        this.adminServer = adminServer;
     }
 
     public Long getAdminID() { return adminID; }
@@ -41,7 +46,10 @@ public class Admin {
         this.adminID = adminID;
     }
 
-    public String getAdminName() { return adminName; }
+    public String getAdminName() {
+        return adminName;
+    }
+
     public void setAdminName(String adminName) {
         this.adminName = adminName;
     }
@@ -50,14 +58,15 @@ public class Admin {
     public String getAdminLink() {
         return adminLink;
     }
+
     public void setAdminLink(String adminLink) {
         this.adminLink = adminLink;
     }
 
-
     public String getAdminColor() {
         return adminColor;
     }
+
     public void setAdminColor(String adminColor) {
         this.adminColor = adminColor;
     }

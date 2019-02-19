@@ -1,5 +1,7 @@
 package hibernate;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -8,8 +10,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.query.Query;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class AdminOperations {
 
@@ -93,13 +94,13 @@ public class AdminOperations {
                 // Getting Transaction Object From Session Object
                 sessionObj.beginTransaction();
 
-                String sqlQuery = "SELECT Admin"  +
-                        "WHERE adminServer = :server";
-                Query queryObj = sessionObj.createQuery(sqlQuery);
-                queryObj.setParameter("server", adminServer);
-                queryObj.executeUpdate();
+                StringBuilder sqlQuery = new StringBuilder("SELECT A.adminName FROM Admin A ")
+                        .append("WHERE A.adminServer = :server ");
 
-                adminsList = sessionObj.createQuery("SELECT A.adminName FROM Admin A").getResultList();
+                Query queryObj = sessionObj.createQuery(sqlQuery.toString());
+                queryObj.setParameter("server", adminServer);
+
+                adminsList = queryObj.getResultList();
                 } catch(Exception sqlException) {
                 if(null != sessionObj.getTransaction()) {
                 System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
@@ -113,6 +114,106 @@ public class AdminOperations {
                 }
                 return adminsList;
                 }
+
+//        public static String displayFullRecords(String adminServer) {
+//
+//
+//                String adminName = null;
+//                String adminLink = null;
+//                String adminColor = null;
+//
+//                try {
+//                        // Getting Session Object From SessionFactory
+//                        sessionObj = buildSessionFactory().openSession();
+//                        // Getting Transaction Object From Session Object
+//                        sessionObj.beginTransaction();
+//
+//                        StringBuilder sqlQuery = new StringBuilder("SELECT A.adminName, A.adminLink, A.adminColor FROM Admin A ")
+//                                .append("WHERE A.adminServer = :server ");
+//
+//                        Query queryObj = sessionObj.createQuery(sqlQuery.toString());
+//                        queryObj.setParameter("server", adminServer);
+//
+//                        List<Object[]> adminsList = queryObj.list();
+//                        for (Object[] a: adminsList) {
+//                                adminName = (String)a[0];
+//                                adminLink = (String)a[1];
+//                                adminColor = (String)a[2];
+//                        }
+//                } catch(Exception sqlException) {
+//                        if(null != sessionObj.getTransaction()) {
+//                                System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
+//                                sessionObj.getTransaction().rollback();
+//                        }
+//                        sqlException.printStackTrace();
+//                } finally {
+//                        if(sessionObj != null) {
+//                                sessionObj.close();
+//                        }
+//                }
+//                return adminName;
+//        }
+
+        public static ObservableList<Admin> displayFullRecords(String adminServer) {
+                ObservableList<Admin> list = null;
+                try {
+                        // Getting Session Object From SessionFactory
+                        sessionObj = buildSessionFactory().openSession();
+                        // Getting Transaction Object From Session Object
+                        sessionObj.beginTransaction();
+
+                        StringBuilder sqlQuery = new StringBuilder("SELECT A FROM Admin A ")
+                                .append("WHERE A.adminServer = :server ");
+
+                        Query queryObj = sessionObj.createQuery(sqlQuery.toString());
+                        queryObj.setParameter("server", adminServer);
+
+                        list = FXCollections.observableArrayList(queryObj.list());
+                        System.out.println(list);
+                } catch (Exception sqlException) {
+                        if (null != sessionObj.getTransaction()) {
+                                System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
+                                sessionObj.getTransaction().rollback();
+                        }
+                        sqlException.printStackTrace();
+                } finally {
+                        if (sessionObj != null) {
+                                sessionObj.close();
+                        }
+                }
+                return list;
+        }
+
+        public static List getAdminInfo(String adminName, String adminServer) {
+                List<Admin> adminsList = new ArrayList();
+                try {
+                        // Getting Session Object From SessionFactory
+                        sessionObj = buildSessionFactory().openSession();
+                        // Getting Transaction Object From Session Object
+                        sessionObj.beginTransaction();
+
+                        StringBuilder sqlQuery = new StringBuilder("SELECT Admin A ")
+                                .append("WHERE A.adminServer = :server ")
+                                .append("AND A.adminName = :name ");
+                        Query queryObj = sessionObj.createQuery(sqlQuery.toString());
+                        queryObj.setParameter("name", adminName);
+                        queryObj.setParameter("server", adminServer);
+                        queryObj.executeUpdate();
+
+                        adminsList = queryObj.getResultList();
+                } catch(Exception sqlException) {
+                        if(null != sessionObj.getTransaction()) {
+                                System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
+                                sessionObj.getTransaction().rollback();
+                        }
+                        sqlException.printStackTrace();
+                } finally {
+                        if(sessionObj != null) {
+                                sessionObj.close();
+                        }
+                }
+                return adminsList;
+        }
 
         // Method 3: This Method Is Used To Update A Record In The Database Table
         public static void updateRecord(String admin_name) {
@@ -155,7 +256,7 @@ public class AdminOperations {
 
                 // Committing The Transactions To The Database
                 sessionObj.getTransaction().commit();
-                System.out.println("\nAdmin With Name?= " + adminName + " Was Successfully Deleted From The Database!\n");
+                System.out.println("\nAdmin With Name " + adminName + " Was Successfully Deleted From The Database!\n");
                 } catch(Exception sqlException) {
                 if(null != sessionObj.getTransaction()) {
                 System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
@@ -203,7 +304,7 @@ public class AdminOperations {
 
                         // Committing The Transactions To The Database
                         sessionObj.getTransaction().commit();
-                        System.out.println("\nAdmin With Name?= " + adminName + " Was Successfully Deleted From The Database!\n");
+                        System.out.println("\nAdmin With Name " + adminName + " Was Successfully Deleted From The Database!\n");
                 } catch(Exception sqlException) {
                         if(null != sessionObj.getTransaction()) {
                                 System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
@@ -225,10 +326,10 @@ public class AdminOperations {
                         // Getting Transaction Object From Session Object
                         sessionObj.beginTransaction();
 
-                        String sqlQuery = "UPDATE Admin set adminName = :newAdminName "  +
-                                "WHERE adminName = :name" +
-                                "WHERE adminServer = :server";
-                        Query queryObj = sessionObj.createQuery(sqlQuery);
+                        StringBuilder sqlQuery = new StringBuilder("UPDATE Admin A set A.adminName = :newAdminName ")
+                                .append("WHERE A.adminName = :name ")
+                                .append("AND A.adminServer = :server ");
+                        Query queryObj = sessionObj.createQuery(sqlQuery.toString());
                         queryObj.setParameter("newAdminName", newAdminName);
                         queryObj.setParameter("name", adminName);
                         queryObj.setParameter("server", adminServer);
@@ -236,7 +337,7 @@ public class AdminOperations {
 
                         // Committing The Transactions To The Database
                         sessionObj.getTransaction().commit();
-                        System.out.println("\nAdmin With Name?= " + adminName + " Was Successfully Updated! New name of the admin is: " + newAdminName + "\n");
+                        System.out.println("\nAdmin With Name " + adminName + " Was Successfully Updated! New name of the admin is: " + newAdminName + "\n");
                 } catch(Exception sqlException) {
                         if(null != sessionObj.getTransaction()) {
                                 System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
@@ -257,18 +358,50 @@ public class AdminOperations {
                         // Getting Transaction Object From Session Object
                         sessionObj.beginTransaction();
 
-                        String sqlQuery = "UPDATE Admin set adminLink = :newAdminLink "  +
-                                "WHERE adminName = :name" +
-                                "WHERE adminServer = :server";
-                        Query queryObj = sessionObj.createQuery(sqlQuery);
-                        queryObj.setParameter("newAdminName", newAdminLink);
+                        StringBuilder sqlQuery = new StringBuilder("UPDATE Admin A set A.adminLink = :newAdminLink ")
+                                .append("WHERE A.adminName = :name ")
+                                .append("AND A.adminServer = :server ");
+                        Query queryObj = sessionObj.createQuery(sqlQuery.toString());
+                        queryObj.setParameter("newAdminLink", newAdminLink);
                         queryObj.setParameter("name", adminName);
                         queryObj.setParameter("server", adminServer);
                         queryObj.executeUpdate();
 
                         // Committing The Transactions To The Database
                         sessionObj.getTransaction().commit();
-                        System.out.println("\nAdmin With Name?= " + adminName + " Was Successfully Updated! New link of the admin is: " + newAdminLink + "\n");
+                        System.out.println("\nAdmin With Name " + adminName + " Was Successfully Updated! New link of the admin is: " + newAdminLink + "\n");
+                } catch(Exception sqlException) {
+                        if(null != sessionObj.getTransaction()) {
+                                System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
+                                sessionObj.getTransaction().rollback();
+                        }
+                        sqlException.printStackTrace();
+                } finally {
+                        if(sessionObj != null) {
+                                sessionObj.close();
+                        }
+                }
+        }
+
+        public static void updateAdminColorRecordByName (String adminName, String newAdminColor, String adminServer) {
+                try {
+                        // Getting Session Object From SessionFactory
+                        sessionObj = buildSessionFactory().openSession();
+                        // Getting Transaction Object From Session Object
+                        sessionObj.beginTransaction();
+
+                        StringBuilder sqlQuery = new StringBuilder("UPDATE Admin A set A.adminColor = :newAdminColor ")
+                                .append("WHERE A.adminName = :name ")
+                                .append("AND A.adminServer = :server ");
+                        Query queryObj = sessionObj.createQuery(sqlQuery.toString());
+                        queryObj.setParameter("newAdminColor", newAdminColor);
+                        queryObj.setParameter("name", adminName);
+                        queryObj.setParameter("server", adminServer);
+                        queryObj.executeUpdate();
+
+                        // Committing The Transactions To The Database
+                        sessionObj.getTransaction().commit();
+                        System.out.println("\nAdmin With Name " + adminName + " Was Successfully Updated! New link of the admin is: " + newAdminColor + "\n");
                 } catch(Exception sqlException) {
                         if(null != sessionObj.getTransaction()) {
                                 System.out.println("\n.......Transaction Is Being Rolled Back.......\n");

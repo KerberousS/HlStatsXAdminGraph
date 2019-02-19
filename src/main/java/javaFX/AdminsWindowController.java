@@ -1,18 +1,18 @@
 package javaFX;
 
+import hibernate.Admin;
 import hibernate.AdminOperations;
-import hibernate.ServerOperations;
-import hibernate.TestJDBCConnection;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -27,15 +27,27 @@ public class AdminsWindowController implements Initializable {
     private GridPane adminsWindow;
 
     @FXML
-    private ListView adminsList;
+    private Text adminText;
 
     @FXML
-    private ComboBox<Object> serverDropdown;
+    private TableView<Admin> adminsList;
 
     @FXML
-    private HBox chooseServerButton;
+    private Text Error;
+    
+    @FXML
+    private TableColumn columnAdminName;
+
+    @FXML
+    private TableColumn columnAdminLink;
+
+    @FXML
+    private TableColumn columnAdminColor;
 
     public static String choosenServer;
+    public static String chosenAdminName;
+    public static String choosenAdminLink;
+    public static String choosenAdminColor;
 
 //    @FXML
 //    protected void handleSumTimeButton(ActionEvent event) {
@@ -58,28 +70,80 @@ public class AdminsWindowController implements Initializable {
     }
 
     @FXML
-    protected void handleManageAdminsButton(ActionEvent event) {
+    protected void handleAddNewAdminButton(ActionEvent event) {
         try {
-            Parent manageAdminsWindow = FXMLLoader.load(getClass().getResource("ManageAdmins.fxml"));
-            adminsWindow.getChildren().setAll(manageAdminsWindow);
+            Parent addAdminWindow = FXMLLoader.load(getClass().getResource("Admins/AddAdmin.fxml"));
+            adminsWindow.getChildren().setAll(addAdminWindow);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @FXML
-    protected void handleGenerateSimpleSumChartButton(ActionEvent event) {
-        //@TODO: Generate charts and show in preview window
+    protected void handleEditAdminButton(ActionEvent event) {
+        try {
+            if (adminsList.getSelectionModel().getSelectedItem() == null) {
+                Error.setText("Please choose an admin first!");
+                Error.setFill(Color.RED);
+            }
+            else {
+                Admin admin = adminsList.getSelectionModel().getSelectedItem();
+                chosenAdminName = admin.getAdminName();
+                choosenAdminLink = admin.getAdminLink();
+                choosenAdminColor = admin.getAdminColor();
+                Parent editAdminWindow = FXMLLoader.load(getClass().getResource("Admins/EditAdmin.fxml"));
+                adminsWindow.getChildren().setAll(editAdminWindow);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    protected void handleDeleteAdminButton(ActionEvent event) {
+        if (adminsList.getSelectionModel().getSelectedItem() == null) {
+            Error.setText("Please choose an Admin first!");
+        } else {
+            Admin admin = adminsList.getSelectionModel().getSelectedItem();
+            chosenAdminName = admin.getAdminName();
+            //TODO: CONFIRM WINDOW
+            AdminOperations adminOperations = new AdminOperations();
+            adminOperations.deleteRecordByName(chosenAdminName, choosenServer);
+
+            //Initialize admins list
+            adminsList.getItems().clear();
+            adminsList.getItems().addAll(AdminOperations.displayFullRecords(choosenServer));
+        }
+    }
+
+    @FXML
+    protected void handleChartsButton(ActionEvent event) {
+        try {
+            if (adminsList.getItems().isEmpty()) {
+                Error.setText("Please add admins first!");
+                Error.setFill(Color.RED);
+            } else {
+                Parent chartWindow = FXMLLoader.load(getClass().getResource("Charts/Charts.fxml"));
+                adminsWindow.getChildren().setAll(chartWindow);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-       assert adminsList != null : "fx:id=\"adminsList\" was not injected: check your FXML file 'Admins.fxml'.";
+        assert adminsList != null : "fx:id=\"adminsList\" was not injected: check your FXML file 'Admins.fxml'.";
 
-         //Initialize server list for server dropdown
-        List admins = AdminOperations.displayRecords(BaseWindowController.choosenServer);
+        columnAdminName.setCellValueFactory(new PropertyValueFactory<Admin, String>("adminName"));
+        columnAdminLink.setCellValueFactory(new PropertyValueFactory<Admin, String>("adminLink"));
+        columnAdminColor.setCellValueFactory(new PropertyValueFactory<Admin, String>("adminColor"));
 
-        serverDropdown.setItems(FXCollections.observableArrayList(admins.toArray()));
-        System.out.println(admins);
+        adminText.setText("Choose admins from the list: ");
+        choosenServer = BaseWindowController.choosenServer;
+        //Initialize server list for server dropdown
+
+        adminsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        adminsList.getItems().addAll(AdminOperations.displayFullRecords(choosenServer));
     }
 }

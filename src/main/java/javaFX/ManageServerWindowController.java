@@ -59,7 +59,7 @@ public class ManageServerWindowController implements Initializable {
     @FXML
     protected void handleAddNewServerButton(ActionEvent event) {
         try {
-            Parent addServerWindow = FXMLLoader.load(getClass().getResource("AddServer.fxml"));
+            Parent addServerWindow = FXMLLoader.load(getClass().getResource("Servers/AddServer.fxml"));
             manageServerWindow.getChildren().setAll(addServerWindow);
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,7 +74,7 @@ public class ManageServerWindowController implements Initializable {
             }
             else {
                 chosenServerName = serverList.getSelectionModel().getSelectedItem().toString();
-                Parent addServerWindow = FXMLLoader.load(getClass().getResource("EditServer.fxml"));
+                Parent addServerWindow = FXMLLoader.load(getClass().getResource("Servers/EditServer.fxml"));
                 manageServerWindow.getChildren().setAll(addServerWindow);
             }
         } catch (IOException e) {

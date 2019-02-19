@@ -6,12 +6,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane fx:id="addAdminWindow" fx:controller="javaFX.AddAdminWindowController"
+<GridPane fx:id="editAdminWindow" fx:controller="javaFX.EditAdminWindowController"
           xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
           styleClass="grid">
     <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
 
-    <Label text="Type in a new admin name:"
+    <Label text="Edit admins name:"
            GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
     <TextField fx:id="adminNameTextField"

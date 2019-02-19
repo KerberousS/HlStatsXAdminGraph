@@ -42,6 +42,9 @@
                 onAction="#handleChooseServerButton" />
     </HBox>
 
+    <Text fx:id="updateStatus"
+          GridPane.columnIndex="0" GridPane.rowIndex="5" />
+
     <stylesheets>
         <URL value="@basewindow.css" />
     </stylesheets>

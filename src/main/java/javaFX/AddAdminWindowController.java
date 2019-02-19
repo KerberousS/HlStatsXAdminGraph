@@ -1,5 +1,6 @@
 package javaFX;
 
+import getInfo.colorOperations;
 import hibernate.AdminOperations;
 import hibernate.ServerOperations;
 import javafx.event.ActionEvent;
@@ -46,7 +47,7 @@ public class AddAdminWindowController implements Initializable {
     @FXML
     protected void handleCancelButton(ActionEvent event) {
         try {
-            Parent manageServerWindow = FXMLLoader.load(getClass().getResource("ManageServers.fxml"));
+            Parent manageServerWindow = FXMLLoader.load(getClass().getResource("Admins/Admins.fxml"));
             addAdminWindow.getChildren().setAll(manageServerWindow);
         } catch (IOException e) {
             e.printStackTrace();
@@ -57,7 +58,10 @@ public class AddAdminWindowController implements Initializable {
     protected void handleAddNewAdminButton(ActionEvent event) {
         String adminName = adminNameTextField.getText();
         String adminLink = adminLinkTextField.getText();
-        String adminColor = adminColorPicker.toString();
+        Color c = adminColorPicker.getValue();
+        String adminColor = colorOperations.colorToHex(c);
+
+
         System.out.println(adminColor);
 
         try {
@@ -77,7 +81,6 @@ public class AddAdminWindowController implements Initializable {
             updateStatus.setFill(Color.RED);
         }
     }
-
 
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {

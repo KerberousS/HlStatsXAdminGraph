@@ -6,9 +6,7 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
-import org.hibernate.service.ServiceRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +90,7 @@ public class ServerOperations {
                 // Getting Transaction Object From Session Object
                 sessionObj.beginTransaction();
 
-                serversList = sessionObj.createQuery("SELECT S.serverName FROM Server S").getResultList();
+                serversList = sessionObj.createQuery("SELECT serverName FROM Server").getResultList();
                 } catch(Exception sqlException) {
                 if(null != sessionObj.getTransaction()) {
                 System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
@@ -166,21 +164,21 @@ public class ServerOperations {
             public static Server findRecordByName(String find_serverName) {
                     Server findserverObj = null;
                     try {
-                    // Getting Session Object From SessionFactory
-                    sessionObj = buildSessionFactory().openSession();
-                    // Getting Transaction Object From Session Object
-                    sessionObj.beginTransaction();
+                            // Getting Session Object From SessionFactory
+                            sessionObj = buildSessionFactory().openSession();
+                            // Getting Transaction Object From Session Object
+                            sessionObj.beginTransaction();
 
-                    findserverObj = sessionObj.load(Server.class, find_serverName);
-                    } catch(Exception sqlException) {
-                    if(null != sessionObj.getTransaction()) {
-                    System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
-                    sessionObj.getTransaction().rollback();
-                    }
-                    sqlException.printStackTrace();
+                            findserverObj = sessionObj.load(Server.class, find_serverName);
+                    } catch (Exception sqlException) {
+                            if (null != sessionObj.getTransaction()) {
+                                    System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
+                                    sessionObj.getTransaction().rollback();
+                            }
+                            sqlException.printStackTrace();
                     }
                     return findserverObj;
-                    }
+            }
 
         // Method 4(c): This Method Is Used To Delete A Particular Record By Name From The Database Table
         public static void deleteRecordByName(String serverName) {
@@ -218,9 +216,9 @@ public class ServerOperations {
                         // Getting Transaction Object From Session Object
                         sessionObj.beginTransaction();
 
-                        String sqlQuery = "UPDATE Server set serverName = :newServerName "  +
-                                "WHERE serverName = :name";
-                        Query queryObj = sessionObj.createQuery(sqlQuery);
+                        StringBuilder sqlQuery = new StringBuilder("UPDATE Server set serverName = :newServerName ")
+                                .append("WHERE serverName = :name ");
+                        Query queryObj = sessionObj.createQuery(sqlQuery.toString());
                         queryObj.setParameter("newServerName", newServerName);
                         queryObj.setParameter("name", serverName);
                         queryObj.executeUpdate();

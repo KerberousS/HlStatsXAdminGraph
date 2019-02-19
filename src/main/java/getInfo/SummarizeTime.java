@@ -1,13 +1,5 @@
 package getInfo;
 
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class SummarizeTime {
@@ -57,8 +49,9 @@ public class SummarizeTime {
             return sumTime;
         }
         else {
-            String sumTime = "The player hasn't played for the last 28 days or the player ID is wrong";
-
+//            String sumTime = "The player hasn't played for the last 28 days or the player ID is wrong";
+            //@TODO Add logging here
+            String sumTime = "0d 0h 0s";
             return sumTime;
         }
     }

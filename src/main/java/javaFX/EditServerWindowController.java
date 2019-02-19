@@ -41,7 +41,7 @@ public class EditServerWindowController implements Initializable {
     @FXML
     protected void handleCancelButton(ActionEvent event) {
         try {
-            Parent manageServerWindow = FXMLLoader.load(getClass().getResource("ManageServers.fxml"));
+            Parent manageServerWindow = FXMLLoader.load(getClass().getResource("Servers/ManageServers.fxml"));
             editServerWindow.getChildren().setAll(manageServerWindow);
         } catch (IOException e) {
             e.printStackTrace();

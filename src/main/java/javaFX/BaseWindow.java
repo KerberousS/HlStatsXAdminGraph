@@ -24,7 +24,7 @@ public class BaseWindow extends Application {
                 primaryStage.setScene(scene);
                 primaryStage.show();
                 primaryStage.setTitle("HlStatsX Admin Graph");
-
+                //TODO: Fix for Java11?
             } catch (IOException e) {
                 e.printStackTrace();
             }

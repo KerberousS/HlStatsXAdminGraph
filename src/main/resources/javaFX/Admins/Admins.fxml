@@ -11,26 +11,55 @@
           styleClass="grid">
     <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
 
-    <ListView fx:id="adminsList"
-              GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <Text fx:id="adminText"
+          GridPane.columnIndex="0" GridPane.rowIndex="0">
+    </Text>
 
-    <HBox spacing="10" alignment="bottom_left"
-          GridPane.columnIndex="0" GridPane.rowIndex="1">
-        <Button text="Manage Admins"
-                onAction="#handleManageAdminsButton" />
+    <TableView fx:id="adminsList"
+               GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <columns>
+            <TableColumn fx:id="columnAdminName" text="Name">
+            </TableColumn>
+            <TableColumn fx:id="columnAdminLink" text="HlStats ID">
+            </TableColumn>
+            <TableColumn fx:id="columnAdminColor" text="Color">
+            </TableColumn>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10" alignment="bottom_left" fx:id="addNewAdminButton"
+          GridPane.columnIndex="0" GridPane.rowIndex="2">
+        <Button text="Add a New Admin"
+                onAction="#handleAddNewAdminButton" />
     </HBox>
 
+    <HBox spacing="25" alignment="bottom_left" fx:id="editAdminButton"
+          GridPane.columnIndex="0" GridPane.rowIndex="3">
+        <Button text="Edit choosen Admin"
+                onAction="#handleEditAdminButton" />
+    </HBox>
+
+    <HBox spacing="10" alignment="bottom_left" fx:id="deleteAdminButton"
+          GridPane.columnIndex="0" GridPane.rowIndex="4">
+        <Button text="Delete choosen Admin"
+                onAction="#handleDeleteAdminButton" />
+    </HBox>
+
+    <Text fx:id="Error"
+          GridPane.columnIndex="0" GridPane.rowIndex="5" >
+    </Text>
+
     <Label text="Choose option:"
-           GridPane.columnIndex="0" GridPane.rowIndex="1" />
+           GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
     <HBox spacing="10" alignment="bottom_left"
-          GridPane.columnIndex="0" GridPane.rowIndex="2">
+          GridPane.columnIndex="1" GridPane.rowIndex="2">
         <Button text="Generate Chart"
-                onAction="#handleGenerateSimpleSumChartButton" />
+                onAction="#handleChartsButton" />
     </HBox>
 
     <HBox spacing="10" alignment="bottom_left" fx:id="closeButton"
-          GridPane.columnIndex="0" GridPane.rowIndex="2">
+          GridPane.columnIndex="1" GridPane.rowIndex="3">
         <Button text="Go back"
                 onAction="#handleCloseButton" />
     </HBox>

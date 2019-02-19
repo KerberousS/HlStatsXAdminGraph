@@ -29,7 +29,7 @@
                 onAction="#handleAddNewServerButton" />
     </HBox>
 
-    <Text fx:id="status"
+    <Text fx:id="updateStatus"
           GridPane.columnIndex="0" GridPane.rowIndex="4" />
 
     <stylesheets>
