@@ -15,7 +15,8 @@ module administratorgraph {
     requires javafx.controls;
     requires java.naming;
     requires net.bytebuddy;
-    exports javaFX;
+    requires log4j;
+    exports javafx;
     opens hibernate;
-    opens javaFX;
+    opens javafx;
 }

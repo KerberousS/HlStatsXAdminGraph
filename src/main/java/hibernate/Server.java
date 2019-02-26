@@ -12,15 +12,14 @@ public class Server implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "SERVER_ID", length = 50, nullable = false)
+    @Column(name = "SERVER_ID", length = 50, unique = true, nullable = false)
     private Long serverID;
 
-    @Column(name = "SERVER_NAME", length = 50, nullable = false)
+    @Column(name = "SERVER_NAME", length = 50, unique = true, nullable = false)
     private String serverName;
 
-//    private Set<Admin> admins = new HashSet<Admin>(0);
-    @ElementCollection(targetClass=Server.class)
-    private Set<Server> servers = new HashSet<Server>(0);
+    @Column(name = "SERVERHLSTATS_LINK", nullable = false)
+    private String serverHlstatsLink;
 
     public long getServerID() {
         return serverID;
@@ -32,22 +31,15 @@ public class Server implements Serializable {
     public String getServerName() {
     return serverName;
     }
-
     public void setServerName(String serverName) {
         this.serverName = serverName;
     }
 
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "servers")
-//    public Set<Admin> getAdmins() {
-//        return admins;
-//    }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "serverName")
-    public Set<Server> getServers() {
-        return servers;
+    public String getServerHlstatsLink() {
+        return serverHlstatsLink;
     }
 
-    public void setServers(Set<Server> servers) {
-        this.servers = servers;
+    public void setServerHlstatsLink(String serverHlstatsLink) {
+        this.serverHlstatsLink = serverHlstatsLink;
     }
 }

@@ -35,10 +35,11 @@ public class Admin {
     public Admin() {
     }
 
-    public Admin(String adminName, String adminLink, String adminColor) {
+    public Admin(String adminName, String adminLink, String adminColor, String adminServer) {
         this.adminName = adminName;
         this.adminLink = adminLink;
         this.adminColor = adminColor;
+        this.adminServer = adminServer;
     }
 
     public Long getAdminID() { return adminID; }

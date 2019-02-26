@@ -18,8 +18,9 @@ import java.io.IOException;
 
 public class ConfigOperations {
         
-        public static final String HIBERNATE_CONFIG_FILEPATH = "./src/main/resources/hibernate.cfg.xml"; //@TODO: Change this HIBERNATE_CONFIG_FILEPATH
-        
+        public static final String HIBERNATE_CONFIG_FILEPATH = "./hibernate.cfg.xml";
+        //TODO: ADD LOGGING HERE
+
         public String getDatabaseUrl()
         {
                 String databaseUrl = null;

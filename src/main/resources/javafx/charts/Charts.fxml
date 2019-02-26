@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<?import javafx.scene.chart.AreaChart?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+
+<GridPane fx:id="chartsWindow" fx:controller="javafx.ChartsWindowController"
+          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
+          styleClass="grid">
+    <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
+
+    <Text fx:id="adminText" text="Choose a type of chart"
+          GridPane.columnIndex="0" GridPane.rowIndex="0">
+    </Text>
+
+    <Label fx:id="caption">
+
+    </Label>
+
+    <PieChart fx:id="pieChart" visible="false" title="Admins Pie Graph"
+               GridPane.columnIndex="0" GridPane.rowIndex="1">
+    </PieChart>
+
+    <LineChart fx:id="lineChart" visible="false" title="Admins Line Graph"
+               prefHeight="1280" prefWidth="1024"
+               GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <xAxis>
+            <CategoryAxis label="Days" fx:id="xLineAxis" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis fx:id="yLineAxis" label="Times (in seconds)" side="LEFT" upperBound="160.0" />
+        </yAxis>
+    </LineChart>
+
+    <AreaChart fx:id="areaChart" visible="false" title="Admins Area Graph"
+               GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <xAxis>
+            <CategoryAxis label="Days" fx:id="xAreaAxis" />
+        </xAxis> 
+        <yAxis>
+            <NumberAxis fx:id="yAreaAxis" label="Times (in seconds)" side="LEFT" upperBound="160.0" />
+        </yAxis>
+    </AreaChart>
+
+    <BarChart fx:id="barChart" visible="false" title="Admins Bar Graph"
+               GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <xAxis>
+            <CategoryAxis label="Days" fx:id="xBarAxis" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis fx:id="yBarAxis" label="Times (in seconds)" side="LEFT" upperBound="160.0" />
+        </yAxis>
+    </BarChart>
+
+    <Label text="From: "
+          GridPane.columnIndex="1" GridPane.rowIndex="0">
+    </Label>
+
+    <DatePicker fx:id="setdateFrom"
+               GridPane.columnIndex="2" GridPane.rowIndex="0">
+    </DatePicker>
+
+    <Label text="To: "
+          GridPane.columnIndex="1" GridPane.rowIndex="1">
+    </Label>
+
+    <DatePicker fx:id="setdateTo"
+                GridPane.columnIndex="2" GridPane.rowIndex="1">
+    </DatePicker>
+
+    <HBox spacing="10" alignment="bottom_left" fx:id="generatePieChart"
+          GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <Button text="Pie Chart"
+                onAction="#generatePieChart" />
+    </HBox>
+
+    <HBox spacing="25" alignment="bottom_left" fx:id="generateLineChart"
+          GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <Button text="Line Chart"
+                onAction="#generateLineChart" />
+    </HBox>
+
+    <HBox spacing="10" alignment="bottom_left" fx:id="generateAreaChart"
+          GridPane.columnIndex="1" GridPane.rowIndex="3">
+        <Button text="Area Chart"
+                onAction="#generateAreaChart" />
+    </HBox>
+
+    <HBox spacing="10" alignment="bottom_left" fx:id="generateBarChart"
+          GridPane.columnIndex="1" GridPane.rowIndex="6">
+        <Button text="Bar Chart"
+                onAction="#generateBarChart" />
+    </HBox>
+
+    <Text fx:id="Error"
+          GridPane.columnIndex="0" GridPane.rowIndex="7" >
+    </Text>
+
+    <HBox spacing="10" alignment="bottom_left" fx:id="closeButton"
+          GridPane.columnIndex="0" GridPane.rowIndex="8">
+        <Button text="Go back"
+                onAction="#handleCloseButton" />
+    </HBox>
+
+    <stylesheets>
+        <URL value="@../basewindow.css" />
+    </stylesheets>
+
+</GridPane>

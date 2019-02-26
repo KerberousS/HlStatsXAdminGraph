@@ -16,10 +16,10 @@
 //
 //
 //        System.out.println("\n=======CREATE RECORDS=======\n");
-//        ServerOperations.createServerRecord(testServerName);
+//        DBOperations.createServerRecord(testServerName);
 //
 //        System.out.println("\n=======READ RECORDS=======\n");
-//        List ListViewServers = ServerOperations.displayRecords();
+//        List ListViewServers = DBOperations.displayRecords();
 //        if(ListViewServers != null & ListViewServers.size() > 0) {
 //            for(Object serverObj : ListViewServers) {
 //                System.out.println(serverObj.toString());
@@ -28,9 +28,9 @@
 //
 //        System.out.println("\n=======UPDATE RECORDS=======\n");
 ////        int updateId = 1;
-//        ServerOperations.updateRecord(testServerName);
+//        DBOperations.updateRecord(testServerName);
 //        System.out.println("\n=======READ RECORDS AFTER UPDATION=======\n");
-//        List updateServer = ServerOperations.displayRecords();
+//        List updateServer = DBOperations.displayRecords();
 //        if(updateServer != null & updateServer.size() > 0) {
 //            for(Object serverObj : updateServer) {
 //                System.out.println(serverObj.toString());
@@ -39,17 +39,17 @@
 //
 //        System.out.println("\n=======DELETE RECORD=======\n");
 //        String deleteName = "Test server";
-//        ServerOperations.deleteRecord(deleteName);
+//        DBOperations.deleteRecord(deleteName);
 //        System.out.println("\n=======READ RECORDS AFTER DELETION=======\n");
-//        List deleteServerRecord = ServerOperations.displayRecords();
+//        List deleteServerRecord = DBOperations.displayRecords();
 //        for(Object serverObj : deleteServerRecord) {
 //            System.out.println(serverObj.toString());
 //        }
 //
 //        System.out.println("\n=======DELETE ALL RECORDS=======\n");
-//        ServerOperations.deleteAllRecords();
+//        DBOperations.deleteAllRecords();
 //        System.out.println("\n=======READ RECORDS AFTER ALL RECORDS DELETION=======");
-//        List deleteAll = ServerOperations.displayRecords();
+//        List deleteAll = DBOperations.displayRecords();
 //        if(deleteAll.size() == 0) {
 //            System.out.println("\nNo Records Are Present In The Database Table!\n");
 //        }

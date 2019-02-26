@@ -10,7 +10,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mainClass>javaFX.BaseWindow</mainClass>
+        <mainClass>javafx.BaseWindow</mainClass>
     </properties>
 
     <dependencies>
@@ -85,6 +85,13 @@
         <groupId>net.bytebuddy</groupId>
         <artifactId>byte-buddy</artifactId>
         <version>1.9.10</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+    <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>2.11.1</version>
     </dependency>
 
     </dependencies>
