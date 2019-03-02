@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.chart.*;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -19,10 +20,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import javafx.scene.input.MouseEvent;
+import javafx.util.Callback;
+
 import java.io.IOException;
 import java.net.URL;
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -87,14 +92,13 @@ public class ChartsWindowController implements Initializable {
             ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
             List<Admin> admins = DBOperations.displayAdminRecords(chosenServer.getServerName());
 
-            Duration duration;
+            Integer duration;
             for (Admin a : admins) {
                 duration = SummarizeTime.adminTimesDurationTotal(a.getAdminLink(), dateFrom, dateTo);
-                Long durationTime = duration.getSeconds();
                 System.out.println(a.getAdminName() + "\n" + SummarizeTime.adminTimesDurationTotal(a.getAdminLink(), dateFrom, dateTo));
-                PieChart.Data data = new PieChart.Data(a.getAdminName() + " (" + SummarizeTime.durationToLocalTime(duration) + ")", durationTime);
+                PieChart.Data data = new PieChart.Data(a.getAdminName() + " (" + SummarizeTime.sumTimeString(a.getAdminLink(), dateFrom, dateTo) + ")", duration);
                 pieChartData.add(data);
-                max += durationTime;
+                max += duration;
             }
 
             //
@@ -135,12 +139,13 @@ public class ChartsWindowController implements Initializable {
             for (Admin a : admins) {
                 XYChart.Series<String, Number> lineChartData = new XYChart.Series<>();
 
-                List<Duration> times = SummarizeTime.getTimesListFromPeriod(a.getAdminLink(), dateFrom, dateTo);
-                List<LocalDate> dates = SummarizeTime.getDaysListFromPeriod(dateFrom, dateTo);
+                List<LocalDateTime> dateTimes = SummarizeTime.getTimesListFromPeriod(a.getAdminLink(), dateFrom, dateTo);
+
                 lineChartData.setName(a.getAdminName());
-                for (int i = 0; i < dates.size(); i++) {
-                    System.out.println("date: " + dates.get(i).toString() + "time: " + times.get(i).toMinutes());
-                    lineChartData.getData().add(new XYChart.Data<>(dates.get(i).toString(), times.get(i).toMinutes()));
+                for (int i = 0; i < dateTimes.size(); i++) {
+
+                    System.out.println("date: " + dateTimes.get(i).toLocalDate().toString() + "time: " + dateTimes.get(i).toLocalTime().toSecondOfDay());
+                    lineChartData.getData().add(new XYChart.Data<>(dateTimes.get(i).toLocalDate().toString(), dateTimes.get(i).toLocalTime().toSecondOfDay()));
 //                    System.out.println(times.get(i) + " // " + dates.get(i));
                 }
                 System.out.println(lineChartData.getData());
@@ -170,12 +175,11 @@ public class ChartsWindowController implements Initializable {
 
                     XYChart.Series<String, Number> areaChartData = new XYChart.Series<>();
 
-                    List<LocalDate> dates = SummarizeTime.getDaysListFromPeriod(dateFrom, dateTo);
-                    List<Duration> times = SummarizeTime.getTimesListFromPeriod(a.getAdminLink(), dateFrom, dateTo);
+                    List<LocalDateTime> dateTimes = SummarizeTime.getTimesListFromPeriod(a.getAdminLink(), dateFrom, dateTo);
 
                     areaChartData.setName(a.getAdminName());
-                    for (int i = 0; i < times.size(); i++) {
-                        areaChartData.getData().add(new XYChart.Data<>(dates.get(i).toString(), times.get(i).toMinutes()));
+                    for (int i = 0; i < dateTimes.size(); i++) {
+                        areaChartData.getData().add(new XYChart.Data<>(dateTimes.get(i).toLocalDate().toString(), dateTimes.get(i).toLocalTime().toSecondOfDay()));
                     }
 
                     System.out.println(areaChartData.getData());
@@ -202,14 +206,12 @@ public class ChartsWindowController implements Initializable {
 
             List<Admin> admins = DBOperations.displayAdminRecords(chosenServer.getServerName());
 
-            List<LocalDate> dates = SummarizeTime.getDaysListFromPeriod(dateFrom, dateTo);
-
             for (Admin a : admins) {
                 XYChart.Series<String, Number> barChartData = new XYChart.Series<>();
                 barChartData.setName(a.getAdminName());
-                List<Duration> times = SummarizeTime.getTimesListFromPeriod(a.getAdminLink(), dateFrom, dateTo);
-                for (int i = 0; i < times.size(); i++) {
-                    barChartData.getData().add(new XYChart.Data<>(dates.get(i).toString(), times.get(i).toMinutes()));
+                List<LocalDateTime> dateTimes = SummarizeTime.getTimesListFromPeriod(a.getAdminLink(), dateFrom, dateTo);
+                for (int i = 0; i < dateTimes.size(); i++) {
+                    barChartData.getData().add(new XYChart.Data<>(dateTimes.get(i).toLocalDate().toString(), dateTimes.get(i).toLocalTime().toSecondOfDay()));
                 }
                 System.out.println(barChartData.getData());
                 barChart.getData().add(barChartData);
@@ -233,12 +235,19 @@ public class ChartsWindowController implements Initializable {
         caption.setTextFill(Color.BLACK);
         caption.setStyle("-fx-font: 24 arial;");
 
+        setdateFrom.setValue(LocalDate.now().minusDays(27));
+        setdateTo.setValue(LocalDate.now());
+
+        // Factory to create Cell of DatePicker
+        Callback<DatePicker, DateCell> dayCellFactory= this.getDayCellFactory();
+        setdateFrom.setDayCellFactory(dayCellFactory);
+        setdateTo.setDayCellFactory(dayCellFactory);
+
         //TODO: ADD COLOR FUNCTIONALITY
         //TODO: ADD SAVE TO SCREENSHOT BUTTON
         //TODO: ADD MORE ADMINS TO CHECK CHARTS (ESPECIALLY BARCHART)
-        //TODO: ADD DATE FROM TO FUNCTIONALITY
-        //TODO: REWORK TIMES ON DURATIONS
         //TODO: ADD NOW DATE/CLOCK IN APPLICATION
+        //TODO: BLOCK DAYS BEFORE 28 DAYS FROM NOW
         }
 
         public void chartVisibility (Boolean pieChartVisibility, Boolean lineChartVisibility, Boolean areaChartVisibility, Boolean barChartVisibility) {
@@ -247,4 +256,28 @@ public class ChartsWindowController implements Initializable {
         areaChart.setVisible(areaChartVisibility);
         barChart.setVisible(barChartVisibility);
         }
+
+    // Factory to create Cell of DatePicker
+    private Callback<DatePicker, DateCell> getDayCellFactory() {
+
+        final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
+
+            @Override
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        // Disable Monday, Tueday, Wednesday.
+                        if (item.isBefore(LocalDate.now().minusDays(27)) || item.isAfter(LocalDate.now())) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb;");
+                        }
+                    }
+                };
+            }
+        };
+        return dayCellFactory;
+    }
     }

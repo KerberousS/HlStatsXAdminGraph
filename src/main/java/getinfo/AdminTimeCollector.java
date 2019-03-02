@@ -67,10 +67,10 @@ public class AdminTimeCollector {
             return adminDateList;
         }
 
-            static List<Duration> collectTimes(String HlstatsURL) {
+            static List<LocalTime> collectTimes(String HlstatsURL) {
                 Elements timeList = AdminTimeCollector.getHlstatsTimeRows(HlstatsURL);
                 DateTimeFormatter timePattern = DateTimeFormatter.ofPattern("HH:mm:ss");
-                List<Duration> adminTimeList = new ArrayList<>();
+                List<LocalTime> adminTimeList = new ArrayList<>();
 
                 if (!timeList.isEmpty()) {
                     for (Element time : timeList) {
@@ -85,16 +85,17 @@ public class AdminTimeCollector {
 
                         //Get times
                         String[] splitTimes = splitTimeCloseHTMLTag[0].split(":"); //23:45:47
-                        Long hourCount = Long.valueOf(splitTimes[0]); //23
-                        Long minuteCount = Long.valueOf(splitTimes[1]); //45
-                        Long secondCount = Long.valueOf(splitTimes[2]); //47
+                        Integer hourCount = Integer.valueOf(splitTimes[0]); //23
+                        Integer minuteCount = Integer.valueOf(splitTimes[1]); //45
+                        Integer secondCount = Integer.valueOf(splitTimes[2]); //47
+
 
                         //Add times to make duration
-                        Duration serverConnectionTime = Duration.ofHours(hourCount).plusMinutes(minuteCount).plusSeconds(secondCount);
+                        LocalTime serverConnectionTime = LocalTime.of(hourCount, minuteCount, secondCount);
                         adminTimeList.add(serverConnectionTime);
                     }
                 } else {
-                    adminTimeList.add(Duration.ofSeconds(0)); //Add single no time element if the player hasnt played
+                    adminTimeList.add(LocalTime.MIN); //Add single no time element if the player hasnt played
                 }
 
                 return adminTimeList;
