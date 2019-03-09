@@ -1,8 +1,5 @@
 package hibernate;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +29,9 @@ public class Admin {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "adminID")
     private Set<Admin> admins = new HashSet<Admin>(0);
 
+    @Transient
+    private Boolean adminSelect;
+
     public Admin() {
     }
 
@@ -40,6 +40,7 @@ public class Admin {
         this.adminLink = adminLink;
         this.adminColor = adminColor;
         this.adminServer = adminServer;
+        this.adminSelect = adminSelect;
     }
 
     public Long getAdminID() { return adminID; }
@@ -84,4 +85,12 @@ public class Admin {
     public void setAdmins(Set<Admin> admins) {
         this.admins = admins;
     }
+
+    public Boolean isSelected() {
+        return adminSelect;
     }
+
+    public void setSelected(Boolean adminSelect) {
+        this.adminSelect = adminSelect;
+    }
+}

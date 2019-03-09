@@ -111,6 +111,10 @@
                 onAction="#handleCloseButton" />
     </HBox>
 
+    <CheckBox text="Use admin natural colors" fx:id="adminColorCheckbox"
+              GridPane.columnIndex="0" GridPane.rowIndex="9">
+    </CheckBox>
+
     <stylesheets>
         <URL value="@../basewindow.css" />
     </stylesheets>

@@ -339,6 +339,28 @@ public class DBOperations {
                 return findserverObj;
         }
 
+        public static String findAdminColorByName(String adminName) {
+                String admColor = null;
+                try {
+                        // Getting Session Object From SessionFactory
+                        sessionObj = buildSessionFactory().openSession();
+                        // Getting Transaction Object From Session Object
+                        sessionObj.beginTransaction();
+
+                        String q = "SELECT a.adminColor FROM Admin a WHERE a.adminName = :aname";
+                        Query query = sessionObj.createQuery(q);
+                        query.setParameter("aname", adminName);
+                        admColor = query.getSingleResult().toString();
+                } catch (Exception sqlException) {
+                        if (null != sessionObj.getTransaction()) {
+                                System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
+                                sessionObj.getTransaction().rollback();
+                        }
+                        sqlException.printStackTrace();
+                }
+                return admColor;
+        }
+
         public static void deleteAllAdminRecords() {
         try {
         // Getting Session Object From SessionFactory

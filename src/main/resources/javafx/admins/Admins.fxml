@@ -18,13 +18,15 @@
     <TableView fx:id="adminsList"
                GridPane.columnIndex="0" GridPane.rowIndex="1">
         <columns>
+            <TableColumn fx:id="columnAdminSelect" text="Select">
+            </TableColumn>
             <TableColumn fx:id="columnAdminID" text="ID">
             </TableColumn>
             <TableColumn fx:id="columnAdminName" text="Name">
             </TableColumn>
-            <TableColumn fx:id="columnAdminLink" text="HlStats ID">
-            </TableColumn>
             <TableColumn fx:id="columnAdminColor" text="Color">
+            </TableColumn>
+            <TableColumn fx:id="columnAdminLink" text="HlStats ID">
             </TableColumn>
         </columns>
     </TableView>
