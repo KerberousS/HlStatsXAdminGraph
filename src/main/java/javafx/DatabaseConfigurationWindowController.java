@@ -102,6 +102,7 @@ public class DatabaseConfigurationWindowController implements Initializable {
         assert cancelButton != null : "fx:id=\"cancelButton\" was not injected: check your FXML file 'DatabaseConfiguration.fxml'.";
         assert updateConfiguration != null : "fx:id=\"updateConfiguration\" was not injected: check your FXML file 'DatabaseConfiguration.fxml'.";
         assert updateStatus != null : "fx:id=\"updateStatus\" was not injected: check your FXML file 'DatabaseConfiguration.fxml'.";
+        //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
 
         ConfigOperations config = new ConfigOperations();
         databaseUrlTextField.setText(config.getDatabaseUrl());

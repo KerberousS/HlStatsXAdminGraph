@@ -65,6 +65,7 @@ public class BaseWindowController implements Initializable {
             e.printStackTrace();
         }
     }
+    //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
 
     @FXML
     protected void handleConfigureDatabaseButton(ActionEvent event) {

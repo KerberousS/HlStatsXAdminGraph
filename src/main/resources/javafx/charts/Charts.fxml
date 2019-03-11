@@ -30,7 +30,7 @@
                GridPane.columnIndex="0" GridPane.rowIndex="1">
     </PieChart>
 
-    <LineChart fx:id="lineChart" visible="false" title="Admins Line Graph"
+    <LineChart fx:id="lineChart" visible="false" title="Admins Line Graph" createSymbols="false"
                prefHeight="1280" prefWidth="1024"
                GridPane.columnIndex="0" GridPane.rowIndex="1">
         <xAxis>
@@ -77,27 +77,27 @@
                 GridPane.columnIndex="2" GridPane.rowIndex="1">
     </DatePicker>
 
-    <HBox spacing="10" alignment="bottom_left" fx:id="generatePieChart"
+    <HBox spacing="10" alignment="bottom_left"
           GridPane.columnIndex="1" GridPane.rowIndex="1">
-        <Button text="Pie Chart"
+        <Button text="Pie Chart" fx:id="pieChartButton"
                 onAction="#generatePieChart" />
     </HBox>
 
-    <HBox spacing="25" alignment="bottom_left" fx:id="generateLineChart"
+    <HBox spacing="25" alignment="bottom_left"
           GridPane.columnIndex="1" GridPane.rowIndex="2">
-        <Button text="Line Chart"
+        <Button text="Line Chart" fx:id="lineChartButton"
                 onAction="#generateLineChart" />
     </HBox>
 
-    <HBox spacing="10" alignment="bottom_left" fx:id="generateAreaChart"
+    <HBox spacing="10" alignment="bottom_left"
           GridPane.columnIndex="1" GridPane.rowIndex="3">
-        <Button text="Area Chart"
+        <Button text="Area Chart" fx:id="areaChartButton"
                 onAction="#generateAreaChart" />
     </HBox>
 
-    <HBox spacing="10" alignment="bottom_left" fx:id="generateBarChart"
+    <HBox spacing="10" alignment="bottom_left"
           GridPane.columnIndex="1" GridPane.rowIndex="6">
-        <Button text="Bar Chart"
+        <Button text="Bar Chart" fx:id="barChartButton"
                 onAction="#generateBarChart" />
     </HBox>
 
@@ -105,15 +105,44 @@
           GridPane.columnIndex="0" GridPane.rowIndex="7" >
     </Text>
 
-    <HBox spacing="10" alignment="bottom_left" fx:id="closeButton"
+    <HBox spacing="10" alignment="bottom_left"
           GridPane.columnIndex="0" GridPane.rowIndex="8">
         <Button text="Go back"
                 onAction="#handleCloseButton" />
     </HBox>
 
-    <CheckBox text="Use admin natural colors" fx:id="adminColorCheckbox"
+    <HBox spacing="10" alignment="bottom_left"
               GridPane.columnIndex="0" GridPane.rowIndex="9">
-    </CheckBox>
+        <Button text="Use admin natural colors" fx:id="naturalColorButton"
+                onAction="#handleNaturalAdminColor"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="bottom_left"
+          GridPane.columnIndex="0" GridPane.rowIndex="10">
+        <Button text="Use totally random colors" fx:id="randomColorButton"
+                onAction="#handleRandomAdminColor"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="bottom_left"
+          GridPane.columnIndex="1" GridPane.rowIndex="9">
+        <Button text="Use totally random colors" fx:id="saveToScreenshot"
+                onAction="#handleSaveScreenshot"/>
+    </HBox>
+
+    <!-- Cant do this currently, too much problems
+    <HBox spacing="10" alignment="bottom_left"-->
+          <!--GridPane.columnIndex="2" GridPane.rowIndex="9">-->
+        <!--<Button text="Use random chart colors" fx:id="randomChartColorButton"-->
+                <!--onAction="#handleRandomChartAdminColor"/>-->
+    <!--</HBox>-->
+
+    <ProgressIndicator fx:id="progressIndicator"
+                       GridPane.columnIndex="2" GridPane.rowIndex="8">
+    </ProgressIndicator>
+
+    <ProgressBar fx:id="progressBar"
+                       GridPane.columnIndex="2" GridPane.rowIndex="9">
+    </ProgressBar>
 
     <stylesheets>
         <URL value="@../basewindow.css" />

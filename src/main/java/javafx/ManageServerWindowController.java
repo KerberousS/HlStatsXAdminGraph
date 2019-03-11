@@ -37,6 +37,7 @@ public class ManageServerWindowController implements Initializable {
 
     public static Server chosenServer;
     private List<Server> serversList = DBOperations.displayServerRecords();
+    //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
 
     @FXML
     protected void handleCloseButton(ActionEvent event) {

@@ -86,6 +86,7 @@ public class EditAdminWindowController implements Initializable {
         }
     }
 
+    //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
 
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {

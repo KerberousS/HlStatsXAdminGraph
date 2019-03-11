@@ -87,6 +87,7 @@ public class AddAdminWindowController implements Initializable {
         assert cancelButton != null : "fx:id=\"cancelButton\" was not injected: check your FXML file 'AddAdmin.fxml'.";
         assert addNewAdminButton != null : "fx:id=\"addNewAdminButton\" was not injected: check your FXML file 'AddAdmin.fxml'.";
 
+        //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
 
         chosenServer = BaseWindowController.chosenServer;
     }

@@ -75,5 +75,7 @@ public class AddServerWindowController implements Initializable {
         assert cancelButton != null : "fx:id=\"cancelButton\" was not injected: check your FXML file 'AddServer.fxml'.";
         assert addNewServerButton != null : "fx:id=\"addNewServerButton\" was not injected: check your FXML file 'AddServer.fxml'.";
 
+        //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
+
     }
 }

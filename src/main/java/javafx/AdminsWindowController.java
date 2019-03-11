@@ -143,6 +143,7 @@ public class AdminsWindowController implements Initializable {
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
         assert adminsList != null : "fx:id=\"adminsList\" was not injected: check your FXML file 'admins.fxml'.";
+        //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
 
         columnAdminID.setCellValueFactory(new PropertyValueFactory<Admin, String>("adminID"));
         columnAdminName.setCellValueFactory(new PropertyValueFactory<Admin, String>("adminName"));
