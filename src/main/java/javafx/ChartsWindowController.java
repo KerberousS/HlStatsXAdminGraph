@@ -4,6 +4,7 @@ import getinfo.SummarizeTime;
 import hibernate.Admin;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -85,15 +87,18 @@ public class ChartsWindowController implements Initializable {
     private Button randomColorButton;
 
     @FXML
+    private Button defaultColorButton;
+
+    @FXML
     private ProgressIndicator progressIndicator;
     @FXML
     private ProgressBar progressBar;
 
     public static List<Admin> adminsList;
+    private static List<String> defaultColorsList = new ArrayList<>();
 
     private LocalDate dateFrom;
     private LocalDate dateTo;
-
     private Integer workToDo;
 
     @FXML
@@ -111,16 +116,16 @@ public class ChartsWindowController implements Initializable {
 
     @FXML
     protected void generatePieChart(ActionEvent event) {
-        chartVisibility(true, false, false, false);
-        chartButtonDisable(true, false, false, false);
-        colorButtonDisable(false, false);
+        setChartsVisiblity(true, false, false, false);
+        setChartButtonsDisableStatus(true, false, false, false);
+        setColorButtonsDisableStatus(false, false, true);
     }
 
     @FXML
     protected void generateLineChart(ActionEvent event) {
-        chartButtonDisable(false, true, false, false);
-        chartVisibility(false, true, false, false);
-        colorButtonDisable(false, false);
+        setChartButtonsDisableStatus(false, true, false, false);
+        setChartsVisiblity(false, true, false, false);
+        setColorButtonsDisableStatus(false, false, true);
     }
 
     @FXML
@@ -150,7 +155,7 @@ public class ChartsWindowController implements Initializable {
             Error.setText("Something went wrong");
             Error.setFill(Color.RED);
         }
-        chartVisibility(false, false, true, false);
+        setChartsVisiblity(false, false, true, false);
     }
 
     @FXML
@@ -176,7 +181,7 @@ public class ChartsWindowController implements Initializable {
             Error.setText("Something went wrong");
             Error.setFill(Color.RED);
         }
-        chartVisibility(false, false, false, true);
+        setChartsVisiblity(false, false, false, true);
     }
 
     @FXML
@@ -185,7 +190,7 @@ public class ChartsWindowController implements Initializable {
     }
     @FXML
     protected void handleNaturalAdminColor(ActionEvent event) {
-        naturalColorButton.setDisable(true);
+        setColorButtonsDisableStatus(true, false, false);
         if (pieChart.isVisible()) {
             Platform.runLater(() -> {
                 for (int i = 0; i < adminsList.size(); i++) {
@@ -216,8 +221,46 @@ public class ChartsWindowController implements Initializable {
     }
 
     @FXML
+    protected void handleDefaultChartColor(ActionEvent event) {
+        setColorButtonsDisableStatus(false, false, true);
+        if (pieChart.isVisible()) {
+            Platform.runLater(() -> {
+                for (int i = 0; i < adminsList.size(); i++) {
+                    //Get nodes
+                    Node adminPieChartColor = pieChart.lookup(".default-color" + i + ".chart-pie");
+                    Node adminLegendSymbol = pieChart.lookup(".default-color" + i + ".chart-legend-item-symbol");
+
+                    //Get default color
+                    String newRGBColor = defaultColorsList.get(i);
+
+                    //Set new style
+                    adminPieChartColor.setStyle("-fx-pie-color: " + newRGBColor);
+                    adminLegendSymbol.setStyle("-fx-background-color: " + newRGBColor);
+                }
+            });
+        } else if (lineChart.isVisible()) {
+            Platform.runLater(() -> {
+                for (int i = 0; i < adminsList.size(); i++) {
+                    //Get nodes
+                    Node adminLineStrokeColor = lineChart.lookup(".default-color" + i + ".chart-series-line");
+                    Node adminLineSymbolColor = lineChart.lookup(".default-color" + i + ".chart-line-symbol");
+                    Node adminLegendSymbol = lineChart.lookup(".default-color" + i + ".chart-legend-item-symbol");
+
+                    //Get default color
+                    String newRGBColor = defaultColorsList.get(i);
+
+                    //Set new node styles
+                    adminLineStrokeColor.setStyle("-fx-stroke: " + newRGBColor);
+                    adminLineSymbolColor.setStyle("-fx-background-color: " + newRGBColor);
+                    adminLegendSymbol.setStyle("-fx-background-color: " + newRGBColor);
+                }
+            });
+        }
+    }
+
+    @FXML
     protected void handleRandomAdminColor(ActionEvent event) {
-        naturalColorButton.setDisable(false);
+        setColorButtonsDisableStatus(false, false, false);
         if (pieChart.isVisible()) {
             Platform.runLater(() -> {
                 for (int i = 0; i < adminsList.size(); i++) {
@@ -268,6 +311,21 @@ public class ChartsWindowController implements Initializable {
             });
         }
     }
+    private void rePopulateCharts() {
+        setChartButtonsDisableStatus(true, true, true, true);
+        setColorButtonsDisableStatus(true, true, true);
+
+        clearChartData.restart();
+
+        clearChartData.setOnSucceeded(e-> {
+                    populatePieChart.restart();
+                    populateLineChart.restart();
+                });
+
+        populatePieChart.setOnSucceeded(e-> pieChartButton.setDisable(false));
+        populateLineChart.setOnSucceeded(e-> lineChartButton.setDisable(false));
+        populatePieChart.setOnSucceeded(e-> setColorButtonsDisableStatus(false, false, true));
+    }
 
     private void populateCharts() {
         populatePieChart.restart();
@@ -276,15 +334,6 @@ public class ChartsWindowController implements Initializable {
         populatePieChart.setOnSucceeded(e-> pieChartButton.setDisable(false));
         populateLineChart.setOnSucceeded(e-> lineChartButton.setDisable(false));
     }
-//    @FXML
-//    protected void handleRandomChartAdminColor(ActionEvent event) {
-//        naturalColorButton.setDisable(false);
-//        if (pieChart.isVisible()) {
-//            generatePieChart(event);
-//        } else if (lineChart.isVisible()) {
-//            generateLineChart(event);
-//        }
-//    } Not to do, unfortunately i cant do this fucking thing, it just refuses to work and i dont want to waste that much time with this
 
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
@@ -298,6 +347,19 @@ public class ChartsWindowController implements Initializable {
         setdateFrom.setValue(LocalDate.now().minusDays(27));
         setdateTo.setValue(LocalDate.now());
 
+        setdateFrom.valueProperty().addListener((observableValue, localDate, t1) -> {
+            rePopulateCharts();
+            setColorButtonsDisableStatus(false, false, true);
+        });
+
+        setdateTo.valueProperty().addListener(new ChangeListener<LocalDate>() {
+            @Override
+            public void changed(ObservableValue<? extends LocalDate> observableValue, LocalDate localDate, LocalDate t1) {
+                rePopulateCharts();
+                setColorButtonsDisableStatus(false, false, true);
+            }
+        });
+
         // Factory to create Cell of DatePicker
         Callback<DatePicker, DateCell> dayCellFactory = this.getDayCellFactory();
         setdateFrom.setDayCellFactory(dayCellFactory);
@@ -305,8 +367,8 @@ public class ChartsWindowController implements Initializable {
 
         adminsList = AdminsWindowController.selectedAdminsList;
 
-        chartButtonDisable(true, true, true, true);
-        colorButtonDisable(true, true);
+        setChartButtonsDisableStatus(true, true, true, true);
+        setColorButtonsDisableStatus(true, true, true);
 
         //Set up progress bars
         progressBar.setProgress(0);
@@ -317,7 +379,13 @@ public class ChartsWindowController implements Initializable {
 
         progressBar.progressProperty().bind(populatePieChart.progressProperty());
         progressIndicator.progressProperty().bind(populatePieChart.progressProperty());
+
         populateCharts();
+        addDefaultColorsToList();
+        String defaultChartColors = getClass().getResource("chartsDefaultColors.css").toExternalForm();
+        chartsWindow.getStylesheets().add(defaultChartColors);
+
+
 
         //TODO: ADD MORE ADMINS TO CHECK CHARTS (ESPECIALLY BARCHART)
         //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
@@ -325,23 +393,42 @@ public class ChartsWindowController implements Initializable {
         //TODO: MAKE ALL DATA APPEAR WHEN LOADING WINDOW
     }
 
-    private void chartVisibility(Boolean pieChartVisibility, Boolean lineChartVisibility, Boolean areaChartVisibility, Boolean barChartVisibility) {
+    private void addDefaultColorsToList() {
+        defaultColorsList.add("#e6194B");
+        defaultColorsList.add("#3cb44b");
+        defaultColorsList.add("#4363d8");
+        defaultColorsList.add("#911eb4");
+        defaultColorsList.add("#f58231");
+        defaultColorsList.add("#bfef45");
+        defaultColorsList.add("#42d4f4");
+        defaultColorsList.add("#ffe119");
+        defaultColorsList.add("#f032e6");
+        defaultColorsList.add("#aaffc3");
+        defaultColorsList.add("#9A6324");
+        defaultColorsList.add("#800000");
+        defaultColorsList.add("#ffd8b1");
+        defaultColorsList.add("#e6beff");
+        defaultColorsList.add("#469990");
+    }
+
+    private void setChartsVisiblity(Boolean pieChartVisibility, Boolean lineChartVisibility, Boolean areaChartVisibility, Boolean barChartVisibility) {
         pieChart.setVisible(pieChartVisibility);
         lineChart.setVisible(lineChartVisibility);
         areaChart.setVisible(areaChartVisibility);
         barChart.setVisible(barChartVisibility);
     }
 
-    private void chartButtonDisable(Boolean pieChartButtonDisabled, Boolean lineChartButtonDisabled, Boolean areaChartButtonDisabled, Boolean barChartButtonDisabled) {
-        pieChartButton.setDisable(pieChartButtonDisabled);
-        lineChartButton.setDisable(lineChartButtonDisabled);
-        areaChartButton.setDisable(areaChartButtonDisabled);
-        barChartButton.setDisable(barChartButtonDisabled);
+    private void setChartButtonsDisableStatus(Boolean pieChartButtonDisable, Boolean lineChartButtonDisable, Boolean areaChartButtonDisable, Boolean barChartButtonDisable) {
+        pieChartButton.setDisable(pieChartButtonDisable);
+        lineChartButton.setDisable(lineChartButtonDisable);
+        areaChartButton.setDisable(areaChartButtonDisable);
+        barChartButton.setDisable(barChartButtonDisable);
     }
 
-    private void colorButtonDisable(Boolean naturalAdminColorDisabled, Boolean randomColorDisabled) {
-        naturalColorButton.setDisable(naturalAdminColorDisabled);
-        randomColorButton.setDisable(randomColorDisabled);
+    private void setColorButtonsDisableStatus(Boolean naturalColorButtonDisable, Boolean randomColorButtonDisable, Boolean defaultColorButtonDisable) {
+        naturalColorButton.setDisable(naturalColorButtonDisable);
+        randomColorButton.setDisable(randomColorButtonDisable);
+        defaultColorButton.setDisable(defaultColorButtonDisable);
     }
 
     private static Integer randomInt(Integer scopeInclusive) {
@@ -445,6 +532,29 @@ public class ChartsWindowController implements Initializable {
                                     });
                         }
                     });
+                    return null;
+                }
+            };
+        }
+    };
+
+    Service clearChartData = new Service() {
+        @Override
+        protected Task createTask() {
+            return new Task() {
+                @Override
+                protected Void call() {
+                    Platform.runLater(() -> {
+                        pieChart.getData().clear();
+                        lineChart.getData().clear();
+                    });
+                    if (!lineChart.getData().isEmpty()) {
+                        try {
+                            Thread.sleep(1000); //FIXME, I cant get this to work in any other way other than that...
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     return null;
                 }
             };

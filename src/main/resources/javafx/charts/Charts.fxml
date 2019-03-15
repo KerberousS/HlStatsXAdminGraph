@@ -124,8 +124,14 @@
     </HBox>
 
     <HBox spacing="10" alignment="bottom_left"
+          GridPane.columnIndex="0" GridPane.rowIndex="11">
+        <Button text="Use default colors" fx:id="defaultColorButton"
+                onAction="#handleDefaultChartColor"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="bottom_left"
           GridPane.columnIndex="1" GridPane.rowIndex="9">
-        <Button text="Use totally random colors" fx:id="saveToScreenshot"
+        <Button text="Save to screenshot mock" fx:id="saveToScreenshot"
                 onAction="#handleSaveScreenshot"/>
     </HBox>
 
