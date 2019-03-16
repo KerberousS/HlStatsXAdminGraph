@@ -23,7 +23,7 @@ public class AdminTimeCollector {
             Document doc = Jsoup.connect(HlstatsURL).get();
             Elements timeRows = doc.select("td:nth-child(4)");
 
-            if(timeRows != null) {
+            if(timeRows != null && timeRows.size()!=0) {
                 timeRows.remove(0);
             }
             return timeRows;
@@ -39,7 +39,7 @@ public class AdminTimeCollector {
         Document doc = Jsoup.connect(HlstatsURL).get();
         Elements dateRows = doc.select("td:first-child");
 
-            if(dateRows != null) {
+            if(dateRows != null && dateRows.size()!=0) {
                 dateRows.remove(0);
             }
             return dateRows;
@@ -55,7 +55,6 @@ public class AdminTimeCollector {
 
             List<LocalDate> adminDateList = new ArrayList<>();
             DateTimeFormatter dayPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
             for (Element date : dateElements) {
                 String[] splitDateOpenHTMLTag = date.toString().split("\">");
                 String[] splitDateCloseHTMLTag = splitDateOpenHTMLTag[1].split("</");
@@ -63,7 +62,6 @@ public class AdminTimeCollector {
                 String serverConnectionDate = splitDateCloseHTMLTag[0];
                 adminDateList.add(LocalDate.parse(serverConnectionDate, dayPattern));
             }
-
             return adminDateList;
         }
 

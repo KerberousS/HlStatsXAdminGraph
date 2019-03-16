@@ -83,6 +83,7 @@ public class SummarizeTime {
         List<LocalTime> adminTimes = AdminTimeCollector.collectTimes(HlstatsURL);
 
         List<LocalDateTime> adminDateTimes = new ArrayList<>();
+        if(!adminDates.isEmpty())
         for (int i=0; i<adminDates.size(); i++) {
             adminDateTimes.add(LocalDateTime.of(adminDates.get(i), adminTimes.get(i)));
         }
@@ -125,6 +126,7 @@ public class SummarizeTime {
         List<LocalDateTime> adminTimeDates = cutAdminDateTimesToPeriod(HlstatsURL, startDay, endDay);
         List<LocalDateTime> fullAdminDateTime = new ArrayList<>();
 
+
         int count = 0;
         for (LocalDate dp : daysPeriod) {
             if (!adminTimeDates.isEmpty()) {
@@ -137,7 +139,7 @@ public class SummarizeTime {
                 LocalDateTime minimalAdminDateTime = LocalDateTime.of(dp, LocalTime.MIN);
                 fullAdminDateTime.add(minimalAdminDateTime);
             }
-            } else if (adminTimeDates.isEmpty()){
+            } else if (adminTimeDates.isEmpty() || adminTimeDates.size()==0){
                 LocalDateTime minimalAdminDateTime = LocalDateTime.of(dp, LocalTime.MIN);
                 fullAdminDateTime.add(minimalAdminDateTime);
             }

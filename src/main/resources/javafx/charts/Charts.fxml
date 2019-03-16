@@ -80,25 +80,25 @@
     <HBox spacing="10" alignment="bottom_left"
           GridPane.columnIndex="1" GridPane.rowIndex="1">
         <Button text="Pie Chart" fx:id="pieChartButton"
-                onAction="#generatePieChart" />
+                onAction="#showPieChart" />
     </HBox>
 
     <HBox spacing="25" alignment="bottom_left"
           GridPane.columnIndex="1" GridPane.rowIndex="2">
         <Button text="Line Chart" fx:id="lineChartButton"
-                onAction="#generateLineChart" />
+                onAction="#showLineChart" />
     </HBox>
 
     <HBox spacing="10" alignment="bottom_left"
           GridPane.columnIndex="1" GridPane.rowIndex="3">
         <Button text="Area Chart" fx:id="areaChartButton"
-                onAction="#generateAreaChart" />
+                onAction="#showAreaChart" />
     </HBox>
 
     <HBox spacing="10" alignment="bottom_left"
           GridPane.columnIndex="1" GridPane.rowIndex="6">
         <Button text="Bar Chart" fx:id="barChartButton"
-                onAction="#generateBarChart" />
+                onAction="#showBarChart" />
     </HBox>
 
     <Text fx:id="Error"

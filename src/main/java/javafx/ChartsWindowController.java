@@ -9,9 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -94,7 +92,7 @@ public class ChartsWindowController implements Initializable {
     @FXML
     private ProgressBar progressBar;
 
-    public static List<Admin> adminsList;
+    private static List<Admin> adminsList;
     private static List<String> defaultColorsList = new ArrayList<>();
 
     private LocalDate dateFrom;
@@ -103,7 +101,6 @@ public class ChartsWindowController implements Initializable {
 
     @FXML
     protected void handleCloseButton(ActionEvent event) {
-
         try {
             Parent baseWindow = FXMLLoader.load(getClass().getResource("admins/admins.fxml"));
             chartsWindow.getChildren().setAll(baseWindow);
@@ -113,74 +110,23 @@ public class ChartsWindowController implements Initializable {
             Error.setFill(Color.RED);
         }
     }
-
     @FXML
-    protected void generatePieChart(ActionEvent event) {
+    protected void showPieChart(ActionEvent event) {
         setChartsVisiblity(true, false, false, false);
-        setChartButtonsDisableStatus(true, false, false, false);
-        setColorButtonsDisableStatus(false, false, true);
     }
 
     @FXML
-    protected void generateLineChart(ActionEvent event) {
-        setChartButtonsDisableStatus(false, true, false, false);
+    protected void showLineChart(ActionEvent event) {
         setChartsVisiblity(false, true, false, false);
-        setColorButtonsDisableStatus(false, false, true);
     }
 
     @FXML
-    protected void generateAreaChart(ActionEvent event) {
-        areaChart.getData().clear();
-        try {
-            dateFrom = setdateFrom.getValue();
-            dateTo = setdateTo.getValue();
-
-            for (Admin a : adminsList) {
-
-                XYChart.Series<String, Number> areaChartData = new XYChart.Series<>();
-
-                List<LocalDateTime> dateTimes = SummarizeTime.getTimesListFromPeriod(a.getAdminLink(), dateFrom, dateTo);
-
-                areaChartData.setName(a.getAdminName());
-                for (int i = 0; i < dateTimes.size(); i++) {
-                    areaChartData.getData().add(new XYChart.Data<>(dateTimes.get(i).toLocalDate().toString(), dateTimes.get(i).toLocalTime().toSecondOfDay()));
-                }
-
-                System.out.println(areaChartData.getData());
-                areaChart.getData().add(areaChartData);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Error.setText("Something went wrong");
-            Error.setFill(Color.RED);
-        }
+    protected void showAreaChart(ActionEvent event) {
         setChartsVisiblity(false, false, true, false);
     }
 
     @FXML
-    protected void generateBarChart(ActionEvent event) {
-        barChart.getData().clear();
-        barChart.setCategoryGap(5);
-        try {
-            dateFrom = setdateFrom.getValue();
-            dateTo = setdateTo.getValue();
-
-            for (Admin a : adminsList) {
-                XYChart.Series<String, Number> barChartData = new XYChart.Series<>();
-                barChartData.setName(a.getAdminName());
-                List<LocalDateTime> dateTimes = SummarizeTime.getTimesListFromPeriod(a.getAdminLink(), dateFrom, dateTo);
-                for (int i = 0; i < dateTimes.size(); i++) {
-                    barChartData.getData().add(new XYChart.Data<>(dateTimes.get(i).toLocalDate().toString(), dateTimes.get(i).toLocalTime().toSecondOfDay()));
-                }
-                System.out.println(barChartData.getData());
-                barChart.getData().add(barChartData);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Error.setText("Something went wrong");
-            Error.setFill(Color.RED);
-        }
+    protected void showBarChart(ActionEvent event) {
         setChartsVisiblity(false, false, false, true);
     }
 
@@ -198,9 +144,12 @@ public class ChartsWindowController implements Initializable {
                     Node adminPieChartColor = pieChart.lookup(".default-color" + i + ".chart-pie");
                     Node adminLegendSymbol = pieChart.lookup(".default-color" + i + ".chart-legend-item-symbol");
 
+                    //Get color
+                    String adminColor = adminsList.get(i).getAdminColor();
+
                     //Set new style
-                    adminPieChartColor.setStyle("-fx-pie-color: " + "#" + adminsList.get(i).getAdminColor());
-                    adminLegendSymbol.setStyle("-fx-background-color: " + "#" + adminsList.get(i).getAdminColor());
+                    adminPieChartColor.setStyle("-fx-pie-color: " + "#" + adminColor);
+                    adminLegendSymbol.setStyle("-fx-background-color: " + "#" + adminColor);
                 }
             });
         } else if (lineChart.isVisible()) {
@@ -211,11 +160,46 @@ public class ChartsWindowController implements Initializable {
                     Node adminLineSymbolColor = lineChart.lookup(".default-color" + i + ".chart-line-symbol");
                     Node adminLegendSymbol = lineChart.lookup(".default-color" + i + ".chart-legend-item-symbol");
 
+                    //Get color
+                    String adminColor = adminsList.get(i).getAdminColor();
+
                     //Set new node styles
-                    adminLineStrokeColor.setStyle("-fx-stroke: " + "#" + adminsList.get(i).getAdminColor());
-                    adminLineSymbolColor.setStyle("-fx-background-color: " + "#" + adminsList.get(i).getAdminColor());
-                    adminLegendSymbol.setStyle("-fx-background-color: " + "#" + adminsList.get(i).getAdminColor());
+                    adminLineStrokeColor.setStyle("-fx-stroke: " + "#" + adminColor);
+                    adminLineSymbolColor.setStyle("-fx-background-color: " + "#" + adminColor);
+                    adminLegendSymbol.setStyle("-fx-background-color: " + "#" + adminColor);
                 }
+            });
+        } else if (areaChart.isVisible()) {
+            Platform.runLater(() -> {
+                for (int i = 0; i < adminsList.size(); i++) {
+                    //Get nodes
+                    Node adminAreaStrokeColor = areaChart.lookup(".default-color" + i + ".chart-series-area-line");
+                    Node adminAreaSymbolColor = areaChart.lookup(".default-color" + i + ".chart-area-symbol");
+                    Node adminAreaFillColor = areaChart.lookup(".default-color" + i + ".chart-series-area-fill");
+                    Node adminLegendSymbol = areaChart.lookup(".default-color" + i + ".chart-legend-item-symbol");
+
+                    //Get color
+                    String adminColor = adminsList.get(i).getAdminColor();
+
+                    //Set new node styles
+                    adminAreaStrokeColor.setStyle("-fx-stroke: " + "#" + adminColor);
+                    adminAreaSymbolColor.setStyle("-fx-background-color: " + "#" + adminColor);
+                    adminAreaFillColor.setStyle("-fx-fill: " + "#" + adminColor); //TODO: ADD ALPHA TO COLOR
+                    adminLegendSymbol.setStyle("-fx-background-color: " + "#" + adminColor);
+                }
+            });
+        } else if (barChart.isVisible()) {
+            Platform.runLater(() -> {
+                    for (int i = 0; i < adminsList.size(); i++) {
+
+                        //Get admin color
+                        String adminColor = adminsList.get(i).getAdminColor();
+
+                        //Set new node styles
+                        for (Node n : barChart.lookupAll(".default-color" + i + ".chart-bar")) {
+                            n.setStyle("-fx-bar-fill: " + "#" + adminColor);
+                        }
+                    }
             });
         }
     }
@@ -318,21 +302,39 @@ public class ChartsWindowController implements Initializable {
         clearChartData.restart();
 
         clearChartData.setOnSucceeded(e-> {
-                    populatePieChart.restart();
-                    populateLineChart.restart();
+            populatePieChart.restart();
+            populateLineChart.restart();
+            populateAreaChart.restart();
+            populateBarChart.restart();
                 });
 
+        //On failed
+        populatePieChart.setOnFailed(e-> {
+            Error.setText(this.getClass().getName() + "has failed, reason: " + populatePieChart.getException().toString());
+            Error.setFill(Color.RED);
+        });
+        populateLineChart.setOnFailed(e-> {
+            Error.setText(this.getClass().getName() + "has failed, reason: " + populateLineChart.getException().toString());
+            Error.setFill(Color.RED);
+        });
+        populateAreaChart.setOnFailed(e-> {
+            Error.setText(this.getClass().getName() + "has failed, reason: " + populateAreaChart.getException().toString());
+            Error.setFill(Color.RED);
+        });
+        populateBarChart.setOnFailed(e-> {
+            Error.setText(this.getClass().getName() + "has failed, reason: " + populateBarChart.getException().toString());
+            Error.setFill(Color.RED);
+        });
+
+
+        //If succeeded
         populatePieChart.setOnSucceeded(e-> pieChartButton.setDisable(false));
         populateLineChart.setOnSucceeded(e-> lineChartButton.setDisable(false));
-        populatePieChart.setOnSucceeded(e-> setColorButtonsDisableStatus(false, false, true));
-    }
-
-    private void populateCharts() {
-        populatePieChart.restart();
-        populateLineChart.restart();
-
-        populatePieChart.setOnSucceeded(e-> pieChartButton.setDisable(false));
-        populateLineChart.setOnSucceeded(e-> lineChartButton.setDisable(false));
+        populateAreaChart.setOnSucceeded(e-> areaChartButton.setDisable(false));
+        populateBarChart.setOnSucceeded(e-> {
+            barChartButton.setDisable(false);
+            setColorButtonsDisableStatus(false, false, true);
+        });
     }
 
     @Override // This method is called by the FXMLLoader when initialization is complete
@@ -367,9 +369,6 @@ public class ChartsWindowController implements Initializable {
 
         adminsList = AdminsWindowController.selectedAdminsList;
 
-        setChartButtonsDisableStatus(true, true, true, true);
-        setColorButtonsDisableStatus(true, true, true);
-
         //Set up progress bars
         progressBar.setProgress(0);
         progressIndicator.setProgress(0);
@@ -380,17 +379,13 @@ public class ChartsWindowController implements Initializable {
         progressBar.progressProperty().bind(populatePieChart.progressProperty());
         progressIndicator.progressProperty().bind(populatePieChart.progressProperty());
 
-        populateCharts();
+        rePopulateCharts();
         addDefaultColorsToList();
-        String defaultChartColors = getClass().getResource("chartsDefaultColors.css").toExternalForm();
-        chartsWindow.getStylesheets().add(defaultChartColors);
+//        String defaultChartColors = getClass().getResource("chartsDefaultColors.css").toExternalForm();
+//        chartsWindow.getStylesheets().add(defaultChartColors);
 
-
-
-        //TODO: ADD MORE ADMINS TO CHECK CHARTS (ESPECIALLY BARCHART)
         //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
-        //TODO: ADD LOADING BARS EVERYWHERE WHERE NEEDED
-        //TODO: MAKE ALL DATA APPEAR WHEN LOADING WINDOW
+        //TODO: CHECK LOADING BAR AFTER GRAPHICAL REWORK
     }
 
     private void addDefaultColorsToList() {
@@ -461,37 +456,6 @@ public class ChartsWindowController implements Initializable {
         return dayCellFactory;
     }
 
-    Service populateLineChart = new Service() {
-        @Override
-        protected Task createTask() {
-            return new Task() {
-                @Override
-                protected Void call() {
-                    dateFrom = setdateFrom.getValue();
-                    dateTo = setdateTo.getValue();
-
-                    for (Admin a : adminsList) {
-                        XYChart.Series<String, Number> lineChartData = new XYChart.Series<>();
-
-                        List<LocalDateTime> dateTimes = SummarizeTime.getTimesListFromPeriod(a.getAdminLink(), dateFrom, dateTo);
-
-                        lineChartData.setName(a.getAdminName());
-                        Platform.runLater(() -> {
-                            for (int i = 0; i < dateTimes.size(); i++) {
-                                //System.out.println("date: " + dateTimes.get(i).toLocalDate().toString() + "time: " + dateTimes.get(i).toLocalTime().toSecondOfDay());
-                                lineChartData.getData().add(new XYChart.Data<>(dateTimes.get(i).toLocalDate().toString(), dateTimes.get(i).toLocalTime().toSecondOfDay()));
-                            }
-                            lineChart.getData().add(lineChartData);
-                        });
-                    }
-                    return null;
-                }
-            };
-        }
-    };
-
-
-
     Service populatePieChart = new Service() {
         @Override
         protected Task createTask() {
@@ -515,7 +479,6 @@ public class ChartsWindowController implements Initializable {
                         this.updateProgress(progress, workToDo);
                     }
 
-                    //TODO: ADD PLATFORM RUNLATER
                     Platform.runLater(() -> pieChart.setData(pieChartData));
 
                     final Double finalMax = max;
@@ -538,6 +501,93 @@ public class ChartsWindowController implements Initializable {
         }
     };
 
+    Service populateLineChart = new Service() {
+        @Override
+        protected Task createTask() {
+            return new Task() {
+                @Override
+                protected Void call() {
+                    dateFrom = setdateFrom.getValue();
+                    dateTo = setdateTo.getValue();
+
+                    for (Admin a : adminsList) {
+                        XYChart.Series<String, Number> lineChartData = new XYChart.Series<>();
+
+                        List<LocalDateTime> dateTimes = SummarizeTime.getTimesListFromPeriod(a.getAdminLink(), dateFrom, dateTo);
+                        //System.out.println(a.getAdminName()); Debug line
+                        lineChartData.setName(a.getAdminName());
+                        Platform.runLater(() -> {
+                            for (int i = 0; i < dateTimes.size(); i++) {
+                                //System.out.println("date: " + dateTimes.get(i).toLocalDate().toString() + "time: " + dateTimes.get(i).toLocalTime().toSecondOfDay()); Debug
+                                lineChartData.getData().add(new XYChart.Data<>(dateTimes.get(i).toLocalDate().toString(), dateTimes.get(i).toLocalTime().toSecondOfDay()));
+                            }
+                            lineChart.getData().add(lineChartData);
+                        });
+                    }
+                    return null;
+                }
+            };
+        }
+    };
+
+
+    Service populateAreaChart = new Service() {
+        @Override
+        protected Task createTask() {
+            return new Task() {
+                @Override
+                protected Void call() {
+                    dateFrom = setdateFrom.getValue();
+                    dateTo = setdateTo.getValue();
+
+                    for (Admin a : adminsList) {
+
+                        XYChart.Series<String, Number> areaChartData = new XYChart.Series<>();
+
+                        List<LocalDateTime> dateTimes = SummarizeTime.getTimesListFromPeriod(a.getAdminLink(), dateFrom, dateTo);
+
+                        areaChartData.setName(a.getAdminName());
+                        Platform.runLater(() -> {
+                            for (int i = 0; i < dateTimes.size(); i++) {
+                                areaChartData.getData().add(new XYChart.Data<>(dateTimes.get(i).toLocalDate().toString(), dateTimes.get(i).toLocalTime().toSecondOfDay()));
+                            }
+                            areaChart.getData().add(areaChartData);
+                        });
+                    }
+                    return null;
+                }
+            };
+        }
+    };
+
+    Service populateBarChart = new Service() {
+        @Override
+        protected Task createTask() {
+            return new Task() {
+                @Override
+                protected Void call() {
+                    dateFrom = setdateFrom.getValue();
+                    dateTo = setdateTo.getValue();
+
+                    for (Admin a : adminsList) {
+                        XYChart.Series<String, Number> barChartData = new XYChart.Series<>();
+                        barChartData.setName(a.getAdminName());
+                        List<LocalDateTime> dateTimes = SummarizeTime.getTimesListFromPeriod(a.getAdminLink(), dateFrom, dateTo);
+
+                        Platform.runLater(() -> {
+                            for (int i = 0; i < dateTimes.size(); i++) {
+                                barChartData.getData().add(new XYChart.Data<>(dateTimes.get(i).toLocalDate().toString(), dateTimes.get(i).toLocalTime().toSecondOfDay()));
+                            }
+                            //System.out.println(barChartData.getData());
+                            barChart.getData().add(barChartData);
+                        });
+                    }
+                    return null;
+                }
+            };
+        }
+    };
+
     Service clearChartData = new Service() {
         @Override
         protected Task createTask() {
@@ -547,14 +597,14 @@ public class ChartsWindowController implements Initializable {
                     Platform.runLater(() -> {
                         pieChart.getData().clear();
                         lineChart.getData().clear();
-                    });
-                    if (!lineChart.getData().isEmpty()) {
+                        areaChart.getData().clear();
+                        barChart.getData().clear();
                         try {
-                            Thread.sleep(1000); //FIXME, I cant get this to work in any other way other than that...
+                            Thread.sleep(1000); //FIXME, I cant get this to work in any other way other than that... This is additional time for chart to actually clear
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                    }
+                    });
                     return null;
                 }
             };
