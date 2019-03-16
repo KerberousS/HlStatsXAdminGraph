@@ -207,39 +207,7 @@ public class ChartsWindowController implements Initializable {
     @FXML
     protected void handleDefaultChartColor(ActionEvent event) {
         setColorButtonsDisableStatus(false, false, true);
-        if (pieChart.isVisible()) {
-            Platform.runLater(() -> {
-                for (int i = 0; i < adminsList.size(); i++) {
-                    //Get nodes
-                    Node adminPieChartColor = pieChart.lookup(".default-color" + i + ".chart-pie");
-                    Node adminLegendSymbol = pieChart.lookup(".default-color" + i + ".chart-legend-item-symbol");
-
-                    //Get default color
-                    String newRGBColor = defaultColorsList.get(i);
-
-                    //Set new style
-                    adminPieChartColor.setStyle("-fx-pie-color: " + newRGBColor);
-                    adminLegendSymbol.setStyle("-fx-background-color: " + newRGBColor);
-                }
-            });
-        } else if (lineChart.isVisible()) {
-            Platform.runLater(() -> {
-                for (int i = 0; i < adminsList.size(); i++) {
-                    //Get nodes
-                    Node adminLineStrokeColor = lineChart.lookup(".default-color" + i + ".chart-series-line");
-                    Node adminLineSymbolColor = lineChart.lookup(".default-color" + i + ".chart-line-symbol");
-                    Node adminLegendSymbol = lineChart.lookup(".default-color" + i + ".chart-legend-item-symbol");
-
-                    //Get default color
-                    String newRGBColor = defaultColorsList.get(i);
-
-                    //Set new node styles
-                    adminLineStrokeColor.setStyle("-fx-stroke: " + newRGBColor);
-                    adminLineSymbolColor.setStyle("-fx-background-color: " + newRGBColor);
-                    adminLegendSymbol.setStyle("-fx-background-color: " + newRGBColor);
-                }
-            });
-        }
+        rePopulateCharts();
     }
 
     @FXML
@@ -380,30 +348,9 @@ public class ChartsWindowController implements Initializable {
         progressIndicator.progressProperty().bind(populatePieChart.progressProperty());
 
         rePopulateCharts();
-        addDefaultColorsToList();
-//        String defaultChartColors = getClass().getResource("chartsDefaultColors.css").toExternalForm();
-//        chartsWindow.getStylesheets().add(defaultChartColors);
 
         //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
         //TODO: CHECK LOADING BAR AFTER GRAPHICAL REWORK
-    }
-
-    private void addDefaultColorsToList() {
-        defaultColorsList.add("#e6194B");
-        defaultColorsList.add("#3cb44b");
-        defaultColorsList.add("#4363d8");
-        defaultColorsList.add("#911eb4");
-        defaultColorsList.add("#f58231");
-        defaultColorsList.add("#bfef45");
-        defaultColorsList.add("#42d4f4");
-        defaultColorsList.add("#ffe119");
-        defaultColorsList.add("#f032e6");
-        defaultColorsList.add("#aaffc3");
-        defaultColorsList.add("#9A6324");
-        defaultColorsList.add("#800000");
-        defaultColorsList.add("#ffd8b1");
-        defaultColorsList.add("#e6beff");
-        defaultColorsList.add("#469990");
     }
 
     private void setChartsVisiblity(Boolean pieChartVisibility, Boolean lineChartVisibility, Boolean areaChartVisibility, Boolean barChartVisibility) {
@@ -600,7 +547,7 @@ public class ChartsWindowController implements Initializable {
                         areaChart.getData().clear();
                         barChart.getData().clear();
                         try {
-                            Thread.sleep(1000); //FIXME, I cant get this to work in any other way other than that... This is additional time for chart to actually clear
+                            Thread.sleep(1000); //FIXME: This is additional time for chart to actually clear the values from both the Data and Styles
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }

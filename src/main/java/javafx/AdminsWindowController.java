@@ -4,7 +4,6 @@ import hibernate.Admin;
 import hibernate.DBOperations;
 import hibernate.Server;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,7 +19,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
-import org.hibernate.annotations.Check;
 
 import java.io.IOException;
 import java.net.URL;
