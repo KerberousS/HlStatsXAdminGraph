@@ -6,47 +6,46 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane fx:id="basewindow" fx:controller="javafx.BaseWindowController"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
-          styleClass="grid">
-    <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
+<BorderPane fx:id="baseWindow" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.BaseWindowController">
+    <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
 
-    <Text id="title" text="Welcome to HlStatsX Admin Graph Tool"
-          GridPane.columnIndex="0" GridPane.rowIndex="0"
-          GridPane.columnSpan="2"/>
+    <top>
+        <VBox alignment="TOP_CENTER" spacing="10">
+            <Text id="title" text="Welcome to HlStatsX Admin Graph Tool">
+            </Text>
 
-    <Text fx:id="databaseStatus"
-          GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        </VBox>
+    </top>
 
-    <HBox spacing="10" alignment="bottom_left"
-          GridPane.columnIndex="2" GridPane.rowIndex="1">
-        <Button text="Configure Database"
-                onAction="#handleConfigureDatabaseButton" />
-    </HBox>
+    <center>
+        <VBox alignment="CENTER" spacing="10">
+            <HBox spacing="10" alignment="TOP_CENTER">
+                <Text fx:id="databaseStatus">
+                </Text>
+                <Button text="Configure Database"
+                        onAction="#handleConfigureDatabaseButton" />
+            </HBox>
 
-    <Label text="Select server:"
-           GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <Label text="Select server:">
+            </Label>
 
-    <ComboBox fx:id="serverDropdown"
-               GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <HBox spacing="10" alignment="CENTER">
+            <ComboBox fx:id="serverDropdown">
+            </ComboBox>
 
-    <HBox spacing="10" alignment="bottom_left"
-          GridPane.columnIndex="2" GridPane.rowIndex="2">
-        <Button text="Manage Servers"
-                onAction="#handleManageServerButton" />
-    </HBox>
+                <Button text="Manage Servers"
+                        onAction="#handleManageServerButton" />
+            </HBox>
 
-    <HBox spacing="10" alignment="bottom_right"
-          GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <Button text="Choose this server"
-                onAction="#handleChooseServerButton" />
-    </HBox>
+                <Button text="Choose this server"
+                        onAction="#handleChooseServerButton" />
 
-    <Text fx:id="updateStatus"
-          GridPane.columnIndex="0" GridPane.rowIndex="5" />
-
+            <Text fx:id="updateStatus">
+            </Text>
+        </VBox>
+    </center>
     <stylesheets>
         <URL value="@basewindow.css" />
     </stylesheets>
 
-</GridPane>
+</BorderPane>

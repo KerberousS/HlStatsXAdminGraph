@@ -5,12 +5,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,14 +39,10 @@ public class AddServerWindowController implements Initializable {
     @FXML
     private Text updateStatus;
 
+    private String manageServersFXMLFile = "servers/ManageServers.fxml";
     @FXML
     protected void handleCancelButton(ActionEvent event) {
-        try {
-            Parent manageServerWindow = FXMLLoader.load(getClass().getResource("servers/ManageServers.fxml"));
-            addServerWindow.getChildren().setAll(manageServerWindow);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.changeScene(manageServersFXMLFile, event);
     }
 
     @FXML
@@ -76,6 +75,19 @@ public class AddServerWindowController implements Initializable {
         assert addNewServerButton != null : "fx:id=\"addNewServerButton\" was not injected: check your FXML file 'AddServer.fxml'.";
 
         //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
+    }
 
+    private void changeScene(String windowFXMLFile, ActionEvent event) {
+        Parent window = null;
+        try {
+            window = FXMLLoader.load(getClass().getResource(windowFXMLFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(window);
+
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
 }

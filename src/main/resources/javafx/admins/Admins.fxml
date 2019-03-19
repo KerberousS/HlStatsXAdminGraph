@@ -1,75 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<GridPane fx:id="adminsWindow" fx:controller="javafx.AdminsWindowController"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
-          styleClass="grid">
-    <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
+<?import javafx.scene.text.Text?>
+<BorderPane fx:id="adminsWindow" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.AdminsWindowController">
+    <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
 
-    <Text fx:id="adminText"
-          GridPane.columnIndex="0" GridPane.rowIndex="0">
-    </Text>
+    <center>
+        <StackPane fx:id="listStackPane">
+            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+            <TableView fx:id="adminsList">
+                <placeholder>
+                    <Label text="">
+                    </Label>
+                </placeholder>
+                <columns>
+                    <TableColumn fx:id="columnAdminSelect" text="Select">
+                    </TableColumn>
+                    <TableColumn fx:id="columnAdminID" text="ID">
+                    </TableColumn>
+                    <TableColumn fx:id="columnAdminName" text="Name">
+                    </TableColumn>
+                    <TableColumn fx:id="columnAdminColor" text="Color">
+                    </TableColumn>
+                    <TableColumn fx:id="columnAdminLink" text="HlStats ID">
+                    </TableColumn>
+                </columns>
+            </TableView>
+        </StackPane>
+    </center>
 
-    <TableView fx:id="adminsList"
-               GridPane.columnIndex="0" GridPane.rowIndex="1">
-        <columns>
-            <TableColumn fx:id="columnAdminSelect" text="Select">
-            </TableColumn>
-            <TableColumn fx:id="columnAdminID" text="ID">
-            </TableColumn>
-            <TableColumn fx:id="columnAdminName" text="Name">
-            </TableColumn>
-            <TableColumn fx:id="columnAdminColor" text="Color">
-            </TableColumn>
-            <TableColumn fx:id="columnAdminLink" text="HlStats ID">
-            </TableColumn>
-        </columns>
-    </TableView>
+    <left>
+        <VBox alignment="CENTER_RIGHT" spacing="10">
+        <Label text="Choose option:"/>
+            <Button fx:id="addNewAdminButton" onAction="#handleAddNewAdminButton" text="Add a New Admin" />
+            <Button fx:id="editAdminButton" onAction="#handleEditAdminButton" text="Edit choosen Admin" />
+            <Button fx:id="deleteAdminButton" onAction="#handleDeleteAdminButton" text="Delete choosen Admin" />
+        </VBox>
+    </left>
 
-    <HBox spacing="10" alignment="bottom_left" fx:id="addNewAdminButton"
-          GridPane.columnIndex="0" GridPane.rowIndex="2">
-        <Button text="Add a New Admin"
-                onAction="#handleAddNewAdminButton" />
-    </HBox>
+    <right>
+        <VBox alignment="CENTER_LEFT" spacing="10">
+            <Button onAction="#handleChartsButton" text="Generate Chart" />
+        </VBox>
+    </right>
 
-    <HBox spacing="25" alignment="bottom_left" fx:id="editAdminButton"
-          GridPane.columnIndex="0" GridPane.rowIndex="3">
-        <Button text="Edit choosen Admin"
-                onAction="#handleEditAdminButton" />
-    </HBox>
-
-    <HBox spacing="10" alignment="bottom_left" fx:id="deleteAdminButton"
-          GridPane.columnIndex="0" GridPane.rowIndex="4">
-        <Button text="Delete choosen Admin"
-                onAction="#handleDeleteAdminButton" />
-    </HBox>
-
-    <Text fx:id="Error"
-          GridPane.columnIndex="0" GridPane.rowIndex="5" >
-    </Text>
-
-    <Label text="Choose option:"
-           GridPane.columnIndex="1" GridPane.rowIndex="1" />
-
-    <HBox spacing="10" alignment="bottom_left"
-          GridPane.columnIndex="1" GridPane.rowIndex="2">
-        <Button text="Generate Chart"
-                onAction="#handleChartsButton" />
-    </HBox>
-
-    <HBox spacing="10" alignment="bottom_left" fx:id="closeButton"
-          GridPane.columnIndex="1" GridPane.rowIndex="3">
-        <Button text="Go back"
-                onAction="#handleCloseButton" />
-    </HBox>
+    <bottom>
+        <VBox alignment="CENTER_LEFT" spacing="10">
+            <Text fx:id="Error">
+            </Text>
+        <Button text="Hover for info">
+            <tooltip>
+                <Tooltip text="To create charts with selected admins use 'Select box' in the first column
+                To edit an admin highlight ONE!" />
+            </tooltip>
+        </Button>
+        <Button fx:id="closeButton" onAction="#handleCloseButton" text="Go back" />
+    </VBox>
+    </bottom>
 
     <stylesheets>
         <URL value="@../basewindow.css" />
     </stylesheets>
 
-</GridPane>
+</BorderPane>

@@ -3,21 +3,26 @@ package javafx;
 import hibernate.Admin;
 import hibernate.DBOperations;
 import hibernate.Server;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
@@ -29,7 +34,7 @@ import java.util.ResourceBundle;
 public class AdminsWindowController implements Initializable {
 
     @FXML
-    private GridPane adminsWindow;
+    private BorderPane adminsWindow;
 
     @FXML
     private Text adminText;
@@ -50,34 +55,34 @@ public class AdminsWindowController implements Initializable {
     @FXML
     private TableColumn columnAdminSelect;
 
+    @FXML
+    private StackPane listStackPane;
+
+    private ProgressIndicator progressIndicator;
+
     private Server chosenServer;
     private List<Admin> adminsRecordsList;
     public static Admin chosenAdmin;
     public static List<Admin> selectedAdminsList;
 
+    //FXML FILES
+    private String baseWindowFXMLFile = "BaseWindow.fxml";
+    private String addAdminFXMLFile = "admins/AddAdmin.fxml";
+    private String editAdminFXMLFile = "admins/EditAdmin.fxml";
+    private String chartsFXMLFile = "charts/charts.fxml";
+
     @FXML
     protected void handleCloseButton(ActionEvent event) {
-        try {
-            Parent baseWindow = FXMLLoader.load(getClass().getResource("BaseWindow.fxml"));
-            adminsWindow.getChildren().setAll(baseWindow);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.changeScene(baseWindowFXMLFile, event);
     }
 
     @FXML
     protected void handleAddNewAdminButton(ActionEvent event) {
-        try {
-            Parent addAdminWindow = FXMLLoader.load(getClass().getResource("admins/AddAdmin.fxml"));
-            adminsWindow.getChildren().setAll(addAdminWindow);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.changeScene(addAdminFXMLFile, event);
     }
 
     @FXML
     protected void handleEditAdminButton(ActionEvent event) {
-        try {
             if (adminsList.getSelectionModel().getSelectedItem() == null) {
                 Error.setText("Please choose an admin first!");
                 Error.setFill(Color.RED);
@@ -85,12 +90,9 @@ public class AdminsWindowController implements Initializable {
             else {
                 int adminIndex = adminsList.getSelectionModel().getSelectedIndex();
                 chosenAdmin = adminsRecordsList.get(adminIndex);
-                Parent editAdminWindow = FXMLLoader.load(getClass().getResource("admins/EditAdmin.fxml"));
-                adminsWindow.getChildren().setAll(editAdminWindow);
+
+                this.changeScene(editAdminFXMLFile, event);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @FXML
@@ -126,8 +128,7 @@ public class AdminsWindowController implements Initializable {
                     }
                 }
                 if (!selectedAdminsList.isEmpty()) {
-                    Parent chartWindow = FXMLLoader.load(getClass().getResource("charts/charts.fxml"));
-                    adminsWindow.getChildren().setAll(chartWindow);
+                    this.changeScene(chartsFXMLFile, event);
                 } else {
                     Error.setText("Please select admins first!");
                     Error.setFill(Color.RED);
@@ -155,22 +156,66 @@ public class AdminsWindowController implements Initializable {
             checkBox.selectedProperty().addListener((ov, old_val, new_val) -> admin.setSelected(new_val));
             return new SimpleObjectProperty<>(checkBox);
         });
-        adminsList.getColumns().addAll(columnAdminSelect);
-        adminText.setText("Choose admins from the list: ");
         //Initialize server list for server dropdown
 
         chosenServer = BaseWindowController.chosenServer;
         adminsList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        adminsRecordsList = DBOperations.displayAdminRecords(chosenServer.getServerName());
 
-        if (adminsRecordsList.isEmpty()) {
-            Error.setText("There are no admins added, add a new admin");
-            Error.setFill(Color.BLUE);
-        } else {
-            for (Admin a : adminsRecordsList) {
-                adminsList.getItems().add(a);
-            }
-        }
+        //Set up progress bars
+        progressIndicator = new ProgressIndicator(0);
+        progressIndicator.progressProperty().bind(getAdmins.progressProperty());
+        progressIndicator.setVisible(true);
+        listStackPane.getChildren().add(progressIndicator);
+        populateAdminsList();
     }
 
+    private void changeScene(String windowFXMLFile, ActionEvent event) {
+        Parent window = null;
+        try {
+            window = FXMLLoader.load(getClass().getResource(windowFXMLFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(window);
+
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void populateAdminsList() {
+        getAdmins.restart();
+
+        //On fail
+        getAdmins.setOnFailed(e-> {
+            Error.setText("Something went terribly wrong, give this piece of code to person responsible for this: " + getAdmins.getException().toString());
+            progressIndicator.setVisible(false);
+                });
+
+        //On succeed
+        getAdmins.setOnSucceeded(e-> {
+            if (adminsRecordsList.isEmpty()) {
+                adminsList.setPlaceholder(new Label( "There are no admins added, add a new admin"));
+                progressIndicator.setVisible(false);
+            } else {
+                for (Admin a : adminsRecordsList) {
+                    adminsList.getItems().add(a);
+                    progressIndicator.setVisible(false);
+                }
+            }
+        });
+    }
+
+    Service getAdmins = new Service() {
+        @Override
+        protected Task createTask() {
+            return new Task() {
+                @Override
+                protected Void call() {
+                    adminsRecordsList = DBOperations.displayAdminRecords(chosenServer.getServerName());
+                    return null;
+                }
+            };
+        }
+    };
 }

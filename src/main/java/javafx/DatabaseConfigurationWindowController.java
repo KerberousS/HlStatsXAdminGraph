@@ -5,12 +5,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -43,14 +46,11 @@ public class DatabaseConfigurationWindowController implements Initializable {
     private String initialUsername;
     private String initialPassword;
 
+    private String baseWindowFXMLFile = "BaseWindow.fxml";
+
     @FXML
     protected void handleCancelButton(ActionEvent event) {
-        try {
-            Parent baseWindow = FXMLLoader.load(getClass().getResource("BaseWindow.fxml"));
-            databaseConfigWindow.getChildren().setAll(baseWindow);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.changeScene(baseWindowFXMLFile, event);
     }
 
     @FXML
@@ -96,13 +96,6 @@ public class DatabaseConfigurationWindowController implements Initializable {
 
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-        assert databaseUrlTextField != null : "fx:id=\"databaseUrlTextField\" was not injected: check your FXML file 'DatabaseConfiguration.fxml'.";
-        assert usernameTextField != null : "fx:id=\"usernameTextField\" was not injected: check your FXML file 'DatabaseConfiguration.fxml'.";
-        assert passwordTextField != null : "fx:id=\"passwordTextField\" was not injected: check your FXML file 'DatabaseConfiguration.fxml'.";
-        assert cancelButton != null : "fx:id=\"cancelButton\" was not injected: check your FXML file 'DatabaseConfiguration.fxml'.";
-        assert updateConfiguration != null : "fx:id=\"updateConfiguration\" was not injected: check your FXML file 'DatabaseConfiguration.fxml'.";
-        assert updateStatus != null : "fx:id=\"updateStatus\" was not injected: check your FXML file 'DatabaseConfiguration.fxml'.";
-        //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
 
         ConfigOperations config = new ConfigOperations();
         databaseUrlTextField.setText(config.getDatabaseUrl());
@@ -112,5 +105,19 @@ public class DatabaseConfigurationWindowController implements Initializable {
         initialURL = databaseUrlTextField.getText();
         initialUsername = usernameTextField.getText();
         initialPassword = passwordTextField.getText();
+    }
+
+    private void changeScene(String windowFXMLFile, ActionEvent event) {
+        Parent window = null;
+        try {
+            window = FXMLLoader.load(getClass().getResource(windowFXMLFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(window);
+
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
 }

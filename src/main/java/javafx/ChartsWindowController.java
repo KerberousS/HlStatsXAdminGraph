@@ -15,20 +15,22 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -36,16 +38,16 @@ import java.util.ResourceBundle;
 public class ChartsWindowController implements Initializable {
 
     @FXML
-    private GridPane chartsWindow;
-
-    @FXML
-    private Text adminText;
+    private BorderPane chartsWindow;
 
     @FXML
     Label caption;
 
     @FXML
     private Text Error;
+
+    @FXML
+    private StackPane chartStackPane;
 
     @FXML
     private PieChart pieChart;
@@ -87,47 +89,38 @@ public class ChartsWindowController implements Initializable {
     @FXML
     private Button defaultColorButton;
 
-    @FXML
-    private ProgressIndicator progressIndicator;
-    @FXML
     private ProgressBar progressBar;
 
     private static List<Admin> adminsList;
-    private static List<String> defaultColorsList = new ArrayList<>();
 
     private LocalDate dateFrom;
     private LocalDate dateTo;
-    private Integer workToDo;
+
+    private String adminsFXMLFile = "admins/Admins.fxml";
 
     @FXML
     protected void handleCloseButton(ActionEvent event) {
-        try {
-            Parent baseWindow = FXMLLoader.load(getClass().getResource("admins/admins.fxml"));
-            chartsWindow.getChildren().setAll(baseWindow);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Error.setText("Something went wrong");
-            Error.setFill(Color.RED);
-        }
+            this.changeScene(adminsFXMLFile, event);
     }
+
     @FXML
     protected void showPieChart(ActionEvent event) {
-        setChartsVisiblity(true, false, false, false);
+        setChartsVisibility(true, false, false, false);
     }
 
     @FXML
     protected void showLineChart(ActionEvent event) {
-        setChartsVisiblity(false, true, false, false);
+        setChartsVisibility(false, true, false, false);
     }
 
     @FXML
     protected void showAreaChart(ActionEvent event) {
-        setChartsVisiblity(false, false, true, false);
+        setChartsVisibility(false, false, true, false);
     }
 
     @FXML
     protected void showBarChart(ActionEvent event) {
-        setChartsVisiblity(false, false, false, true);
+        setChartsVisibility(false, false, false, true);
     }
 
     @FXML
@@ -263,57 +256,9 @@ public class ChartsWindowController implements Initializable {
             });
         }
     }
-    private void rePopulateCharts() {
-        setChartButtonsDisableStatus(true, true, true, true);
-        setColorButtonsDisableStatus(true, true, true);
-
-        clearChartData.restart();
-
-        clearChartData.setOnSucceeded(e-> {
-            populatePieChart.restart();
-            populateLineChart.restart();
-            populateAreaChart.restart();
-            populateBarChart.restart();
-                });
-
-        //On failed
-        populatePieChart.setOnFailed(e-> {
-            Error.setText(this.getClass().getName() + "has failed, reason: " + populatePieChart.getException().toString());
-            Error.setFill(Color.RED);
-        });
-        populateLineChart.setOnFailed(e-> {
-            Error.setText(this.getClass().getName() + "has failed, reason: " + populateLineChart.getException().toString());
-            Error.setFill(Color.RED);
-        });
-        populateAreaChart.setOnFailed(e-> {
-            Error.setText(this.getClass().getName() + "has failed, reason: " + populateAreaChart.getException().toString());
-            Error.setFill(Color.RED);
-        });
-        populateBarChart.setOnFailed(e-> {
-            Error.setText(this.getClass().getName() + "has failed, reason: " + populateBarChart.getException().toString());
-            Error.setFill(Color.RED);
-        });
-
-
-        //If succeeded
-        populatePieChart.setOnSucceeded(e-> pieChartButton.setDisable(false));
-        populateLineChart.setOnSucceeded(e-> lineChartButton.setDisable(false));
-        populateAreaChart.setOnSucceeded(e-> areaChartButton.setDisable(false));
-        populateBarChart.setOnSucceeded(e-> {
-            barChartButton.setDisable(false);
-            setColorButtonsDisableStatus(false, false, true);
-        });
-    }
 
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-        assert chartsWindow != null : "fx:id=\"chartsWindow\" was not injected: check your FXML file 'charts.fxml'.";
-
-        adminText.setText("Choose admins from the list: ");
-
-        caption.setTextFill(Color.BLACK);
-        caption.setStyle("-fx-font: 24 arial;");
-
         setdateFrom.setValue(LocalDate.now().minusDays(27));
         setdateTo.setValue(LocalDate.now());
 
@@ -337,23 +282,52 @@ public class ChartsWindowController implements Initializable {
 
         adminsList = AdminsWindowController.selectedAdminsList;
 
-        //Set up progress bars
-        progressBar.setProgress(0);
-        progressIndicator.setProgress(0);
-
-        progressBar.progressProperty().unbind();
-        progressIndicator.progressProperty().unbind();
-
-        progressBar.progressProperty().bind(populatePieChart.progressProperty());
-        progressIndicator.progressProperty().bind(populatePieChart.progressProperty());
-
         rePopulateCharts();
 
-        //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
         //TODO: CHECK LOADING BAR AFTER GRAPHICAL REWORK
     }
 
-    private void setChartsVisiblity(Boolean pieChartVisibility, Boolean lineChartVisibility, Boolean areaChartVisibility, Boolean barChartVisibility) {
+    // Factory to create Cell of DatePicker
+    private Callback<DatePicker, DateCell> getDayCellFactory() {
+
+        final Callback<DatePicker, DateCell> dayCellFactory = new Callback<>() {
+
+            @Override
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        // Disable days before 28 days from now and any date that is after todays date
+                        Platform.runLater(() -> {
+                            if (item.isBefore(LocalDate.now().minusDays(27)) || item.isAfter(LocalDate.now())) {
+                                setDisable(true);
+                                setStyle("-fx-background-color: #ffc0cb;");
+                            }
+                        });
+                    }
+                };
+            }
+        };
+        return dayCellFactory;
+    }
+
+    private void changeScene(String windowFXMLFile, ActionEvent event) {
+        Parent window = null;
+        try {
+            window = FXMLLoader.load(getClass().getResource(windowFXMLFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(window);
+
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void setChartsVisibility(Boolean pieChartVisibility, Boolean lineChartVisibility, Boolean areaChartVisibility, Boolean barChartVisibility) {
         pieChart.setVisible(pieChartVisibility);
         lineChart.setVisible(lineChartVisibility);
         areaChart.setVisible(areaChartVisibility);
@@ -379,29 +353,7 @@ public class ChartsWindowController implements Initializable {
         return randomInt;
     }
 
-    // Factory to create Cell of DatePicker
-    private Callback<DatePicker, DateCell> getDayCellFactory() {
 
-        final Callback<DatePicker, DateCell> dayCellFactory = new Callback<>() {
-
-            @Override
-            public DateCell call(final DatePicker datePicker) {
-                return new DateCell() {
-                    @Override
-                    public void updateItem(LocalDate item, boolean empty) {
-                        super.updateItem(item, empty);
-
-                        // Disable days before 28 days from now and any date that is after todays date
-                        if (item.isBefore(LocalDate.now().minusDays(27)) || item.isAfter(LocalDate.now())) {
-                            setDisable(true);
-                            setStyle("-fx-background-color: #ffc0cb;");
-                        }
-                    }
-                };
-            }
-        };
-        return dayCellFactory;
-    }
 
     Service populatePieChart = new Service() {
         @Override
@@ -412,10 +364,8 @@ public class ChartsWindowController implements Initializable {
                     Double max = 0.0;
                     dateFrom = setdateFrom.getValue();
                     dateTo = setdateTo.getValue();
-                    workToDo = adminsList.size();
                     ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
 
-                    int progress = 0;
                     Integer duration;
                     for (Admin a : adminsList) {
                         duration = SummarizeTime.adminTimesDurationTotal(a.getAdminLink(), dateFrom, dateTo);
@@ -423,13 +373,11 @@ public class ChartsWindowController implements Initializable {
                         PieChart.Data data = new PieChart.Data(a.getAdminName() + " (" + SummarizeTime.sumTimeString(a.getAdminLink(), dateFrom, dateTo) + ")", duration);
                         pieChartData.add(data);
                         max += duration;
-                        this.updateProgress(progress, workToDo);
                     }
-
-                    Platform.runLater(() -> pieChart.setData(pieChartData));
 
                     final Double finalMax = max;
                     Platform.runLater(() -> {
+                        pieChart.setData(pieChartData);
                         for (PieChart.Data data : pieChart.getData()) {
                             data.getNode().addEventHandler(MouseEvent.MOUSE_PRESSED,
                                     e -> {
@@ -557,4 +505,53 @@ public class ChartsWindowController implements Initializable {
             };
         }
     };
+
+
+    private void rePopulateCharts() {
+        setChartButtonsDisableStatus(true, true, true, true);
+        setColorButtonsDisableStatus(true, true, true);
+
+        progressBar = new ProgressBar();
+        progressBar.progressProperty().bind(populateLineChart.progressProperty());
+        chartStackPane.getChildren().add(progressBar);
+        progressBar.setVisible(true);
+        clearChartData.restart();
+
+        //On succeed
+        clearChartData.setOnSucceeded(e -> {
+            populatePieChart.restart();
+            populateLineChart.restart();
+            populateAreaChart.restart();
+            populateBarChart.restart();
+        });
+
+        //On failed
+        populatePieChart.setOnFailed(e -> {
+            Error.setText(this.getClass().getName() + "has failed, reason: " + populatePieChart.getException().toString());
+            Error.setFill(Color.RED);
+        });
+        populateLineChart.setOnFailed(e -> {
+            Error.setText(this.getClass().getName() + "has failed, reason: " + populateLineChart.getException().toString());
+            Error.setFill(Color.RED);
+        });
+        populateAreaChart.setOnFailed(e -> {
+            Error.setText(this.getClass().getName() + "has failed, reason: " + populateAreaChart.getException().toString());
+            Error.setFill(Color.RED);
+        });
+        populateBarChart.setOnFailed(e -> {
+            Error.setText(this.getClass().getName() + "has failed, reason: " + populateBarChart.getException().toString());
+            Error.setFill(Color.RED);
+        });
+
+
+        //If succeeded
+        populatePieChart.setOnSucceeded(e -> pieChartButton.setDisable(false));
+        populateLineChart.setOnSucceeded(e -> lineChartButton.setDisable(false));
+        populateAreaChart.setOnSucceeded(e -> areaChartButton.setDisable(false));
+        populateBarChart.setOnSucceeded(e -> {
+            barChartButton.setDisable(false);
+            setColorButtonsDisableStatus(false, false, true);
+            progressBar.setVisible(false);
+        });
+    }
 }

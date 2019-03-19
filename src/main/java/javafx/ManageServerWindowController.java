@@ -6,12 +6,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,30 +42,24 @@ public class ManageServerWindowController implements Initializable {
     private List<Server> serversList = DBOperations.displayServerRecords();
     //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
 
+    //FXML FILES
+    private String baseWindowFXMLFile = "BaseWindow.fxml";
+    private String addServerFXMLFile = "servers/AddServer.fxml";
+    private String editServerFXMLFile = "servers/EditServer.fxml";
+
     @FXML
     protected void handleCloseButton(ActionEvent event) {
-        try {
-            Parent baseWindow = FXMLLoader.load(getClass().getResource("BaseWindow.fxml"));
-            manageServerWindow.getChildren().setAll(baseWindow);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.changeScene(baseWindowFXMLFile, event);
     }
 
 
     @FXML
     protected void handleAddNewServerButton(ActionEvent event) {
-        try {
-            Parent addServerWindow = FXMLLoader.load(getClass().getResource("servers/AddServer.fxml"));
-            manageServerWindow.getChildren().setAll(addServerWindow);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.changeScene(addServerFXMLFile, event);
     }
 
     @FXML
     protected void handleEditServerButton(ActionEvent event) {
-        try {
             if (serverList.getSelectionModel().getSelectedItem() == null) {
                 Error.setText("Please choose a server first!");
             }
@@ -70,12 +67,8 @@ public class ManageServerWindowController implements Initializable {
                 int serverIndex = serverList.getSelectionModel().getSelectedIndex();
                 chosenServer = serversList.get(serverIndex);
 
-                Parent addServerWindow = FXMLLoader.load(getClass().getResource("servers/EditServer.fxml"));
-                manageServerWindow.getChildren().setAll(addServerWindow);
+                this.changeScene(editServerFXMLFile, event);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @FXML
@@ -110,5 +103,19 @@ public class ManageServerWindowController implements Initializable {
             for (Server s : serversList)
                 serverList.getItems().add(s.getServerName());
         }
+    }
+
+    private void changeScene(String windowFXMLFile, ActionEvent event) {
+        Parent window = null;
+        try {
+            window = FXMLLoader.load(getClass().getResource(windowFXMLFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(window);
+
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
 }

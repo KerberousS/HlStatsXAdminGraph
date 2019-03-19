@@ -1,157 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.AreaChart?>
 <?import javafx.scene.chart.BarChart?>
-<?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
-<GridPane fx:id="chartsWindow" fx:controller="javafx.ChartsWindowController"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
-          styleClass="grid">
-    <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
-
-    <Text fx:id="adminText" text="Choose a type of chart"
-          GridPane.columnIndex="0" GridPane.rowIndex="0">
-    </Text>
-
+<BorderPane fx:id="chartsWindow" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.ChartsWindowController">
+    <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
+    
     <Label fx:id="caption">
-
     </Label>
 
-    <PieChart fx:id="pieChart" visible="false" title="Admins Pie Graph"
-               GridPane.columnIndex="0" GridPane.rowIndex="1">
-    </PieChart>
+    <center>
+        <StackPane alignment="CENTER" fx:id="chartStackPane">
+            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+            <PieChart fx:id="pieChart" maxWidth="Infinity" title="Admins Pie Graph" visible="false">
+            </PieChart>
 
-    <LineChart fx:id="lineChart" visible="false" title="Admins Line Graph" createSymbols="false"
-               prefHeight="1280" prefWidth="1024"
-               GridPane.columnIndex="0" GridPane.rowIndex="1">
-        <xAxis>
-            <CategoryAxis label="Days" fx:id="xLineAxis" />
-        </xAxis>
-        <yAxis>
-            <NumberAxis fx:id="yLineAxis" label="Times (in seconds)" side="LEFT" upperBound="160.0" />
-        </yAxis>
-    </LineChart>
+            <LineChart fx:id="lineChart" createSymbols="false" title="Admins Line Graph" visible="false">
+                <xAxis>
+                    <CategoryAxis label="Days" fx:id="xLineAxis" />
+                </xAxis>
+                <yAxis>
+                    <NumberAxis fx:id="yLineAxis" label="Times (in seconds)" side="LEFT"  />
+                </yAxis>
+            </LineChart>
 
-    <AreaChart fx:id="areaChart" visible="false" title="Admins Area Graph"
-               GridPane.columnIndex="0" GridPane.rowIndex="1">
-        <xAxis>
-            <CategoryAxis label="Days" fx:id="xAreaAxis" />
-        </xAxis> 
-        <yAxis>
-            <NumberAxis fx:id="yAreaAxis" label="Times (in seconds)" side="LEFT" upperBound="160.0" />
-        </yAxis>
-    </AreaChart>
+            <AreaChart fx:id="areaChart" title="Admins Area Graph" visible="false">
+                <xAxis>
+                    <CategoryAxis label="Days" fx:id="xAreaAxis" />
+                </xAxis>
+                <yAxis>
+                    <NumberAxis fx:id="yAreaAxis" label="Times (in seconds)" side="LEFT" />
+                </yAxis>
+            </AreaChart>
 
-    <BarChart fx:id="barChart" visible="false" title="Admins Bar Graph"
-               GridPane.columnIndex="0" GridPane.rowIndex="1">
-        <xAxis>
-            <CategoryAxis label="Days" fx:id="xBarAxis" />
-        </xAxis>
-        <yAxis>
-            <NumberAxis fx:id="yBarAxis" label="Times (in seconds)" side="LEFT" upperBound="160.0" />
-        </yAxis>
-    </BarChart>
+            <BarChart fx:id="barChart" title="Admins Bar Graph" visible="false">
+                <xAxis>
+                    <CategoryAxis label="Days" fx:id="xBarAxis" />
+                </xAxis>
+                <yAxis>
+                    <NumberAxis fx:id="yBarAxis" label="Times (in seconds)" side="LEFT" />
+                </yAxis>
+            </BarChart>
+        </StackPane>
+    </center>
 
-    <Label text="From: "
-          GridPane.columnIndex="1" GridPane.rowIndex="0">
-    </Label>
+    <top>
+        <HBox alignment="TOP_CENTER" spacing="5">
+            <Label text="From: ">
+            </Label>
 
-    <DatePicker fx:id="setdateFrom"
-               GridPane.columnIndex="2" GridPane.rowIndex="0">
-    </DatePicker>
+            <DatePicker fx:id="setdateFrom">
+            </DatePicker>
 
-    <Label text="To: "
-          GridPane.columnIndex="1" GridPane.rowIndex="1">
-    </Label>
+            <Label text="To: ">
+            </Label>
 
-    <DatePicker fx:id="setdateTo"
-                GridPane.columnIndex="2" GridPane.rowIndex="1">
-    </DatePicker>
+            <DatePicker fx:id="setdateTo" BorderPane.alignment="CENTER">
+            </DatePicker>
+        </HBox>
+    </top>
 
-    <HBox spacing="10" alignment="bottom_left"
-          GridPane.columnIndex="1" GridPane.rowIndex="1">
-        <Button text="Pie Chart" fx:id="pieChartButton"
-                onAction="#showPieChart" />
+    <right>
+    <VBox alignment="CENTER_RIGHT" spacing="10">
+        <Button fx:id="pieChartButton" onAction="#showPieChart" text="Pie Chart" />
+        <Button fx:id="lineChartButton" onAction="#showLineChart" text="Line Chart" />
+        <Button fx:id="areaChartButton" onAction="#showAreaChart" text="Area Chart" />
+        <Button fx:id="barChartButton" onAction="#showBarChart" text="Bar Chart" />
+    </VBox>
+    </right>
+
+    <bottom>
+    <HBox spacing="10">
+        <Button onAction="#handleCloseButton" text="Go back" />
+
+        <Text fx:id="Error">
+        </Text>
     </HBox>
+    </bottom>
 
-    <HBox spacing="25" alignment="bottom_left"
-          GridPane.columnIndex="1" GridPane.rowIndex="2">
-        <Button text="Line Chart" fx:id="lineChartButton"
-                onAction="#showLineChart" />
-    </HBox>
-
-    <HBox spacing="10" alignment="bottom_left"
-          GridPane.columnIndex="1" GridPane.rowIndex="3">
-        <Button text="Area Chart" fx:id="areaChartButton"
-                onAction="#showAreaChart" />
-    </HBox>
-
-    <HBox spacing="10" alignment="bottom_left"
-          GridPane.columnIndex="1" GridPane.rowIndex="6">
-        <Button text="Bar Chart" fx:id="barChartButton"
-                onAction="#showBarChart" />
-    </HBox>
-
-    <Text fx:id="Error"
-          GridPane.columnIndex="0" GridPane.rowIndex="7" >
-    </Text>
-
-    <HBox spacing="10" alignment="bottom_left"
-          GridPane.columnIndex="0" GridPane.rowIndex="8">
-        <Button text="Go back"
-                onAction="#handleCloseButton" />
-    </HBox>
-
-    <HBox spacing="10" alignment="bottom_left"
-              GridPane.columnIndex="0" GridPane.rowIndex="9">
-        <Button text="Use admin natural colors" fx:id="naturalColorButton"
-                onAction="#handleNaturalAdminColor"/>
-    </HBox>
-
-    <HBox spacing="10" alignment="bottom_left"
-          GridPane.columnIndex="0" GridPane.rowIndex="10">
-        <Button text="Use totally random colors" fx:id="randomColorButton"
-                onAction="#handleRandomAdminColor"/>
-    </HBox>
-
-    <HBox spacing="10" alignment="bottom_left"
-          GridPane.columnIndex="0" GridPane.rowIndex="11">
-        <Button text="Use default colors" fx:id="defaultColorButton"
-                onAction="#handleDefaultChartColor"/>
-    </HBox>
-
-    <HBox spacing="10" alignment="bottom_left"
-          GridPane.columnIndex="1" GridPane.rowIndex="9">
-        <Button text="Save to screenshot mock" fx:id="saveToScreenshot"
-                onAction="#handleSaveScreenshot"/>
-    </HBox>
-
-    <!-- Cant do this currently, too much problems
-    <HBox spacing="10" alignment="bottom_left"-->
-          <!--GridPane.columnIndex="2" GridPane.rowIndex="9">-->
-        <!--<Button text="Use random chart colors" fx:id="randomChartColorButton"-->
-                <!--onAction="#handleRandomChartAdminColor"/>-->
-    <!--</HBox>-->
-
-    <ProgressIndicator fx:id="progressIndicator"
-                       GridPane.columnIndex="2" GridPane.rowIndex="8">
-    </ProgressIndicator>
-
-    <ProgressBar fx:id="progressBar"
-                       GridPane.columnIndex="2" GridPane.rowIndex="9">
-    </ProgressBar>
+    <left>
+    <VBox alignment="CENTER_LEFT" spacing="10">
+        <Button fx:id="naturalColorButton" onAction="#handleNaturalAdminColor" text="Natural Colors" />
+        <Button fx:id="randomColorButton" onAction="#handleRandomAdminColor" text="Random Colors" />
+        <Button fx:id="defaultColorButton" onAction="#handleDefaultChartColor" text="Default Colors" />
+        <Button fx:id="saveToScreenshot" alignment="TOP_RIGHT" contentDisplay="TEXT_ONLY" onAction="#handleSaveScreenshot" text="Screenshot mock" />
+    </VBox>
+    </left>
 
     <stylesheets>
         <URL value="@../basewindow.css" />
     </stylesheets>
 
-</GridPane>
+</BorderPane>
