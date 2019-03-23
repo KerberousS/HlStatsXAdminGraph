@@ -18,22 +18,20 @@
         <HBox alignment="CENTER" spacing="10">
 
             <VBox>
-            <Label text="Type in a new admin name:" />
-
-            <TextField fx:id="adminNameTextField" />
+                <Label text="Type in a new admin name:" />
+                <TextField fx:id="adminNameTextField" />
             </VBox>
 
             <VBox>
-            <Label text="Admins HlStatsX ID:" />
-
-            <TextField fx:id="adminLinkTextField" />
+                <Label text="Admins HlStatsX ID:" />
+                <TextField fx:id="adminLinkTextField" />
             </VBox>
 
             <VBox>
-            <Label text="Admins Color:" />
-
-            <ColorPicker fx:id="adminColorPicker" />
+                <Label text="Admins Color:" />
+                <ColorPicker fx:id="adminColorPicker" />
             </VBox>
+
         </HBox>
     </center>
 

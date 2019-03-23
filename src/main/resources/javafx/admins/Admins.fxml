@@ -8,17 +8,16 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.text.Text?>
+
 <BorderPane fx:id="adminsWindow" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.AdminsWindowController">
     <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
 
     <center>
         <StackPane fx:id="listStackPane">
-            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+            <padding><Insets bottom="50" left="50" right="50" top="50" /></padding>
             <TableView fx:id="adminsList">
                 <placeholder>
                     <Label text="">
@@ -36,13 +35,16 @@
                     <TableColumn fx:id="columnAdminLink" text="HlStats ID">
                     </TableColumn>
                 </columns>
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
             </TableView>
         </StackPane>
     </center>
 
     <left>
         <VBox alignment="CENTER_RIGHT" spacing="10">
-        <Label text="Choose option:"/>
+        <Label text="Manage admins:" />
             <Button fx:id="addNewAdminButton" onAction="#handleAddNewAdminButton" text="Add a New Admin" />
             <Button fx:id="editAdminButton" onAction="#handleEditAdminButton" text="Edit choosen Admin" />
             <Button fx:id="deleteAdminButton" onAction="#handleDeleteAdminButton" text="Delete choosen Admin" />
@@ -61,8 +63,7 @@
             </Text>
         <Button text="Hover for info">
             <tooltip>
-                <Tooltip text="To create charts with selected admins use 'Select box' in the first column
-                To edit an admin highlight ONE!" />
+                <Tooltip text="To create charts with selected admins use 'Select box' in the first column                 To edit an admin highlight ONE!" />
             </tooltip>
         </Button>
         <Button fx:id="closeButton" onAction="#handleCloseButton" text="Go back" />

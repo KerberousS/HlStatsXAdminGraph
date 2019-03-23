@@ -6,44 +6,45 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane fx:id="manageServerWindow" fx:controller="javafx.ManageServerWindowController"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
-          styleClass="grid">
-    <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
+<BorderPane fx:id="manageServerWindow" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.ManageServerWindowController">
+    <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
 
-    <ListView fx:id="serverList"
-              GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <center>
+        <StackPane fx:id="listStackPane">
+        <padding><Insets bottom="50" left="50" right="50" top="50" /></padding>
+            <ListView fx:id="serverList"/>
+        </StackPane>
+    </center>
 
-    <HBox spacing="10" alignment="bottom_left" fx:id="addNewServerButton"
-          GridPane.columnIndex="1" GridPane.rowIndex="2">
-        <Button text="Add a New Server"
-                onAction="#handleAddNewServerButton" />
-    </HBox>
+    <left>
+        <VBox alignment="CENTER_RIGHT" spacing="10">
+            <HBox spacing="10" alignment="bottom_left">
+                <Button text="Add a New Server" fx:id="addNewServerButton"
+                        onAction="#handleAddNewServerButton" />
+            </HBox>
 
-    <HBox spacing="25" alignment="bottom_left" fx:id="editServerButton"
-          GridPane.columnIndex="1" GridPane.rowIndex="3">
-        <Button text="Edit choosen Server"
-                onAction="#handleEditServerButton" />
-    </HBox>
+            <HBox spacing="25" alignment="bottom_left">
+                <Button text="Edit choosen Server" fx:id="editServerButton"
+                        onAction="#handleEditServerButton" />
+            </HBox>
 
-    <HBox spacing="10" alignment="bottom_left" fx:id="deleteServerButton"
-          GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <Button text="Delete choosen Server"
-                onAction="#handleDeleteServerButton" />
-    </HBox>
+            <HBox spacing="10" alignment="bottom_left">
+                <Button text="Delete choosen Server" fx:id="deleteServerButton"
+                        onAction="#handleDeleteServerButton" />
+            </HBox>
+        </VBox>
+    </left>
 
-    <HBox spacing="10" alignment="bottom_left" fx:id="closeButton"
-          GridPane.columnIndex="0" GridPane.rowIndex="2">
-        <Button text="Go back"
-                onAction="#handleCloseButton" />
-    </HBox>
-
-    <Text fx:id="Error"
-               GridPane.columnIndex="0" GridPane.rowIndex="5">
-    </Text>
+    <bottom>
+        <VBox alignment="CENTER_LEFT" spacing="10">
+            <Text fx:id="Error"/>
+                <Button text="Go back" fx:id="closeButton"
+                        onAction="#handleCloseButton" />
+        </VBox>
+    </bottom>
 
     <stylesheets>
         <URL value="@../basewindow.css" />
     </stylesheets>
 
-</GridPane>
+</BorderPane>

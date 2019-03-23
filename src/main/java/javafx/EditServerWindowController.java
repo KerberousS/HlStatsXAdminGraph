@@ -9,9 +9,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 public class EditServerWindowController implements Initializable {
 
     @FXML
-    private GridPane editServerWindow;
+    private BorderPane editServerWindow;
 
     @FXML
     private TextField serverNameTextField;
@@ -32,10 +32,10 @@ public class EditServerWindowController implements Initializable {
     private TextField serverURLTextField;
 
     @FXML
-    private HBox cancelbutton;
+    private Button cancelbutton;
 
     @FXML
-    private HBox addnewserverbutton;
+    private Button addnewserverbutton;
 
     @FXML
     private Text updateStatus;

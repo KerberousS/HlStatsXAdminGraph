@@ -11,8 +11,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -26,7 +28,7 @@ import java.util.ResourceBundle;
 public class EditAdminWindowController implements Initializable {
 
     @FXML
-    private GridPane editAdminWindow;
+    private BorderPane editAdminWindow;
 
     @FXML
     private TextField adminNameTextField;
@@ -38,10 +40,10 @@ public class EditAdminWindowController implements Initializable {
     private ColorPicker adminColorPicker;
 
     @FXML
-    private HBox cancelButton;
+    private Button cancelButton;
 
     @FXML
-    private HBox editAdminButton;
+    private Button editAdminButton;
 
     @FXML
     private Text updateStatus;

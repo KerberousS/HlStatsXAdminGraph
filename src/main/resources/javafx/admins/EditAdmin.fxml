@@ -6,46 +6,54 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane fx:id="editAdminWindow" fx:controller="javafx.EditAdminWindowController"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
-          styleClass="grid">
-    <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
+<BorderPane fx:id="editAdminWindow" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.EditAdminWindowController">
+    <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
 
-    <Label text="Edit admins name:"
-           GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <center>
+        <HBox alignment="CENTER" spacing="10">
 
-    <TextField fx:id="adminNameTextField"
-               GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <VBox>
+                <Label text="Edit admins name:">
+                </Label>
 
-    <Label text="Admins HlStatsX ID:"
-           GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField fx:id="adminNameTextField">
+                </TextField>
+            </VBox>
 
-    <TextField fx:id="adminLinkTextField"
-               GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <VBox>
+                <Label text="Admins HlStatsX ID:">
+                </Label>
 
-    <Label text="Admins Color:"
-           GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <TextField fx:id="adminLinkTextField">
+                </TextField>
+            </VBox>
 
-    <ColorPicker fx:id="adminColorPicker"
-               GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <VBox>
+                <Label text="Admins Color:">
+                </Label>
 
-    <HBox spacing="10" alignment="bottom_left" fx:id="cancelButton"
-          GridPane.columnIndex="0" GridPane.rowIndex="5">
-        <Button text="Cancel"
-                onAction="#handleCancelButton" />
-    </HBox>
+                <ColorPicker fx:id="adminColorPicker">
+                </ColorPicker>
+            </VBox>
+        </HBox>
+    </center>
 
-    <HBox spacing="10" alignment="bottom_left" fx:id="editAdminButton"
-          GridPane.columnIndex="1" GridPane.rowIndex="5">
-        <Button text="Edit Admin"
-                onAction="#handleEditAdminButton" />
-    </HBox>
+    <bottom>
+        <VBox alignment="CENTER">
+            <Text fx:id="updateStatus">
+            </Text>
+            <HBox alignment="CENTER_RIGHT" spacing="50">
+                <Button text="Cancel" fx:id="cancelButton"
+                        onAction="#handleCancelButton" />
 
-    <Text fx:id="updateStatus"
-          GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                <Button text="Edit Admin" fx:id="editAdminButton"
+                        onAction="#handleEditAdminButton" />
+            </HBox>
+        </VBox>
+    </bottom>
 
     <stylesheets>
         <URL value="@../basewindow.css" />
     </stylesheets>
 
-</GridPane>
+</BorderPane>

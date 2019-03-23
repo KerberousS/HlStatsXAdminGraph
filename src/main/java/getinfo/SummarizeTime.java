@@ -4,9 +4,7 @@ import java.time.*;
 import java.time.LocalDate;
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class SummarizeTime {
 
@@ -77,31 +75,42 @@ public class SummarizeTime {
      * ACQUIRED DATA LISTS METHODS
      *
      */
+//
+//    private static List<LocalDateTime> getAdminDateTimes(String HlstatsURL) {
+//        List<LocalDate> adminDates = AdminTimeCollector.collectDates(HlstatsURL);
+//        List<LocalTime> adminTimes = AdminTimeCollector.collectTimes(HlstatsURL);
+//
+//        List<LocalDateTime> adminDateTimes = new ArrayList<>();
+//        if(!adminDates.isEmpty())
+//        for (int i=0; i<adminDates.size(); i++) {
+//            adminDateTimes.add(LocalDateTime.of(adminDates.get(i), adminTimes.get(i)));
+//        }
+//        return adminDateTimes;
+//    }
 
-    private static List<LocalDateTime> getAdminDateTimes(String HlstatsURL) {
-        List<LocalDate> adminDates = AdminTimeCollector.collectDates(HlstatsURL);
-        List<LocalTime> adminTimes = AdminTimeCollector.collectTimes(HlstatsURL);
+//    private static List<LocalDateTime> getAdminDateTimes(String HlstatsURL) {
+//        HashMap adminDateTimesMap = AdminTimeCollector.getAdminDateTimes(HlstatsURL);
+//
+//        List<LocalDateTime> adminDateTimes = new ArrayList<>();
+//        if(!adminDateTimesMap.isEmpty())
+//            for (int i=0; i<adminDateTimesMap.size(); i++) {
+//                adminDateTimes.add(LocalDateTime.of(adminDateTimesMap., adminDateTimesMap.get(i)));
+//            }
+//        return adminDateTimes;
+//    }
 
-        List<LocalDateTime> adminDateTimes = new ArrayList<>();
-        if(!adminDates.isEmpty())
-        for (int i=0; i<adminDates.size(); i++) {
-            adminDateTimes.add(LocalDateTime.of(adminDates.get(i), adminTimes.get(i)));
-        }
-        return adminDateTimes;
-    }
-
-    private static List<LocalDateTime> cutAdminDateTimesToPeriod(String HlstatsURL, LocalDate startDay, LocalDate endDay) {
-        List<LocalDateTime> periodTimeDates = new ArrayList<>();
-        List<LocalDateTime> adminDayTimes = getAdminDateTimes(HlstatsURL);
-
-        Collections.reverse(adminDayTimes);
-        for (LocalDateTime adt : adminDayTimes) {
-            if (adt.toLocalDate().isAfter(startDay.minusDays(1)) && adt.toLocalDate().isBefore(endDay.plusDays(1))) {
-                periodTimeDates.add(adt);
-            }
-        }
-        return periodTimeDates;
-    }
+//    private static List<LocalDateTime> cutAdminDateTimesToPeriod(String HlstatsURL, LocalDate startDay, LocalDate endDay) {
+//        List<LocalDateTime> periodTimeDates = new ArrayList<>();
+//        List<LocalDateTime> adminDayTimes = getAdminDateTimes(HlstatsURL);
+//
+//        Collections.reverse(adminDayTimes);
+//        for (LocalDateTime adt : adminDayTimes) {
+//            if (adt.toLocalDate().isAfter(startDay.minusDays(1)) && adt.toLocalDate().isBefore(endDay.plusDays(1))) {
+//                periodTimeDates.add(adt);
+//            }
+//        }
+//        return periodTimeDates;
+//    }
 
     private static List<LocalDate> getDaysListFromPeriod(LocalDate startDay, LocalDate endDay) {
         List<LocalDate> daysList = new ArrayList<>();
@@ -123,29 +132,41 @@ public class SummarizeTime {
     public static List<LocalDateTime> getTimesListFromPeriod(String HlstatsURL, LocalDate startDay, LocalDate endDay) {
 
         List<LocalDate> daysPeriod = getDaysListFromPeriod(startDay, endDay);
-        List<LocalDateTime> adminTimeDates = cutAdminDateTimesToPeriod(HlstatsURL, startDay, endDay);
+        HashMap<LocalDate, LocalTime> adminTimeDates = AdminTimeCollector.getAdminDateTimes(HlstatsURL);
         List<LocalDateTime> fullAdminDateTime = new ArrayList<>();
 
 
-        int count = 0;
         for (LocalDate dp : daysPeriod) {
             if (!adminTimeDates.isEmpty()) {
-            if (dp.equals(adminTimeDates.get(count).toLocalDate())) {
-                fullAdminDateTime.add(adminTimeDates.get(count));
-                if (count!=adminTimeDates.size()-1) {
-                    count += 1;
+                if (adminTimeDates.containsKey(dp)) {
+                    LocalTime adminTime = adminTimeDates.get(dp);
+                    fullAdminDateTime.add(LocalDateTime.of(dp, adminTime));
+                } else {
+                    LocalDateTime minimalAdminDateTime = LocalDateTime.of(dp, LocalTime.MIN);
+                    fullAdminDateTime.add(minimalAdminDateTime);
                 }
-            } else {
-                LocalDateTime minimalAdminDateTime = LocalDateTime.of(dp, LocalTime.MIN);
-                fullAdminDateTime.add(minimalAdminDateTime);
-            }
-            } else if (adminTimeDates.isEmpty() || adminTimeDates.size()==0){
-                LocalDateTime minimalAdminDateTime = LocalDateTime.of(dp, LocalTime.MIN);
-                fullAdminDateTime.add(minimalAdminDateTime);
-            }
+                } else if (adminTimeDates.isEmpty() || adminTimeDates.size()==0){
+                    LocalDateTime minimalAdminDateTime = LocalDateTime.of(dp, LocalTime.MIN);
+                    fullAdminDateTime.add(minimalAdminDateTime);
+                }
         }
 
-
+//        for (LocalDate dp : daysPeriod) {
+//            if (!adminTimeDates.isEmpty()) {
+//                if (dp.equals(adminTimeDates.get(count).toLocalDate())) {
+//                    fullAdminDateTime.add(adminTimeDates.get(count));
+//                    if (count!=adminTimeDates.size()-1) {
+//                        count += 1;
+//                    }
+//                } else {
+//                    LocalDateTime minimalAdminDateTime = LocalDateTime.of(dp, LocalTime.MIN);
+//                    fullAdminDateTime.add(minimalAdminDateTime);
+//                }
+//            } else if (adminTimeDates.isEmpty() || adminTimeDates.size()==0){
+//                LocalDateTime minimalAdminDateTime = LocalDateTime.of(dp, LocalTime.MIN);
+//                fullAdminDateTime.add(minimalAdminDateTime);
+//            }
+//        }
         return fullAdminDateTime;
+        }
     }
-}

@@ -8,9 +8,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 public class AddServerWindowController implements Initializable {
 
     @FXML
-    private GridPane addServerWindow;
+    private BorderPane addServerWindow;
 
     @FXML
     private TextField serverNameTextField;
@@ -31,10 +31,10 @@ public class AddServerWindowController implements Initializable {
     private TextField serverLinkTextField;
 
     @FXML
-    private HBox cancelButton;
+    private Button cancelButton;
 
     @FXML
-    private HBox addNewServerButton;
+    private Button addNewServerButton;
 
     @FXML
     private Text updateStatus;

@@ -64,7 +64,7 @@ public class BaseWindowController implements Initializable {
 
     @FXML
     protected void handleConfigureDatabaseButton(ActionEvent event) {
-            this.changeScene(adminsFXMLFile, event);
+            this.changeScene(databaseConfigurationFXMLFile, event);
     }
 
     @Override // This method is called by the FXMLLoader when initialization is complete
