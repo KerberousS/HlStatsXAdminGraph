@@ -17,6 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.chart.StackedBarChart?>
 <BorderPane fx:id="chartsWindow" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.ChartsWindowController">
     <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
     
@@ -47,14 +48,14 @@
                 </yAxis>
             </AreaChart>
 
-            <BarChart fx:id="barChart" title="Admins Bar Graph" visible="false">
+            <StackedBarChart fx:id="barChart" title="Admins Bar Graph" visible="false">
                 <xAxis>
                     <CategoryAxis label="Days" fx:id="xBarAxis" />
                 </xAxis>
                 <yAxis>
                     <NumberAxis fx:id="yBarAxis" label="Times (in seconds)" side="LEFT" />
                 </yAxis>
-            </BarChart>
+            </StackedBarChart>
         </StackPane>
     </center>
 

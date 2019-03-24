@@ -1,5 +1,6 @@
 package javafx;
 
+import com.sun.javafx.charts.Legend;
 import getinfo.SummarizeTime;
 import hibernate.Admin;
 import javafx.application.Platform;
@@ -59,7 +60,7 @@ public class ChartsWindowController implements Initializable {
     private AreaChart areaChart;
 
     @FXML
-    private BarChart barChart;
+    private StackedBarChart barChart;
 
     @FXML
     private Button pieChartButton;
@@ -205,12 +206,8 @@ public class ChartsWindowController implements Initializable {
                         //Get admin color
                         String adminColor = adminsList.get(i).getAdminColor();
 
-                        int fixI = i;
                         //Set new node styles
-                        if (barChart.lookupAll(".default-color" + i + ".chart-bar")==null) {
-                            fixI += adminsList.size();
-                        }
-                        for (Node n : barChart.lookupAll(".default-color" + fixI + ".chart-bar")) {
+                        for (Node n : barChart.lookupAll(".default-color" + i + ".chart-bar")) {
                             n.setStyle("-fx-bar-fill: " + "#" + adminColor);
                         }
                     }
@@ -228,41 +225,38 @@ public class ChartsWindowController implements Initializable {
     protected void handleRandomAdminColor(ActionEvent event) {
         setColorButtonsDisableStatus(false, false, false);
         if (pieChart.isVisible()) {
-            Platform.runLater(() -> {
-                for (int i = 0; i < adminsList.size(); i++) {
-                    //Get nodes
-                    Node adminPieChartColor = pieChart.lookup(".default-color" + i + ".chart-pie");
-                    Node adminLegendSymbol = pieChart.lookup(".default-color" + i + ".chart-legend-item-symbol");
+                Platform.runLater(() -> {
+                    for (int i = 0; i < adminsList.size(); i++) {
+                        //Generate random color
+                        StringBuilder newRGBColor = new StringBuilder()
+                                .append("rgb")
+                                .append("(")
+                                .append(randomInt(255))
+                                .append(", ")
+                                .append(randomInt(255))
+                                .append(", ")
+                                .append(randomInt(255))
+                                .append(")");
 
-                    if (adminPieChartColor==null) {
-                        adminPieChartColor = pieChart.lookup(".default-color" + i+adminsList.size() + ".chart-pie");
-                        adminLegendSymbol = pieChart.lookup(".default-color" + i+adminsList.size() + ".chart-legend-item-symbol");
+                        pieChart.getData().get(i).getNode().lookup(".chart-pie").setStyle("-fx-pie-color: " + newRGBColor);
                     }
 
-                    //Generate random color
-                    StringBuilder newRGBColor = new StringBuilder()
-                            .append("rgb")
-                            .append("(")
-                            .append(randomInt(255))
-                            .append(", ")
-                            .append(randomInt(255))
-                            .append(", ")
-                            .append(randomInt(255))
-                            .append(")");
-
-                    //Set new style
-                    adminPieChartColor.setStyle("-fx-pie-color: " + newRGBColor);
-                    adminLegendSymbol.setStyle("-fx-background-color: " + newRGBColor);
+                for (Node n : pieChart.getChildrenUnmodifiable()) {
+                    if (n instanceof Legend) {
+                        int count = 0;
+                        for (Legend.LegendItem legendItem : ((Legend) n).getItems()) {
+                            String[] currentAdminRGBCStyle = pieChart.getData().get(count).getNode().lookup(".chart-pie").getStyle().split(": ");
+                            String newRGBColor = currentAdminRGBCStyle[1];
+                            legendItem.getSymbol().setStyle("-fx-background-color: " + newRGBColor);
+                            count++;
+                        }
+                    }
                 }
             });
         } else if (lineChart.isVisible()) {
+
             Platform.runLater(() -> {
                 for (int i = 0; i < adminsList.size(); i++) {
-                    //Get nodes
-                    Node adminLineStrokeColor = lineChart.lookup(".default-color" + i + ".chart-series-line");
-                    Node adminLineSymbolColor = lineChart.lookup(".default-color" + i + ".chart-line-symbol");
-                    Node adminLegendSymbol = lineChart.lookup(".default-color" + i + ".chart-legend-item-symbol");
-
                     //Generate random color
                     StringBuilder newRGBColor = new StringBuilder()
                             .append("rgb")
@@ -274,25 +268,24 @@ public class ChartsWindowController implements Initializable {
                             .append(randomInt(255))
                             .append(")");
 
-                    //Set new node styles
+                    lineChart.getData().get(i).getNode().lookup(".chart-series-line").setStyle("-fx-stroke: " + newRGBColor);
+                }
 
-                    try {
-                        adminLineStrokeColor.setStyle("-fx-stroke: " + newRGBColor);
-                        adminLineSymbolColor.setStyle("-fx-background-color: " + newRGBColor);
-                        adminLegendSymbol.setStyle("-fx-background-color: " + newRGBColor);
-                    } catch (NullPointerException e) {
-                        adminLineStrokeColor = lineChart.lookup(".default-color" + i+adminsList.size() + ".chart-series-line");
-                        adminLineSymbolColor = lineChart.lookup(".default-color" + i+adminsList.size() + ".chart-line-symbol");
-                        adminLegendSymbol = lineChart.lookup(".default-color" + i+adminsList.size() + ".chart-legend-item-symbol");
-
-                        adminLineStrokeColor.setStyle("-fx-stroke: " + newRGBColor);
-                        adminLineSymbolColor.setStyle("-fx-background-color: " + newRGBColor);
-                        adminLegendSymbol.setStyle("-fx-background-color: " + newRGBColor);
+                for (Node n : lineChart.getChildrenUnmodifiable()) {
+                    if (n instanceof Legend) {
+                        int count = 0;
+                        for (Legend.LegendItem legendItem : ((Legend) n).getItems()) {
+                            String[] currentAdminRGBCStyle = lineChart.getData().get(count).getNode().lookup(".chart-series-line").getStyle().split(": ");
+                            String newRGBColor = currentAdminRGBCStyle[1];
+                            legendItem.getSymbol().setStyle("-fx-background-color: " + newRGBColor);
+                            count++;
+                        }
                     }
                 }
             });
         }
     }
+
 
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
