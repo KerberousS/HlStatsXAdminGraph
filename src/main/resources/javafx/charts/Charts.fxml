@@ -3,7 +3,6 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.AreaChart?>
-<?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
@@ -30,7 +29,7 @@
             <PieChart fx:id="pieChart" maxWidth="Infinity" title="Admins Pie Graph" visible="false">
             </PieChart>
 
-            <LineChart fx:id="lineChart" createSymbols="false" title="Admins Line Graph" visible="false">
+            <LineChart fx:id="lineChart" createSymbols="false" title="Admins Line Graph" animated="false">
                 <xAxis>
                     <CategoryAxis label="Days" fx:id="xLineAxis" />
                 </xAxis>
@@ -39,7 +38,7 @@
                 </yAxis>
             </LineChart>
 
-            <AreaChart fx:id="areaChart" title="Admins Area Graph" visible="false">
+            <AreaChart fx:id="areaChart" title="Admins Area Graph" visible="false" animated="false">
                 <xAxis>
                     <CategoryAxis label="Days" fx:id="xAreaAxis" />
                 </xAxis>
@@ -48,7 +47,7 @@
                 </yAxis>
             </AreaChart>
 
-            <StackedBarChart fx:id="barChart" title="Admins Bar Graph" visible="false">
+            <StackedBarChart fx:id="barChart" title="Admins Bar Graph" visible="false" animated="false">
                 <xAxis>
                     <CategoryAxis label="Days" fx:id="xBarAxis" />
                 </xAxis>
@@ -64,13 +63,13 @@
             <Label text="From: ">
             </Label>
 
-            <DatePicker fx:id="setdateFrom">
+            <DatePicker fx:id="setDateFrom">
             </DatePicker>
 
             <Label text="To: ">
             </Label>
 
-            <DatePicker fx:id="setdateTo" BorderPane.alignment="CENTER">
+            <DatePicker fx:id="setDateTo" BorderPane.alignment="CENTER">
             </DatePicker>
         </HBox>
     </top>

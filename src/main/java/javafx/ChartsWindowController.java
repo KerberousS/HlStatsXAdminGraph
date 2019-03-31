@@ -4,12 +4,8 @@ import com.sun.javafx.charts.Legend;
 import getinfo.SummarizeTime;
 import hibernate.Admin;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +17,6 @@ import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import javafx.scene.input.MouseEvent;
@@ -76,10 +71,10 @@ public class ChartsWindowController implements Initializable {
 
 
     @FXML
-    private DatePicker setdateFrom;
+    private DatePicker setDateFrom;
 
     @FXML
-    private DatePicker setdateTo;
+    private DatePicker setDateTo;
 
     @FXML
     private Button naturalColorButton;
@@ -90,17 +85,18 @@ public class ChartsWindowController implements Initializable {
     @FXML
     private Button defaultColorButton;
 
-    private ProgressBar progressBar;
+    private ProgressIndicator progressIndicator;
 
     private static List<Admin> adminsList;
 
-    private LocalDate dateFrom;
-    private LocalDate dateTo;
+    private static LocalDate dateFrom;
+    private static LocalDate dateTo;
 
     private String adminsFXMLFile = "admins/Admins.fxml";
+
     @FXML
     protected void handleCloseButton(ActionEvent event) {
-            this.changeScene(adminsFXMLFile, event);
+        this.changeScene(adminsFXMLFile, event);
     }
 
     @FXML
@@ -127,90 +123,81 @@ public class ChartsWindowController implements Initializable {
     protected void handleSaveScreenshot(ActionEvent event) {
         //TODO: SAVE SCREENSHOT
     }
+
     @FXML
     protected void handleNaturalAdminColor(ActionEvent event) {
         setColorButtonsDisableStatus(true, false, false);
         if (pieChart.isVisible()) {
             Platform.runLater(() -> {
                 for (int i = 0; i < adminsList.size(); i++) {
-                    //Get nodes
-                    Node adminPieChartColor = pieChart.lookup(".default-color" + i + ".chart-pie");
-                    Node adminLegendSymbol = pieChart.lookup(".default-color" + i + ".chart-legend-item-symbol");
-
-                    if (adminPieChartColor==null) {
-                        adminPieChartColor = pieChart.lookup(".default-color" + i+adminsList.size() + ".chart-pie");
-                        adminLegendSymbol = pieChart.lookup(".default-color" + i+adminsList.size() + ".chart-legend-item-symbol");
+                    pieChart.getData().get(i).getNode().lookup(".chart-pie").setStyle("-fx-pie-color: " + "#" + adminsList.get(i).getAdminColor());
+                }
+                for (Node n : pieChart.getChildrenUnmodifiable()) {
+                    if (n instanceof Legend) {
+                        int count = 0;
+                        for (Legend.LegendItem legendItem : ((Legend) n).getItems()) {
+                            String[] currentAdminChartColorStyle = pieChart.getData().get(count).getNode().lookup(".chart-pie").getStyle().split(": ");
+                            String currentAdminChartColor = currentAdminChartColorStyle[1];
+                            legendItem.getSymbol().setStyle("-fx-background-color: " + currentAdminChartColor);
+                            count++;
+                        }
                     }
-
-                    //Get admin color
-                    String adminColor = adminsList.get(i).getAdminColor();
-
-                    //Set new style
-                    adminPieChartColor.setStyle("-fx-pie-color: " + "#" + adminColor);
-                    adminLegendSymbol.setStyle("-fx-background-color: " + "#" + adminColor);
                 }
             });
         } else if (lineChart.isVisible()) {
             Platform.runLater(() -> {
                 for (int i = 0; i < adminsList.size(); i++) {
-                    //Get nodes
-                    Node adminLineStrokeColor = lineChart.lookup(".default-color" + i + ".chart-series-line");
-                    Node adminLineSymbolColor = lineChart.lookup(".default-color" + i + ".chart-line-symbol");
-                    Node adminLegendSymbol = lineChart.lookup(".default-color" + i + ".chart-legend-item-symbol");
+                    lineChart.getData().get(i).getNode().lookup(".chart-series-line").setStyle("-fx-stroke: " + "#" + adminsList.get(i).getAdminColor());
+                }
 
-                    if (adminLineStrokeColor==null) {
-                        adminLineStrokeColor = lineChart.lookup(".default-color" + i+adminsList.size() + ".chart-series-line");
-                        adminLineSymbolColor = lineChart.lookup(".default-color" + i+adminsList.size() + ".chart-line-symbol");
-                        adminLegendSymbol = lineChart.lookup(".default-color" + i+adminsList.size() + ".chart-legend-item-symbol");
+                for (Node n : lineChart.getChildrenUnmodifiable()) {
+                    if (n instanceof Legend) {
+                        int count = 0;
+                        for (Legend.LegendItem legendItem : ((Legend) n).getItems()) {
+                            String[] currentAdminChartColorStyle = lineChart.getData().get(count).getNode().lookup(".chart-series-line").getStyle().split(": ");
+                            String currentAdminChartColor = currentAdminChartColorStyle[1];
+                            legendItem.getSymbol().setStyle("-fx-background-color: " + currentAdminChartColor);
+                            count++;
+                        }
                     }
-
-                    //Get color
-                    String adminColor = adminsList.get(i).getAdminColor();
-
-                    //Set new node styles
-                    adminLineStrokeColor.setStyle("-fx-stroke: " + "#" + adminColor);
-                    adminLineSymbolColor.setStyle("-fx-background-color: " + "#" + adminColor);
-                    adminLegendSymbol.setStyle("-fx-background-color: " + "#" + adminColor);
                 }
             });
         } else if (areaChart.isVisible()) {
             Platform.runLater(() -> {
                 for (int i = 0; i < adminsList.size(); i++) {
                     //Get nodes
-                    Node adminAreaStrokeColor = areaChart.lookup(".default-color" + i + ".chart-series-area-line");
-                    Node adminAreaSymbolColor = areaChart.lookup(".default-color" + i + ".chart-area-symbol");
-                    Node adminAreaFillColor = areaChart.lookup(".default-color" + i + ".chart-series-area-fill");
-                    Node adminLegendSymbol = areaChart.lookup(".default-color" + i + ".chart-legend-item-symbol");
+                    StringBuilder lookupCSS = new StringBuilder()
+                            .append(".default-color")
+                            .append(i);
 
-                    if (adminAreaStrokeColor==null) {
-                        adminAreaStrokeColor = areaChart.lookup(".default-color" + i+adminsList.size() + ".chart-series-area-line");
-                        adminAreaSymbolColor = areaChart.lookup(".default-color" + i+adminsList.size() + ".chart-area-symbol");
-                        adminAreaFillColor = areaChart.lookup(".default-color" + i+adminsList.size() + ".chart-series-area-fill");
-                        adminLegendSymbol = areaChart.lookup(".default-color" + i+adminsList.size() + ".chart-legend-item-symbol");
-                    }
+                    Node adminAreaStrokeColor = areaChart.lookup(lookupCSS.append(".chart-series-area-line").toString());
+                    Node adminAreaSymbolColor = areaChart.lookup(lookupCSS.append(".chart-area-symbol").toString());
+                    Node adminAreaFillColor = areaChart.lookup(lookupCSS.append(".chart-series-area-fill").toString());
+                    Node adminLegendSymbol = areaChart.lookup(lookupCSS.append(".chart-legend-item-symbol").toString());
 
                     //Get color
-                    String adminColor = adminsList.get(i).getAdminColor();
+                    String adminColor = java.awt.Color.decode("#" + adminsList.get(i).getAdminColor()).toString();
+                    System.out.println(adminColor);
 
                     //Set new node styles
-                    adminAreaStrokeColor.setStyle("-fx-stroke: " + "#" + adminColor);
-                    adminAreaSymbolColor.setStyle("-fx-background-color: " + "#" + adminColor);
-                    adminAreaFillColor.setStyle("-fx-fill: " + "#" + adminColor); //TODO: ADD ALPHA TO COLOR
-                    adminLegendSymbol.setStyle("-fx-background-color: " + "#" + adminColor);
+                    adminAreaStrokeColor.setStyle("-fx-stroke: " + adminColor);
+                    adminAreaSymbolColor.setStyle("-fx-background-color: " + adminColor);
+                    adminAreaFillColor.setStyle("-fx-fill: " + adminColor); //TODO: ADD ALPHA TO COLOR
+                    adminLegendSymbol.setStyle("-fx-background-color: " + adminColor);
                 }
             });
         } else if (barChart.isVisible()) {
             Platform.runLater(() -> {
-                    for (int i = 0; i < adminsList.size(); i++) {
+                for (int i = 0; i < adminsList.size(); i++) {
 
-                        //Get admin color
-                        String adminColor = adminsList.get(i).getAdminColor();
+                    //Get admin color
+                    String adminColor = adminsList.get(i).getAdminColor();
 
-                        //Set new node styles
-                        for (Node n : barChart.lookupAll(".default-color" + i + ".chart-bar")) {
-                            n.setStyle("-fx-bar-fill: " + "#" + adminColor);
-                        }
+                    //Set new node styles
+                    for (Node n : barChart.lookupAll(".default-color" + i + ".chart-bar")) {
+                        n.setStyle("-fx-bar-fill: " + "#" + adminColor);
                     }
+                }
             });
         }
     }
@@ -225,21 +212,21 @@ public class ChartsWindowController implements Initializable {
     protected void handleRandomAdminColor(ActionEvent event) {
         setColorButtonsDisableStatus(false, false, false);
         if (pieChart.isVisible()) {
-                Platform.runLater(() -> {
-                    for (int i = 0; i < adminsList.size(); i++) {
-                        //Generate random color
-                        StringBuilder newRGBColor = new StringBuilder()
-                                .append("rgb")
-                                .append("(")
-                                .append(randomInt(255))
-                                .append(", ")
-                                .append(randomInt(255))
-                                .append(", ")
-                                .append(randomInt(255))
-                                .append(")");
+            Platform.runLater(() -> {
+                for (int i = 0; i < adminsList.size(); i++) {
+                    //Generate random color
+                    StringBuilder newRGBColor = new StringBuilder()
+                            .append("rgb")
+                            .append("(")
+                            .append(randomInt(255))
+                            .append(", ")
+                            .append(randomInt(255))
+                            .append(", ")
+                            .append(randomInt(255))
+                            .append(")");
 
-                        pieChart.getData().get(i).getNode().lookup(".chart-pie").setStyle("-fx-pie-color: " + newRGBColor);
-                    }
+                    pieChart.getData().get(i).getNode().lookup(".chart-pie").setStyle("-fx-pie-color: " + newRGBColor);
+                }
 
                 for (Node n : pieChart.getChildrenUnmodifiable()) {
                     if (n instanceof Legend) {
@@ -286,34 +273,36 @@ public class ChartsWindowController implements Initializable {
         }
     }
 
-
+    
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-        setdateFrom.setValue(LocalDate.now().minusDays(27));
-        setdateTo.setValue(LocalDate.now());
 
-        setdateFrom.valueProperty().addListener((observableValue, localDate, t1) -> {
-            rePopulateCharts();
+        setDateFrom.setValue(LocalDate.now().minusDays(27));
+        setDateTo.setValue(LocalDate.now());
+
+        dateFrom = setDateFrom.getValue();
+        dateTo = setDateTo.getValue();
+
+        setDateFrom.valueProperty().addListener((observableValue, localDate, t1) -> {
+            dateFrom = t1;
+            Platform.runLater(() -> rePopulateCharts());
             setColorButtonsDisableStatus(false, false, true);
         });
 
-        setdateTo.valueProperty().addListener(new ChangeListener<LocalDate>() {
-            @Override
-            public void changed(ObservableValue<? extends LocalDate> observableValue, LocalDate localDate, LocalDate t1) {
-                rePopulateCharts();
-                setColorButtonsDisableStatus(false, false, true);
-            }
+        setDateTo.valueProperty().addListener((observableValue, localDate, t1) -> {
+            dateTo = t1;
+            Platform.runLater(() -> rePopulateCharts());
+            setColorButtonsDisableStatus(false, false, true);
         });
 
         // Factory to create Cell of DatePicker
         Callback<DatePicker, DateCell> dayCellFactory = this.getDayCellFactory();
-        setdateFrom.setDayCellFactory(dayCellFactory);
-        setdateTo.setDayCellFactory(dayCellFactory);
+        setDateFrom.setDayCellFactory(dayCellFactory);
+        setDateTo.setDayCellFactory(dayCellFactory);
 
         adminsList = AdminsWindowController.selectedAdminsList;
 
-        rePopulateCharts();
-
+        Platform.runLater(() -> rePopulateCharts());
         //TODO: CHECK LOADING BAR AFTER GRAPHICAL REWORK
     }
 
@@ -352,7 +341,7 @@ public class ChartsWindowController implements Initializable {
         }
         Scene scene = new Scene(window);
 
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
     }
@@ -362,13 +351,6 @@ public class ChartsWindowController implements Initializable {
         lineChart.setVisible(lineChartVisibility);
         areaChart.setVisible(areaChartVisibility);
         barChart.setVisible(barChartVisibility);
-    }
-
-    private void setChartButtonsDisableStatus(Boolean pieChartButtonDisable, Boolean lineChartButtonDisable, Boolean areaChartButtonDisable, Boolean barChartButtonDisable) {
-        pieChartButton.setDisable(pieChartButtonDisable);
-        lineChartButton.setDisable(lineChartButtonDisable);
-        areaChartButton.setDisable(areaChartButtonDisable);
-        barChartButton.setDisable(barChartButtonDisable);
     }
 
     private void setColorButtonsDisableStatus(Boolean naturalColorButtonDisable, Boolean randomColorButtonDisable, Boolean defaultColorButtonDisable) {
@@ -383,251 +365,140 @@ public class ChartsWindowController implements Initializable {
         return randomInt;
     }
 
+    private void setPieChartData() {
+        Platform.runLater(() -> {
+            //Create new Chart series
+            ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
+            for (Admin a : adminsList) {
+                //Get admin data
+                GetAdminPieDataService getData = new GetAdminPieDataService(a, dateFrom, dateTo);
+
+                getData.restart();
+
+                getData.setOnSucceeded(e ->  {
+                    PieChart.Data data = new PieChart.Data(a.getAdminName() + " (" + SummarizeTime.sumTimeString(a.getAdminLink(), dateFrom, dateTo) + ")", getData.getValue());
+                    pieChartData.add(data);
+                    pieChart.setData(pieChartData);
+                });
+            }
 
 
-//    Service populatePieChart = new Service() {
-//        @Override
-//        protected Task createTask() {
-//            return new Task() {
-//                @Override
-//                protected Void call() {
-//                    Double max = 0.0;
-//                    dateFrom = setdateFrom.getValue();
-//                    dateTo = setdateTo.getValue();
-//                    ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+//            Double adminTimeSum = 0.0;
+//            for (PieChart.Data data : pieChart.getData()) {
+//                adminTimeSum += data.getPieValue();
+//            }
 //
-//                    Integer duration;
-//                    for (Admin a : adminsList) {
-//                        duration = SummarizeTime.adminTimesDurationTotal(a.getAdminLink(), dateFrom, dateTo);
-//                        //System.out.println(a.getAdminName() + "\n" + SummarizeTime.adminTimesDurationTotal(a.getAdminLink(), dateFrom, dateTo));
-//                        PieChart.Data data = new PieChart.Data(a.getAdminName() + " (" + SummarizeTime.sumTimeString(a.getAdminLink(), dateFrom, dateTo) + ")", duration);
-//                        pieChartData.add(data);
-//                        max += duration;
-//                    }
+//            final Double adminTimeSumFinal = adminTimeSum;
 //
-//                    final Double finalMax = max;
-//                    Platform.runLater(() -> pieChart.setData(pieChartData));
-//                        for (PieChart.Data data : pieChart.getData()) {
-//                            data.getNode().addEventHandler(MouseEvent.MOUSE_PRESSED,
-//                                    e -> {
-//                                        caption.setTranslateX(e.getSceneX());
-//                                        caption.setTranslateY(e.getSceneY());
-//                                        //TODO: CHECK THIS AFTER REWORK OF GUI
-//                                        double dataValue = data.getPieValue() / finalMax * 100;
-//                                        String result = String.format("%.2f", dataValue);
-//                                        caption.setText(result + "%");
-//                                    });
-//                        }
-//                    return null;
-//                }
-//            };
-//        }
-//    };
+//            for (PieChart.Data data : pieChart.getData()) {
+//                data.getNode().addEventHandler(MouseEvent.MOUSE_PRESSED,
+//                        e -> {
+//                            caption.setTranslateX(e.getSceneX());
+//                            caption.setTranslateY(e.getSceneY());
+//                            //TODO: CHECK THIS AFTER REWORK OF GUI
+//                            double dataValue = data.getPieValue() / adminTimeSumFinal * 100;
+//                            String result = String.format("%.2f", dataValue);
+//                            caption.setText(result + "%");
+//                        });
+//            }
+        });
+    }
 
-    Service populatePieChart = new Service() {
-        @Override
-        protected Task createTask() {
-            return new Task() {
-                @Override
-                protected Void call() {
-                    Double max = 0.0;
-                    dateFrom = setdateFrom.getValue();
-                    dateTo = setdateTo.getValue();
-                    ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+    private void setLineChartData() {
+        Platform.runLater(() -> {
+            for (Admin a : adminsList) {
+                
+                //Get admin data
+                GetAdminChartDataService getData = new GetAdminChartDataService(a, dateFrom, dateTo);
 
-                    Integer duration;
-                    for (Admin a : adminsList) {
-                        duration = SummarizeTime.adminTimesDurationTotal(a.getAdminLink(), dateFrom, dateTo);
-                        //System.out.println(a.getAdminName() + "\n" + SummarizeTime.adminTimesDurationTotal(a.getAdminLink(), dateFrom, dateTo));
-                        PieChart.Data data = new PieChart.Data(a.getAdminName() + " (" + SummarizeTime.sumTimeString(a.getAdminLink(), dateFrom, dateTo) + ")", duration);
-                        pieChartData.add(data);
-                        max += duration;
+                getData.restart();
+
+                getData.setOnSucceeded(e -> {
+                    //Create new Chart series
+                    XYChart.Series<String, Number> lineChartData = new XYChart.Series<>();
+                    List<LocalDateTime> dateTimes = getData.getValue();
+                    lineChartData.setName(a.getAdminName());
+                    for (int i = 0; i < dateTimes.size(); i++) {
+                        lineChartData.getData().add(new XYChart.Data<>(dateTimes.get(i).toLocalDate().toString(), dateTimes.get(i).toLocalTime().toSecondOfDay()));
                     }
+                    lineChart.getData().add(lineChartData);
+                });
+            }
+        });
+    }
 
-                    final Double finalMax = max;
-                    Platform.runLater(() -> pieChart.setData(pieChartData));
-                        for (PieChart.Data data : pieChart.getData()) {
-                            data.getNode().addEventHandler(MouseEvent.MOUSE_PRESSED,
-                                    e -> {
-                                        caption.setTranslateX(e.getSceneX());
-                                        caption.setTranslateY(e.getSceneY());
-                                        //TODO: CHECK THIS AFTER REWORK OF GUI
-                                        double dataValue = data.getPieValue() / finalMax * 100;
-                                        String result = String.format("%.2f", dataValue);
-                                        caption.setText(result + "%");
-                                    });
-                        }
-                    return null;
-                }
-            };
-        }
-    };
+    private void setAreaChartData() {
+        Platform.runLater(() -> {
+            for (Admin a : adminsList) {
 
-    Service populateLineChart = new Service() {
-        @Override
-        protected Task createTask() {
-            return new Task() {
-                @Override
-                protected Void call() {
-                    dateFrom = setdateFrom.getValue();
-                    dateTo = setdateTo.getValue();
+                //Get admin data
+                GetAdminChartDataService getData = new GetAdminChartDataService(a, dateFrom, dateTo);
+                getData.restart();
 
-                    for (Admin a : adminsList) {
-                        XYChart.Series<String, Number> lineChartData = new XYChart.Series<>();
+                getData.setOnSucceeded(e -> {
+                    //Create new Chart series
+                    XYChart.Series<String, Number> areaChartData = new XYChart.Series<>();
+                    List<LocalDateTime> dateTimes = getData.getValue();
 
-                        List<LocalDateTime> dateTimes = SummarizeTime.getTimesListFromPeriod(a.getAdminLink(), dateFrom, dateTo);
-                        //System.out.println(a.getAdminName()); Debug line
-                        lineChartData.setName(a.getAdminName());
-                            for (int i = 0; i < dateTimes.size(); i++) {
-                                //System.out.println("date: " + dateTimes.get(i).toLocalDate().toString() + "time: " + dateTimes.get(i).toLocalTime().toSecondOfDay()); Debug
-                                lineChartData.getData().add(new XYChart.Data<>(dateTimes.get(i).toLocalDate().toString(), dateTimes.get(i).toLocalTime().toSecondOfDay()));
-                            }
-                        Platform.runLater(() -> lineChart.getData().add(lineChartData));
+                    //Set admins name as series title
+                    areaChartData.setName(a.getAdminName());
+
+                    //Convert all admin data to chart data
+                    for (int i = 0; i < dateTimes.size(); i++) {
+                        areaChartData.getData().add(new XYChart.Data<>(dateTimes.get(i).toLocalDate().toString(), dateTimes.get(i).toLocalTime().toSecondOfDay()));
                     }
-                    return null;
-                }
-            };
-        }
-    };
+                    //Add chart data to areaChart
+                    areaChart.getData().add(areaChartData);
+                });
+            }
+        });
+    }
 
 
-    Service populateAreaChart = new Service() {
-        @Override
-        protected Task createTask() {
-            return new Task() {
-                @Override
-                protected Void call() {
-                    dateFrom = setdateFrom.getValue();
-                    dateTo = setdateTo.getValue();
+    private void setBarChartData() {
+        Platform.runLater(() -> {
+            for (Admin a : adminsList) {
 
-                    for (Admin a : adminsList) {
+                //Get admin data
+                GetAdminChartDataService getData = new GetAdminChartDataService(a, dateFrom, dateTo);
+                getData.restart();
 
-                        XYChart.Series<String, Number> areaChartData = new XYChart.Series<>();
+                getData.setOnSucceeded(e -> {
+                    //Create new Chart series
+                    XYChart.Series<String, Number> barChartData = new XYChart.Series<>();
+                    List<LocalDateTime> dateTimes = getData.getValue();
 
-                        List<LocalDateTime> dateTimes = SummarizeTime.getTimesListFromPeriod(a.getAdminLink(), dateFrom, dateTo);
+                    barChartData.setName(a.getAdminName());
 
-                        areaChartData.setName(a.getAdminName());
-                            for (int i = 0; i < dateTimes.size(); i++) {
-                                areaChartData.getData().add(new XYChart.Data<>(dateTimes.get(i).toLocalDate().toString(), dateTimes.get(i).toLocalTime().toSecondOfDay()));
-                            }
-                        Platform.runLater(() -> areaChart.getData().add(areaChartData));
+                    for (int i = 0; i < dateTimes.size(); i++) {
+                        barChartData.getData().add(new XYChart.Data<>(dateTimes.get(i).toLocalDate().toString(), dateTimes.get(i).toLocalTime().toSecondOfDay()));
                     }
-                    return null;
-                }
-            };
-        }
-    };
-
-    Service populateBarChart = new Service() {
-        @Override
-        protected Task createTask() {
-            return new Task() {
-                @Override
-                protected Void call() {
-                    dateFrom = setdateFrom.getValue();
-                    dateTo = setdateTo.getValue();
-
-                    for (Admin a : adminsList) {
-                        XYChart.Series<String, Number> barChartData = new XYChart.Series<>();
-                        barChartData.setName(a.getAdminName());
-                        List<LocalDateTime> dateTimes = SummarizeTime.getTimesListFromPeriod(a.getAdminLink(), dateFrom, dateTo);
-
-                            for (int i = 0; i < dateTimes.size(); i++) {
-                                barChartData.getData().add(new XYChart.Data<>(dateTimes.get(i).toLocalDate().toString(), dateTimes.get(i).toLocalTime().toSecondOfDay()));
-                            }
-                            //System.out.println(barChartData.getData());
-                            Platform.runLater(() -> barChart.getData().add(barChartData));
-                    }
-                    return null;
-                }
-            };
-        }
-    };
-
-    Service clearChartData = new Service() {
-        @Override
-        protected Task createTask() {
-            return new Task() {
-                @Override
-                protected Void call() {
-                    //Clear all datas
-                    Platform.runLater(() -> {
-                                pieChart.getData().clear();
-                                lineChart.getData().clear();
-                                areaChart.getData().clear();
-                                barChart.getData().clear();
-                            });
-
-                    //Clean layout
-                    pieChart.layout();
-                    lineChart.layout();
-                    areaChart.layout();
-                    barChart.layout();
-                    return null;
-                }
-            };
-        }
-    };
-
-    Service getAdminData = new Service() {
-        @Override
-        protected Task createTask() {
-            return new Task() {
-                @Override
-                protected Void call() {
-
-                    return null;
-                }
-            };
-        }
-    };
-
-    private synchronized void rePopulateCharts() {
-        setChartButtonsDisableStatus(true, true, true, true);
-        setColorButtonsDisableStatus(true, true, true);
-
-        progressBar = new ProgressBar();
-        progressBar.progressProperty().bind(populateLineChart.progressProperty());
-        chartStackPane.getChildren().add(progressBar);
-        progressBar.setVisible(true);
-
-        clearChartData.restart();
-
-        //On succeed
-        clearChartData.setOnSucceeded(e -> {
-            populatePieChart.restart();
-            populateLineChart.restart();
-            populateAreaChart.restart();
-            populateBarChart.restart();
+                    barChart.getData().add(barChartData);
+                });
+            }
         });
-
-        //On failed
-        populatePieChart.setOnFailed(e -> {
-            Error.setText(this.getClass().getName() + "has failed, reason: " + populatePieChart.getException().toString());
-            Error.setFill(Color.RED);
-        });
-        populateLineChart.setOnFailed(e -> {
-            Error.setText(this.getClass().getName() + "has failed, reason: " + populateLineChart.getException().toString());
-            Error.setFill(Color.RED);
-        });
-        populateAreaChart.setOnFailed(e -> {
-            Error.setText(this.getClass().getName() + "has failed, reason: " + populateAreaChart.getException().toString());
-            Error.setFill(Color.RED);
-        });
-        populateBarChart.setOnFailed(e -> {
-            Error.setText(this.getClass().getName() + "has failed, reason: " + populateBarChart.getException().toString());
-            Error.setFill(Color.RED);
-        });
+    }
 
 
-        //If succeeded
-        populatePieChart.setOnSucceeded(e -> pieChartButton.setDisable(false));
-        populateLineChart.setOnSucceeded(e -> lineChartButton.setDisable(false));
-        populateAreaChart.setOnSucceeded(e -> areaChartButton.setDisable(false));
-        populateBarChart.setOnSucceeded(e -> {
-            barChartButton.setDisable(false);
-            setColorButtonsDisableStatus(false, false, true);
-            progressBar.setVisible(false);
+    private void clearChartData() {
+        Platform.runLater(() -> {
+            //Clear all datas
+            pieChart.getData().clear();
+            lineChart.getData().clear();
+            areaChart.getData().clear();
+            barChart.getData().clear();
+        });
+    }
+
+    private void rePopulateCharts() {
+        Platform.runLater(() -> {
+        clearChartData();
+
+        setLineChartData();
+        setAreaChartData();
+        setBarChartData();
+        setPieChartData();
         });
     }
 }
