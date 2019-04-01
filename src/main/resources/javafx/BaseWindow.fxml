@@ -38,12 +38,13 @@
                 <Button text="Manage Servers"
                         GridPane.rowIndex="2" GridPane.columnIndex="1"
                         onAction="#handleManageServerButton" />
-                <Button text="Choose this server"
+                <Button text="Choose this server" fx:id="chooseServerButton"
                         GridPane.rowIndex="3" GridPane.columnIndex="0"
                         onAction="#handleChooseServerButton" />
 
             <Text fx:id="updateStatus"
-                  GridPane.rowIndex="4" GridPane.columnIndex="0">
+                  GridPane.rowIndex="4" GridPane.columnIndex="0"
+            GridPane.columnSpan="2">
             </Text>
         </GridPane>
     </center>

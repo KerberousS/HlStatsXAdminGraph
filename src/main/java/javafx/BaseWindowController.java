@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -36,6 +37,9 @@ public class BaseWindowController implements Initializable {
 
     @FXML
     private Text updateStatus;
+
+    @FXML
+    private Button chooseServerButton;
 
     public static Server chosenServer;
     private List<Server> serversList = DBOperations.displayServerRecords();
@@ -77,9 +81,11 @@ public class BaseWindowController implements Initializable {
         if (status == "Connection Established") {
             databaseStatus.setText("Database " + status);
             databaseStatus.setFill(Color.GREEN);
+            chooseServerButton.setDisable(false);
         } else {
             databaseStatus.setText("Database " + status);
             databaseStatus.setFill(Color.RED);
+            chooseServerButton.setDisable(true);
         }
             //Initialize server list for server dropdown
 
