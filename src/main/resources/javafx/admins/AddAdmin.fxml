@@ -26,7 +26,8 @@
                     <Label text="Admins HlStatsX ID:"
                            GridPane.columnIndex="0" GridPane.rowIndex="2"/>
                     <TextField fx:id="adminLinkTextField"
-                               GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                               GridPane.columnIndex="0" GridPane.rowIndex="3"
+                    GridPane.columnSpan="2"/>
 
                     <Label text="Admins Color:"
                            GridPane.columnIndex="0" GridPane.rowIndex="4"/>

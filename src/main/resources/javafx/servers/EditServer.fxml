@@ -24,7 +24,8 @@
                 GridPane.columnSpan="2"/>
 
             <Text fx:id="updateStatus"
-                  GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                  GridPane.columnIndex="0" GridPane.rowIndex="4"
+            GridPane.columnSpan="2"/>
 
                 <Button text="Cancel" fx:id="cancelbutton" onAction="#handleCancelButton"
                         GridPane.columnIndex="0" GridPane.rowIndex="5"/>

@@ -24,7 +24,8 @@
                 </Label>
 
                 <TextField fx:id="adminLinkTextField"
-                           GridPane.columnIndex="0" GridPane.rowIndex="3">
+                           GridPane.columnIndex="0" GridPane.rowIndex="3"
+                GridPane.columnSpan="2">
                 </TextField>
                 <Label text="Admins Color:"
                        GridPane.columnIndex="0" GridPane.rowIndex="4">

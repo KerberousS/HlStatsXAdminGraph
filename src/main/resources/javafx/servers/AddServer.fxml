@@ -20,11 +20,13 @@
             <Label text="Type in a new server link:"
                    GridPane.columnIndex="0" GridPane.rowIndex="2"/>
             <TextField fx:id="serverLinkTextField" text="http://hlstatsx.strefagier.com.pl/hlstats.php?mode=playersessions&amp;player="
-                       GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                       GridPane.columnIndex="0" GridPane.rowIndex="3"
+            GridPane.columnSpan="2"/>
 
 
             <Text fx:id="updateStatus"
-                  GridPane.columnIndex="0" GridPane.rowIndex="4">
+                  GridPane.columnIndex="0" GridPane.rowIndex="4"
+            GridPane.columnSpan="2">
             </Text>
 
                 <Button text="Cancel" fx:id="cancelButton" onAction="#handleCancelButton"

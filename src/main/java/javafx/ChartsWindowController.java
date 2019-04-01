@@ -37,7 +37,7 @@ public class ChartsWindowController implements Initializable {
     private BorderPane chartsWindow;
 
     @FXML
-    Label caption;
+    Text caption;
 
     @FXML
     private Text Error;

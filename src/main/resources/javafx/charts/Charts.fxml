@@ -20,8 +20,8 @@
 <BorderPane fx:id="chartsWindow" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.ChartsWindowController">
     <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
     
-    <Label fx:id="caption">
-    </Label>
+    <Text fx:id="caption">
+    </Text>
 
     <center>
         <StackPane alignment="CENTER" fx:id="chartStackPane">
