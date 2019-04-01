@@ -23,16 +23,22 @@
                     <Label text="">
                     </Label>
                 </placeholder>
+                <!--<columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>-->
                 <columns>
-                    <TableColumn fx:id="columnAdminSelect" text="Select">
+                    <TableColumn fx:id="columnAdminSelect" text="Select"
+                    prefWidth="50">
                     </TableColumn>
-                    <TableColumn fx:id="columnAdminID" text="ID">
+                    <TableColumn fx:id="columnAdminID" text="ID"
+                                 prefWidth="50">
                     </TableColumn>
-                    <TableColumn fx:id="columnAdminName" text="Name">
+                    <TableColumn fx:id="columnAdminName" text="Name"
+                                 prefWidth="100">
                     </TableColumn>
-                    <TableColumn fx:id="columnAdminColor" text="Color">
+                    <TableColumn fx:id="columnAdminColor" text="Color"
+                                 prefWidth="100">
                     </TableColumn>
-                    <TableColumn fx:id="columnAdminLink" text="HlStats ID">
+                    <TableColumn fx:id="columnAdminLink" text="HlStats ID"
+                                 prefWidth="500">
                     </TableColumn>
                 </columns>
             <opaqueInsets>
