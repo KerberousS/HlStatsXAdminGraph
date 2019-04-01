@@ -102,21 +102,25 @@ public class ChartsWindowController implements Initializable {
     @FXML
     protected void showPieChart(ActionEvent event) {
         setChartsVisibility(true, false, false, false);
+        setColorButtonsDisableStatus(false, false, false);
     }
 
     @FXML
     protected void showLineChart(ActionEvent event) {
         setChartsVisibility(false, true, false, false);
+        setColorButtonsDisableStatus(false, false, false);
     }
 
     @FXML
     protected void showAreaChart(ActionEvent event) {
         setChartsVisibility(false, false, true, false);
+        setColorButtonsDisableStatus(true, true, false);
     }
 
     @FXML
     protected void showBarChart(ActionEvent event) {
         setChartsVisibility(false, false, false, true);
+        setColorButtonsDisableStatus(false, false, false);
     }
 
     @FXML
@@ -162,30 +166,30 @@ public class ChartsWindowController implements Initializable {
                     }
                 }
             });
-        } else if (areaChart.isVisible()) {
-            Platform.runLater(() -> {
-                for (int i = 0; i < adminsList.size(); i++) {
-                    //Get nodes
-                    StringBuilder lookupCSS = new StringBuilder()
-                            .append(".default-color")
-                            .append(i);
-
-                    Node adminAreaStrokeColor = areaChart.lookup(lookupCSS.append(".chart-series-area-line").toString());
-                    Node adminAreaSymbolColor = areaChart.lookup(lookupCSS.append(".chart-area-symbol").toString());
-                    Node adminAreaFillColor = areaChart.lookup(lookupCSS.append(".chart-series-area-fill").toString());
-                    Node adminLegendSymbol = areaChart.lookup(lookupCSS.append(".chart-legend-item-symbol").toString());
-
-                    //Get color
-                    String adminColor = java.awt.Color.decode("#" + adminsList.get(i).getAdminColor()).toString();
-                    System.out.println(adminColor);
-
-                    //Set new node styles
-                    adminAreaStrokeColor.setStyle("-fx-stroke: " + adminColor);
-                    adminAreaSymbolColor.setStyle("-fx-background-color: " + adminColor);
-                    adminAreaFillColor.setStyle("-fx-fill: " + adminColor); //TODO: ADD ALPHA TO COLOR
-                    adminLegendSymbol.setStyle("-fx-background-color: " + adminColor);
-                }
-            });
+//        } else if (areaChart.isVisible()) {
+//            Platform.runLater(() -> {
+//                for (int i = 0; i < adminsList.size(); i++) {
+//                    //Get nodes
+//                    StringBuilder lookupCSS = new StringBuilder()
+//                            .append(".default-color")
+//                            .append(i);
+//
+//                    Node adminAreaStrokeColor = areaChart.lookup(lookupCSS.append(".chart-series-area-line").toString());
+//                    Node adminAreaSymbolColor = areaChart.lookup(lookupCSS.append(".chart-area-symbol").toString());
+//                    Node adminAreaFillColor = areaChart.lookup(lookupCSS.append(".chart-series-area-fill").toString());
+//                    Node adminLegendSymbol = areaChart.lookup(lookupCSS.append(".chart-legend-item-symbol").toString());
+//
+//                    //Get color
+//                    String adminColor = java.awt.Color.decode("#" + adminsList.get(i).getAdminColor()).toString();
+//                    System.out.println(adminColor);
+//
+//                    //Set new node styles
+//                    adminAreaStrokeColor.setStyle("-fx-stroke: " + adminColor);
+//                    adminAreaSymbolColor.setStyle("-fx-background-color: " + adminColor);
+//                    adminAreaFillColor.setStyle("-fx-fill: " + adminColor); //TODO: ADD ALPHA TO COLOR
+//                    adminLegendSymbol.setStyle("-fx-background-color: " + adminColor);
+//                }
+//            });
         } else if (barChart.isVisible()) {
             Platform.runLater(() -> {
                 for (int i = 0; i < adminsList.size(); i++) {
@@ -204,7 +208,6 @@ public class ChartsWindowController implements Initializable {
 
     @FXML
     protected void handleDefaultChartColor(ActionEvent event) {
-        setColorButtonsDisableStatus(false, false, true);
         rePopulateCharts();
     }
 
@@ -270,8 +273,29 @@ public class ChartsWindowController implements Initializable {
                     }
                 }
             });
-        }
+        } else if (barChart.isVisible()) {
+        Platform.runLater(() -> {
+            for (int i = 0; i < adminsList.size(); i++) {
+
+                //Generate random color
+                StringBuilder newRGBColor = new StringBuilder()
+                        .append("rgb")
+                        .append("(")
+                        .append(randomInt(255))
+                        .append(", ")
+                        .append(randomInt(255))
+                        .append(", ")
+                        .append(randomInt(255))
+                        .append(")");
+
+                //Set new node styles
+                for (Node n : barChart.lookupAll(".default-color" + i + ".chart-bar")) {
+                    n.setStyle("-fx-bar-fill: " + newRGBColor);
+                }
+            }
+        });
     }
+}
 
     
     @Override // This method is called by the FXMLLoader when initialization is complete
