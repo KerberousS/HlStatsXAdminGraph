@@ -29,7 +29,7 @@
 .text {
     -fx-font-size: 1em;
     -fx-font-weight: bold;
-    -fx-text-fill: #fffff;
+    -fx-text-fill: #ffffff;
     -fx-margin-top: 0.1em;
     -fx-margin-bottom: 0.1em;
     -fx-margin-left: 0.1em;
@@ -53,63 +53,37 @@
     /* COMBOBOX STYLES */
 .combo-box .list-cell
 {
-    -fx-background: white;
+    -fx-background: linear-gradient(#606c88, #3f4c6b);
     -fx-background-color: transparent;
-    -fx-text-fill: -fx-text-base-color;
-    -fx-padding: 3 0 2 7;
-    -fx-cell-size: 1.66667em;
+    -fx-text-fill: white;
+    -fx-cell-size: 2em;
 }
 
 .combo-box-popup .list-view
 {
-    -fx-background-color: white, white;
-    -fx-background-insets: 0, 1;
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 8, 0.0 , 0 , 0 );
-}
-
-.combo-box-popup .list-view .list-cell
-{
-    -fx-padding: 4 0 4 5;
-
-    /* No alternate highlighting */
-    -fx-background-color: white;
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
 }
 
 .combo-box-popup .list-view .list-cell:filled:selected, .combo-box-popup .list-view .list-cell:filled:selected:hover
 {
-    -fx-background: -fx-accent;
-    -fx-background-color: -fx-selection-bar;
-    -fx-text-fill: -fx-selection-bar-text;
-}
-
-.combo-box-popup .list-view .list-cell:filled:hover
-{
-    -fx-background-color: white;
-    -fx-text-fill: -fx-text-inner-color;
+    -fx-background-color: linear-gradient(#e74c3c, #000000);
+    -fx-text-fill: white;
 }
 
 .combo-box-base
 {
-    -fx-background-color: white, white, white, white;
-    -fx-background-radius: 5, 5, 4, 3;
-    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
-    -fx-padding: 0;
+    -fx-background-color: linear-gradient(#e74c3c, #000000);
+    -fx-text-fill: white;
 }
 
 .combo-box-base:hover
 {
-    -fx-color: -fx-hover-base;
-}
-
-.combo-box-base:showing
-{
-    -fx-color: -fx-pressed-base;
+    -fx-background-color: linear-gradient(#000000, #e74c3c);
 }
 
 .combo-box-base:focused {
-    -fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
-    -fx-background-radius: 6.4, 4, 5, 3;
-    -fx-background-insets: -1.4, 0, 1, 2;
+    -fx-background-color: linear-gradient(#e74c3c, #000000);
 }
 
 .combo-box-base:disabled {
