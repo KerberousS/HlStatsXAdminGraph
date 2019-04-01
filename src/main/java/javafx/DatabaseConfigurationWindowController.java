@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -34,10 +35,10 @@ public class DatabaseConfigurationWindowController implements Initializable {
     private TextField passwordTextField;
 
     @FXML
-    private HBox cancelButton;
+    private Button cancelButton;
 
     @FXML
-    private HBox updateConfiguration;
+    private Button updateConfiguration;
 
     @FXML
     private Text updateStatus;

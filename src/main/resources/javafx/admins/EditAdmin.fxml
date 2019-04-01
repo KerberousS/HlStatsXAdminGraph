@@ -10,47 +10,43 @@
     <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
 
     <center>
-        <HBox alignment="CENTER" spacing="10">
+        <GridPane alignment="CENTER" vgap="10" hgap="10">
 
-            <VBox>
-                <Label text="Edit admins name:">
+                <Label text="Edit admins name:"
+                       GridPane.columnIndex="0" GridPane.rowIndex="0">
                 </Label>
 
-                <TextField fx:id="adminNameTextField">
+                <TextField fx:id="adminNameTextField"
+                           GridPane.columnIndex="0" GridPane.rowIndex="1">
                 </TextField>
-            </VBox>
-
-            <VBox>
-                <Label text="Admins HlStatsX ID:">
+                <Label text="Admins HlStatsX ID:"
+                       GridPane.columnIndex="0" GridPane.rowIndex="2">
                 </Label>
 
-                <TextField fx:id="adminLinkTextField">
+                <TextField fx:id="adminLinkTextField"
+                           GridPane.columnIndex="0" GridPane.rowIndex="3">
                 </TextField>
-            </VBox>
-
-            <VBox>
-                <Label text="Admins Color:">
+                <Label text="Admins Color:"
+                       GridPane.columnIndex="0" GridPane.rowIndex="4">
                 </Label>
 
-                <ColorPicker fx:id="adminColorPicker">
+                <ColorPicker fx:id="adminColorPicker"
+                             GridPane.columnIndex="0" GridPane.rowIndex="5">
                 </ColorPicker>
-            </VBox>
-        </HBox>
-    </center>
 
-    <bottom>
-        <VBox alignment="CENTER">
-            <Text fx:id="updateStatus">
+            <Text fx:id="updateStatus"
+                  GridPane.columnIndex="0" GridPane.rowIndex="6">
             </Text>
-            <HBox alignment="CENTER_RIGHT" spacing="50">
+
                 <Button text="Cancel" fx:id="cancelButton"
+                        GridPane.columnIndex="0" GridPane.rowIndex="7"
                         onAction="#handleCancelButton" />
 
                 <Button text="Edit Admin" fx:id="editAdminButton"
+                        GridPane.columnIndex="1" GridPane.rowIndex="7"
                         onAction="#handleEditAdminButton" />
-            </HBox>
-        </VBox>
-    </bottom>
+            </GridPane>
+        </center>
 
     <stylesheets>
         <URL value="@../basewindow.css" />

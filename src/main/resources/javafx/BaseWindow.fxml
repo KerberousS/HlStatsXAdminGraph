@@ -18,31 +18,34 @@
     </top>
 
     <center>
-        <VBox alignment="CENTER" spacing="10">
-            <HBox spacing="10" alignment="TOP_CENTER">
-                <Text fx:id="databaseStatus">
+        <GridPane alignment="CENTER" vgap="10" hgap="10">
+            <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
+                <Text fx:id="databaseStatus"
+                GridPane.rowIndex="0" GridPane.columnIndex="0">
                 </Text>
                 <Button text="Configure Database"
+                        GridPane.rowIndex="0" GridPane.columnIndex="1"
                         onAction="#handleConfigureDatabaseButton" />
-            </HBox>
 
-            <Label text="Select server:">
+            <Label text="Select server:"
+                   GridPane.rowIndex="1" GridPane.columnIndex="0">
             </Label>
 
-            <HBox spacing="10" alignment="CENTER">
-            <ComboBox fx:id="serverDropdown">
+            <ComboBox fx:id="serverDropdown" prefWidth="124"
+                      GridPane.rowIndex="2" GridPane.columnIndex="0">
             </ComboBox>
 
                 <Button text="Manage Servers"
+                        GridPane.rowIndex="2" GridPane.columnIndex="1"
                         onAction="#handleManageServerButton" />
-            </HBox>
-
                 <Button text="Choose this server"
+                        GridPane.rowIndex="3" GridPane.columnIndex="0"
                         onAction="#handleChooseServerButton" />
 
-            <Text fx:id="updateStatus">
+            <Text fx:id="updateStatus"
+                  GridPane.rowIndex="4" GridPane.columnIndex="0">
             </Text>
-        </VBox>
+        </GridPane>
     </center>
     <stylesheets>
         <URL value="@basewindow.css" />

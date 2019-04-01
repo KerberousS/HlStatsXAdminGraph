@@ -75,10 +75,10 @@ public class BaseWindowController implements Initializable {
         TestJDBCConnection testDB = new TestJDBCConnection();
         String status = testDB.TestConnection();
         if (status == "Connection Established") {
-            databaseStatus.setText("Database status: " + status);
+            databaseStatus.setText("Database " + status);
             databaseStatus.setFill(Color.GREEN);
         } else {
-            databaseStatus.setText("Database status: " + status);
+            databaseStatus.setText("Database " + status);
             databaseStatus.setFill(Color.RED);
         }
             //Initialize server list for server dropdown

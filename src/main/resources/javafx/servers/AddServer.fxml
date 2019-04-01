@@ -10,31 +10,30 @@
     <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
 
     <center>
-        <HBox alignment="CENTER" spacing="10">
+        <GridPane alignment="CENTER" vgap="10" hgap="10">
 
-            <VBox>
-                <Label text="Type in a new server name:" />
-                <TextField fx:id="serverNameTextField" />
-            </VBox>
-            <VBox>
-            <Label text="Type in a new server link:"/>
-            <TextField fx:id="serverLinkTextField" text="http://hlstatsx.strefagier.com.pl/hlstats.php?mode=playersessions&amp;player="/>
-            </VBox>
+                <Label text="Type in a new server name:"
+                       GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="serverNameTextField"
+                           GridPane.columnIndex="0" GridPane.rowIndex="1"/>
 
-        </HBox>
-    </center>
+            <Label text="Type in a new server link:"
+                   GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="serverLinkTextField" text="http://hlstatsx.strefagier.com.pl/hlstats.php?mode=playersessions&amp;player="
+                       GridPane.columnIndex="0" GridPane.rowIndex="3"/>
 
-    <bottom>
-        <VBox alignment="CENTER">
-            <Text fx:id="updateStatus">
+
+            <Text fx:id="updateStatus"
+                  GridPane.columnIndex="0" GridPane.rowIndex="4">
             </Text>
 
-            <HBox alignment="CENTER_RIGHT" spacing="50">
-                <Button text="Cancel" fx:id="cancelButton" onAction="#handleCancelButton" />
-                <Button text="Confirm" fx:id="addNewServerButton" onAction="#handleAddNewServerButton" />
-            </HBox>
-        </VBox>
-    </bottom>
+                <Button text="Cancel" fx:id="cancelButton" onAction="#handleCancelButton"
+                        GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <Button text="Confirm" fx:id="addNewServerButton" onAction="#handleAddNewServerButton"
+                        GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+        </GridPane>
+    </center>
 
     <stylesheets>
         <URL value="@../basewindow.css" />

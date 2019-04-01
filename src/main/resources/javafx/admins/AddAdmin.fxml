@@ -11,41 +11,39 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.layout.GridPane?>
 <BorderPane fx:id="addAdminWindow" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.AddAdminWindowController">
     <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
 
     <center>
-        <HBox alignment="CENTER" spacing="10">
+        <GridPane alignment="CENTER" vgap="10" hgap="10">
 
-            <VBox>
-                <Label text="Type in a new admin name:" />
-                <TextField fx:id="adminNameTextField" />
-            </VBox>
+                    <Label text="Type in a new admin name:"
+                    GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField fx:id="adminNameTextField"
+                               GridPane.columnIndex="0" GridPane.rowIndex="1"/>
 
-            <VBox>
-                <Label text="Admins HlStatsX ID:" />
-                <TextField fx:id="adminLinkTextField" />
-            </VBox>
+                    <Label text="Admins HlStatsX ID:"
+                           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <TextField fx:id="adminLinkTextField"
+                               GridPane.columnIndex="0" GridPane.rowIndex="3"/>
 
-            <VBox>
-                <Label text="Admins Color:" />
-                <ColorPicker fx:id="adminColorPicker" />
-            </VBox>
+                    <Label text="Admins Color:"
+                           GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                    <ColorPicker fx:id="adminColorPicker"
+                                 GridPane.columnIndex="0" GridPane.rowIndex="5"/>
 
-        </HBox>
+                    <Text fx:id="updateStatus"
+                          GridPane.columnIndex="0" GridPane.rowIndex="6">
+                    </Text>
+
+                        <Button fx:id="cancelButton" alignment="BOTTOM_LEFT" onAction="#handleCancelButton" text="Cancel"
+                                GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                        <Button fx:id="addNewAdminButton" alignment="BOTTOM_RIGHT" onAction="#handleAddNewAdminButton" text="Confirm"
+                                GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+        </GridPane>
     </center>
 
-    <bottom>
-        <VBox alignment="CENTER">
-            <Text fx:id="updateStatus">
-            </Text>
-
-            <HBox alignment="CENTER_RIGHT" spacing="50">
-                <Button fx:id="cancelButton" alignment="BOTTOM_LEFT" onAction="#handleCancelButton" text="Cancel" />
-                <Button fx:id="addNewAdminButton" alignment="BOTTOM_RIGHT" onAction="#handleAddNewAdminButton" text="Confirm" />
-            </HBox>
-        </VBox>
-    </bottom>
 
     <stylesheets>
         <URL value="@../basewindow.css" />
