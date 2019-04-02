@@ -6,6 +6,7 @@ import hibernate.Admin;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,16 +14,22 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-import javafx.scene.input.MouseEvent;
+import javafx.scene.transform.Transform;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import javax.imageio.ImageIO;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -125,7 +132,49 @@ public class ChartsWindowController implements Initializable {
 
     @FXML
     protected void handleSaveScreenshot(ActionEvent event) {
-        //TODO: SAVE SCREENSHOT
+        //Create new filechooser
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "PNG files (*.png)", "*.png");
+
+        //Configure filechooser
+        fileChooser.setTitle("Save as...");
+        fileChooser.setInitialFileName("adminchart.png");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        //Show filechooser
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        File file = fileChooser.showSaveDialog(stage);
+
+        //Fix image DPI
+        Double pixelScale = 2.0;
+        SnapshotParameters snapshotParameters = new SnapshotParameters();
+        snapshotParameters.setTransform(Transform.scale(pixelScale, pixelScale));
+
+        if (file != null) {
+            try {
+                if (pieChart.isVisible()) {
+                    WritableImage writableImage = new WritableImage((int)Math.rint(pixelScale*pieChart.getWidth()), (int)Math.rint(pixelScale*pieChart.getHeight()));
+                    WritableImage image = pieChart.snapshot(snapshotParameters, writableImage);
+                    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+                } else if (lineChart.isVisible()) {
+                    WritableImage writableImage = new WritableImage((int)Math.rint(pixelScale*lineChart.getWidth()), (int)Math.rint(pixelScale*lineChart.getHeight()));
+                    WritableImage image = lineChart.snapshot(snapshotParameters, writableImage);
+                    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+                } else if (areaChart.isVisible()) {
+                    WritableImage writableImage = new WritableImage((int)Math.rint(pixelScale*areaChart.getWidth()), (int)Math.rint(pixelScale*areaChart.getHeight()));
+                    WritableImage image = areaChart.snapshot(snapshotParameters, writableImage);
+                    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+                } else if (barChart.isVisible()) {
+                    WritableImage writableImage = new WritableImage((int)Math.rint(pixelScale*barChart.getWidth()), (int)Math.rint(pixelScale*barChart.getHeight()));
+                    WritableImage image = barChart.snapshot(snapshotParameters, writableImage);
+                    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+                }
+            } catch (Exception e) {
+                Error.setText(e.getStackTrace().toString());
+                Error.setFill(Color.RED);
+            }
+        }
     }
 
     @FXML

@@ -97,7 +97,7 @@
         <Button fx:id="naturalColorButton" onAction="#handleNaturalAdminColor" text="Natural Colors" />
         <Button fx:id="randomColorButton" onAction="#handleRandomAdminColor" text="Random Colors" />
         <Button fx:id="defaultColorButton" onAction="#handleDefaultChartColor" text="Default Colors" />
-        <Button fx:id="saveToScreenshot" alignment="TOP_RIGHT" contentDisplay="TEXT_ONLY" onAction="#handleSaveScreenshot" text="Screenshot mock" />
+        <Button fx:id="saveToScreenshot" onAction="#handleSaveScreenshot" text="Save screenshot" />
     </VBox>
     </left>
 

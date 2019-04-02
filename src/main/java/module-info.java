@@ -3,6 +3,7 @@ module administratorgraph {
     requires javafx.fxml;
     requires javafx.base;
     requires javafx.controls;
+    requires javafx.swing;
     requires java.xml.bind;
     requires java.xml;
     requires java.xml.crypto;

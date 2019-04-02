@@ -97,6 +97,13 @@
         <version>2.11.1</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-swing</artifactId>
+        <version>13-ea+3</version>
+    </dependency>
+
     </dependencies>
 
     <build>

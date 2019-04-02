@@ -67,7 +67,7 @@ public class EditServerWindowController implements Initializable {
                 updateStatus.setText("Admin has been updated!");
                 updateStatus.setFill(Color.GREEN);
             }
-        } catch (Exception e) { //TODO: CHECK IF THIS EVEN WORKS CAUSE I THINK ITS BROKEN, THE SAME THING HAPPENS IN NEW SERVER WINDOW
+        } catch (Exception e) {
             e.printStackTrace();
             updateStatus.setText("Something went terribly wrong!");
             updateStatus.setFill(Color.RED);

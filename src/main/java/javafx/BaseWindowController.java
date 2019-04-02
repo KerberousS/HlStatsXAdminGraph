@@ -42,7 +42,7 @@ public class BaseWindowController implements Initializable {
     private Button chooseServerButton;
 
     public static Server chosenServer;
-    private List<Server> serversList = DBOperations.displayServerRecords();
+    private List<Server> serversList;
 
     private String databaseConfigurationFXMLFile = "DatabaseConfiguration.fxml";
     private String manageServersFXMLFile = "servers/ManageServers.fxml";
@@ -74,6 +74,8 @@ public class BaseWindowController implements Initializable {
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
         assert serverDropdown != null : "fx:id=\"serverDropdown\" was not injected: check your FXML file 'BaseWindow.fxml'.";
+
+        serversList = DBOperations.displayServerRecords();
 
         //Set database status
         TestJDBCConnection testDB = new TestJDBCConnection();
