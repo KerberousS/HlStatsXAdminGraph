@@ -19,6 +19,5 @@
         <!-- Annotated entity classes -->
         <mapping class="hibernate.Admin"/>
         <mapping class="hibernate.Server"/>
-        <mapping class="hibernate.Time"/>
     </session-factory>
 </hibernate-configuration>

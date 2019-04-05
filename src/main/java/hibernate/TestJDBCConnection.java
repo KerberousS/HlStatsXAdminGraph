@@ -21,10 +21,10 @@ public class TestJDBCConnection {
 
             System.out.println("Connection successful");
 
-            status = "Connection Established";
+            status = "Database connection Established";
         } catch (Exception e) {
             e.printStackTrace();
-            status = "An error has occured, please check your configuration";
+            status = "Couldn't connect to database";
         }
         return status;
     }

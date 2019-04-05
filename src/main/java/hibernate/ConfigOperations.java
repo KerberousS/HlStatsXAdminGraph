@@ -18,94 +18,32 @@ import java.io.IOException;
 
 public class ConfigOperations {
         
-        public static final String HIBERNATE_CONFIG_FILEPATH = "./hibernate.cfg.xml";
+        private static final String HIBERNATE_CONFIG_FILEPATH = "./hibernate.cfg.xml";
         //TODO: ADD LOGGING HERE
 
-        public String getDatabaseUrl()
-        {
-                String databaseUrl = null;
-                try {
-                        //Access Files
-                        DocumentBuilderFactory docFactory = DocumentBuilderFactory
-                                .newInstance();
-                        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-                        Document doc = docBuilder.parse(HIBERNATE_CONFIG_FILEPATH);
-
-                        // Expression for connection url
-                        String xpathURLExpression = "/hibernate-configuration/session-factory/property[@name='hibernate.connection.url']";
-
-                        // Create XPathFactory object
-                        XPathFactory xpathFactory = XPathFactory.newInstance();
-
-                        // Create XPath object
-                        XPath xpath = xpathFactory.newXPath();
-
-                        // Create XPathExpression object
-                        XPathExpression expr = xpath.compile(xpathURLExpression);
-                        Node connectionUrl = (Node) xpath.compile(xpathURLExpression).evaluate(doc, XPathConstants.NODE);
-
-                        databaseUrl = connectionUrl.getTextContent();
-                } catch (ParserConfigurationException e) {
-                        e.printStackTrace();
-                } catch (IOException e) {
-                        e.printStackTrace();
-                } catch (SAXException e) {
-                        e.printStackTrace();
-                } catch (XPathExpressionException e) {
-                        e.printStackTrace();
-                }
-                return databaseUrl;
-        }
-
-        public String getDatabaseUsername()
-        {
-                String databaseUsername = null;
-                try {
-                        //Access Files
-                        DocumentBuilderFactory docFactory = DocumentBuilderFactory
-                                .newInstance();
-                        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-                        Document doc = docBuilder.parse(HIBERNATE_CONFIG_FILEPATH);
-
-                        // Expression for connection url
-                        String xpathExpression = "/hibernate-configuration/session-factory/property[@name='hibernate.connection.username']";
-
-                        // Create XPathFactory object
-                        XPathFactory xpathFactory = XPathFactory.newInstance();
-
-                        // Create XPath object
-                        XPath xpath = xpathFactory.newXPath();
-
-                        // Create XPathExpression object
-                        XPathExpression expr = xpath.compile(xpathExpression);
-                        Node connectionUsername = (Node) xpath.compile(xpathExpression).evaluate(doc, XPathConstants.NODE);
-
-                        databaseUsername = connectionUsername.getTextContent();
-                } catch (ParserConfigurationException e) {
-                        e.printStackTrace();
-                } catch (IOException e) {
-                        e.printStackTrace();
-                } catch (SAXException e) {
-                        e.printStackTrace();
-                } catch (XPathExpressionException e) {
-                        e.printStackTrace();
-                }
-                return databaseUsername;
-        }
-
-public String getDatabasePassword()
-{
-        String databasePassword = null;
-        try {
+        private Document accessConfigFile() {
                 //Access Files
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory
                         .newInstance();
-                DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-                Document doc = docBuilder.parse(HIBERNATE_CONFIG_FILEPATH);
+                DocumentBuilder docBuilder = null;
+                try {
+                        docBuilder = docFactory.newDocumentBuilder();
+                } catch (ParserConfigurationException e) {
+                        e.printStackTrace();
+                }
 
-                // Expression for connection url
-                String xpathExpression = "/hibernate-configuration/session-factory/property[@name='hibernate.connection.password']";
+                Document doc = null;
+                try {
+                        assert docBuilder != null;
+                        doc = docBuilder.parse(HIBERNATE_CONFIG_FILEPATH);
+                } catch (IOException | SAXException e) {
+                        e.printStackTrace();
+                }
 
+                return doc;
+        }
+
+        private Node getNodeByXpathExpression(Document doc, String xpathExpression) {
                 // Create XPathFactory object
                 XPathFactory xpathFactory = XPathFactory.newInstance();
 
@@ -113,43 +51,72 @@ public String getDatabasePassword()
                 XPath xpath = xpathFactory.newXPath();
 
                 // Create XPathExpression object
-                XPathExpression expr = xpath.compile(xpathExpression);
-                Node connectionPassword = (Node) xpath.compile(xpathExpression).evaluate(doc, XPathConstants.NODE);
+                Node node = null;
 
-                databasePassword = connectionPassword.getTextContent();
-        } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-        } catch (IOException e) {
-                e.printStackTrace();
-        } catch (SAXException e) {
-                e.printStackTrace();
-        } catch (XPathExpressionException e) {
-                e.printStackTrace();
+                try {
+                        node = (Node) xpath.compile(xpathExpression).evaluate(doc, XPathConstants.NODE);
+                } catch (XPathExpressionException e) {
+                        e.printStackTrace();
+                }
+
+                return node;
         }
-        return databasePassword;
-}
 
+        public String getDatabaseUrl()
+        {
+                //Get document file
+                Document doc = accessConfigFile();
+
+                // Expression for connection url
+                String xpathURLExpression = "/hibernate-configuration/session-factory/property[@name='hibernate.connection.url']";
+
+                // Create XPathExpression object
+                Node connectionUrl = getNodeByXpathExpression(doc, xpathURLExpression);
+
+                //Return content of URL xpath
+                return connectionUrl.getTextContent();
+        }
+
+        public String getDatabaseUsername()
+        {
+                //Get document file
+                Document doc = accessConfigFile();
+
+                // Expression for connection url
+                String xpathUsernameExpression = "/hibernate-configuration/session-factory/property[@name='hibernate.connection.username']";
+
+                // Create XPathExpression object
+                Node connectionUsername = getNodeByXpathExpression(doc, xpathUsernameExpression);
+
+                //Return content of username xpath
+                return connectionUsername.getTextContent();
+        }
+
+        public String getDatabasePassword()
+        {
+                //Get document file
+                Document doc = accessConfigFile();
+
+                // Expression for connection url
+                String xpathPasswordExpression = "/hibernate-configuration/session-factory/property[@name='hibernate.connection.password']";
+
+                // Create XPathExpression object
+                Node connectionPassword = getNodeByXpathExpression(doc, xpathPasswordExpression);
+
+                //Return content of password xpath
+                return connectionPassword.getTextContent();
+        }
 
         public void setConfigURL (String newDatabaseURL) {
                 try {
-                        //Access Files
-                        DocumentBuilderFactory docFactory = DocumentBuilderFactory
-                                .newInstance();
-                        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-                        Document doc = docBuilder.parse(HIBERNATE_CONFIG_FILEPATH);
+                        //Get document file
+                        Document doc = accessConfigFile();
 
                         // Expression for connection url
                         String xpathURLExpression = "/hibernate-configuration/session-factory/property[@name='hibernate.connection.url']";
 
-                        // Create XPathFactory object
-                        XPathFactory xpathFactory = XPathFactory.newInstance();
-
-                        // Create XPath object
-                        XPath xpath = xpathFactory.newXPath();
-
                         // Create XPathExpression object
-                        XPathExpression expr = xpath.compile(xpathURLExpression);
-                        Node connectionUrl = (Node) xpath.compile(xpathURLExpression).evaluate(doc, XPathConstants.NODE);
+                        Node connectionUrl = getNodeByXpathExpression(doc, xpathURLExpression);
 
                         connectionUrl.setTextContent(newDatabaseURL);
 
@@ -162,43 +129,25 @@ public String getDatabasePassword()
                         transformer.transform(source, result);
 
                         System.out.println("Done");
-
-                } catch (ParserConfigurationException e) {
-                        e.printStackTrace();
                 } catch (TransformerException e) {
-                        e.printStackTrace();
-                } catch (SAXException e) {
-                        e.printStackTrace();
-                } catch (IOException e) {
-                        e.printStackTrace();
-                } catch (XPathExpressionException e) {
                         e.printStackTrace();
                 }
         }
+
                 public void setConfigUsername (String newDatabaseUsername) {
                         try {
-                                //Access Files
-                                DocumentBuilderFactory docFactory = DocumentBuilderFactory
-                                        .newInstance();
-                                DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-                                Document doc = docBuilder.parse(HIBERNATE_CONFIG_FILEPATH);
+                                //Get document file
+                                Document doc = accessConfigFile();
 
                                 // Expression for connection url
                                 String xpathUsernameExpression = "/hibernate-configuration/session-factory/property[@name='hibernate.connection.username']";
 
-                                // Create XPathFactory object
-                                XPathFactory xpathFactory = XPathFactory.newInstance();
-
-                                // Create XPath object
-                                XPath xpath = xpathFactory.newXPath();
-
                                 // Create XPathExpression object
-                                XPathExpression expr = xpath.compile(xpathUsernameExpression);
-                                Node connectionUrl = (Node) xpath.compile(xpathUsernameExpression).evaluate(doc, XPathConstants.NODE);
+                                Node connectionUsername = getNodeByXpathExpression(doc, xpathUsernameExpression);
 
-                                connectionUrl.setTextContent(newDatabaseUsername);
+                                connectionUsername.setTextContent(newDatabaseUsername);
 
-                                // write the content into xml file
+                                //Write the content into xml file
                                 TransformerFactory transformerFactory = TransformerFactory
                                         .newInstance();
                                 Transformer transformer = transformerFactory.newTransformer();
@@ -207,43 +156,25 @@ public String getDatabasePassword()
                                 transformer.transform(source, result);
 
                                 System.out.println("Done");
-
-                        } catch (ParserConfigurationException e) {
-                                e.printStackTrace();
                         } catch (TransformerException e) {
-                                e.printStackTrace();
-                        } catch (SAXException e) {
-                                e.printStackTrace();
-                        } catch (IOException e) {
-                                e.printStackTrace();
-                        } catch (XPathExpressionException e) {
                                 e.printStackTrace();
                         }
                 }
+
         public void setConfigPassword (String newDatabasePassword) {
                 try {
-                        //Access Files
-                        DocumentBuilderFactory docFactory = DocumentBuilderFactory
-                                .newInstance();
-                        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-                        Document doc = docBuilder.parse(HIBERNATE_CONFIG_FILEPATH);
+                        //Get document file
+                        Document doc = accessConfigFile();
 
                         // Expression for connection url
-                        String xpathUsernameExpression = "/hibernate-configuration/session-factory/property[@name='hibernate.connection.password']";
-
-                        // Create XPathFactory object
-                        XPathFactory xpathFactory = XPathFactory.newInstance();
-
-                        // Create XPath object
-                        XPath xpath = xpathFactory.newXPath();
+                        String xpathPasswordExpression = "/hibernate-configuration/session-factory/property[@name='hibernate.connection.password']";
 
                         // Create XPathExpression object
-                        XPathExpression expr = xpath.compile(xpathUsernameExpression);
-                        Node connectionUrl = (Node) xpath.compile(xpathUsernameExpression).evaluate(doc, XPathConstants.NODE);
+                        Node connectionPassword = getNodeByXpathExpression(doc, xpathPasswordExpression);
 
-                        connectionUrl.setTextContent(newDatabasePassword);
+                        connectionPassword.setTextContent(newDatabasePassword);
 
-                        // write the content into xml file
+                        //Write the content into xml file
                         TransformerFactory transformerFactory = TransformerFactory
                                 .newInstance();
                         Transformer transformer = transformerFactory.newTransformer();
@@ -252,16 +183,7 @@ public String getDatabasePassword()
                         transformer.transform(source, result);
 
                         System.out.println("Done");
-
-                } catch (ParserConfigurationException e) {
-                        e.printStackTrace();
                 } catch (TransformerException e) {
-                        e.printStackTrace();
-                } catch (SAXException e) {
-                        e.printStackTrace();
-                } catch (IOException e) {
-                        e.printStackTrace();
-                } catch (XPathExpressionException e) {
                         e.printStackTrace();
                 }
         }

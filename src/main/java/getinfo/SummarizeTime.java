@@ -39,14 +39,25 @@ public class SummarizeTime {
             int minutes = (sum1 % 3600) / 60;
             int seconds = sum1 % 60;
 
-            String daysTime = (days + "d");
-            String times = (hours + "h" + " " + minutes + "m" + " " + seconds + "s");
-            String sumTime = daysTime + " " + times;
+            StringBuilder sb = new StringBuilder(days)
+                    .append("d ")
+                    .append(hours)
+                    .append("h ")
+                    .append(minutes)
+                    .append("m ")
+                    .append(seconds)
+                    .append("s");
+
+            String sumTime = sb.toString();
+
+//            String daysTime = (days + "d");
+//            String times = (hours + "h" + " " + minutes + "m" + " " + seconds + "s");
+//            String sumTime = daysTime + " " + times;
 
             return sumTime;
         }
         else {
-            String sumTime = "0d 0m 0s";
+            String sumTime = "0d 0h 0m 0s";
 
             return sumTime;
         }

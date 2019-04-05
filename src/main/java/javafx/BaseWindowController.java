@@ -80,12 +80,12 @@ public class BaseWindowController implements Initializable {
         //Set database status
         TestJDBCConnection testDB = new TestJDBCConnection();
         String status = testDB.TestConnection();
-        if (status == "Connection Established") {
-            databaseStatus.setText("Database " + status);
+        if (status == "Database connection Established") {
+            databaseStatus.setText(status);
             databaseStatus.setFill(Color.GREEN);
             chooseServerButton.setDisable(false);
         } else {
-            databaseStatus.setText("Database " + status);
+            databaseStatus.setText(status);
             databaseStatus.setFill(Color.RED);
             chooseServerButton.setDisable(true);
         }
