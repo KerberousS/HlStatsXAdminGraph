@@ -126,3 +126,18 @@
     -fx-background-insets: 0;
     -fx-background-radius: 1;
 }
+    /* CHART STYLES */
+/* FOR LINECHARTS */
+.axis {
+    -fx-tick-label-fill: black;
+    -fx-tick-label-font-weight: bold;
+    -fx-margin-top: 0.1em;
+    -fx-margin-bottom: 0.1em;
+    -fx-margin-left: 0.1em;
+    -fx-margin-right: 0.1em;
+}
+/* FOR PIECHART */
+.chart-pie-label {
+    -fx-fill: black;
+    -fx-weight: black;
+}

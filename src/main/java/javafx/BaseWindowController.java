@@ -3,6 +3,8 @@ package javafx;
 import hibernate.DBOperations;
 import hibernate.Server;
 import hibernate.TestJDBCConnection;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,9 +14,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -41,7 +42,7 @@ public class BaseWindowController implements Initializable {
     @FXML
     private Button chooseServerButton;
 
-    public static Server chosenServer;
+    static Server chosenServer;
     private List<Server> serversList;
 
     private String databaseConfigurationFXMLFile = "DatabaseConfiguration.fxml";
@@ -50,55 +51,42 @@ public class BaseWindowController implements Initializable {
 
     @FXML
     protected void handleManageServerButton(ActionEvent event) {
-            this.changeScene(manageServersFXMLFile, event);
+        this.changeScene(manageServersFXMLFile, event);
     }
 
     @FXML
     protected void handleChooseServerButton(ActionEvent event) {
-            if (serverDropdown.getSelectionModel().getSelectedItem() == null) {
-                updateStatus.setText("Please choose a server first!");
-                updateStatus.setFill(Color.RED);
-            } else {
-                int serverIndex = serverDropdown.getSelectionModel().getSelectedIndex();
-                chosenServer = serversList.get(serverIndex);
-                this.changeScene(adminsFXMLFile, event);
-            }
+        if (serverDropdown.getSelectionModel().getSelectedItem() == null) {
+            updateStatus.setText("Please choose a server first!");
+            updateStatus.setFill(Color.RED);
+        } else {
+            int serverIndex = serverDropdown.getSelectionModel().getSelectedIndex();
+            chosenServer = serversList.get(serverIndex);
+            this.changeScene(adminsFXMLFile, event);
         }
+    }
     //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
 
     @FXML
     protected void handleConfigureDatabaseButton(ActionEvent event) {
-            this.changeScene(databaseConfigurationFXMLFile, event);
+        this.changeScene(databaseConfigurationFXMLFile, event);
     }
 
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
         assert serverDropdown != null : "fx:id=\"serverDropdown\" was not injected: check your FXML file 'BaseWindow.fxml'.";
 
-        serversList = DBOperations.displayServerRecords();
+        serverDropdown.setDisable(true);
+        ProgressIndicator pi = new ProgressIndicator(0);
+        pi.progressProperty().unbind();
+        pi.progressProperty().bind(addServersList.progressProperty());
+        pi.setVisible(true);
+        baseWindow.getChildren().add(pi);
 
-        //Set database status
-        TestJDBCConnection testDB = new TestJDBCConnection();
-        String status = testDB.TestConnection();
-        if (status == "Database connection Established") {
-            databaseStatus.setText(status);
-            databaseStatus.setFill(Color.GREEN);
-            chooseServerButton.setDisable(false);
-        } else {
-            databaseStatus.setText(status);
-            databaseStatus.setFill(Color.RED);
-            chooseServerButton.setDisable(true);
-        }
-            //Initialize server list for server dropdown
+        checkDBConnection.restart();
+        addServersList.restart();
 
-
-        if (serversList.isEmpty()) {
-            updateStatus.setText("There are no servers added, add a new server");
-            updateStatus.setFill(Color.BLUE);
-        } else {
-            for (Server s : serversList)
-            serverDropdown.getItems().add(s.getServerName());
-        }
+        addServersList.setOnSucceeded(e -> serverDropdown.setDisable(false));
     }
 
     private void changeScene(String windowFXMLFile, ActionEvent event) {
@@ -108,10 +96,62 @@ public class BaseWindowController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Scene scene = new Scene(window);
+        Scene scene = null;
+        if (window != null) {
+            scene = new Scene(window);
+        } else {
+            System.out.println("Something went terribly wrong, window is null");
+        }
 
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
     }
+
+    private Service addServersList = new Service() {
+        @Override
+        protected Task createTask() {
+            return new Task() {
+                @Override
+                protected Void call() {
+                    serversList = DBOperations.displayServerRecords();
+
+                    //Initialize server list for server dropdown
+
+                    if (serversList.isEmpty()) {
+                        updateStatus.setText("There are no servers added, add a new server");
+                        updateStatus.setFill(Color.BLUE);
+                    } else {
+                        for (Server s : serversList)
+                            serverDropdown.getItems().add(s.getServerName());
+                    }
+                    return null;
+                }
+            };
+        }
+    };
+
+    private Service checkDBConnection = new Service() {
+        @Override
+        protected Task createTask() {
+            return new Task() {
+                @Override
+                protected Void call() {
+                    //Set database status
+                    TestJDBCConnection testDB = new TestJDBCConnection();
+                    String status = testDB.TestConnection();
+                    if (status.equals("Database connection Established")) {
+                        databaseStatus.setText(status);
+                        databaseStatus.setFill(Color.GREEN);
+                        chooseServerButton.setDisable(false);
+                    } else {
+                        databaseStatus.setText(status);
+                        databaseStatus.setFill(Color.RED);
+                        chooseServerButton.setDisable(true);
+                    }
+                    return null;
+                }
+            };
+        }
+    };
 }

@@ -2,6 +2,8 @@ package javafx;
 
 import hibernate.DBOperations;
 import hibernate.Server;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,7 +43,7 @@ public class ManageServerWindowController implements Initializable {
     private Text Error;
 
     public static Server chosenServer;
-    private List<Server> serversList = DBOperations.displayServerRecords();
+    private List<Server> serversList;
     //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
 
     //FXML FILES
@@ -87,7 +89,7 @@ public class ManageServerWindowController implements Initializable {
 
             //Initialize server list for server dropdown
             serverList.getItems().clear();
-            serverList.getItems().addAll(DBOperations.displayServerRecords());
+            addServersList.restart();
         }
     }
 
@@ -98,14 +100,31 @@ public class ManageServerWindowController implements Initializable {
         assert closeButton != null : "fx:id=\"closebutton\" was not injected: check your FXML file 'basewindow.fxml'.";
         assert addNewServerButton != null : "fx:id=\"addnewserverbutton\" was not injected: check your FXML file 'basewindow.fxml'.";
 
-        if (serversList.isEmpty()) {
-            Error.setText("There are no servers added, add a new server");
-            Error.setFill(Color.BLUE);
-        } else {
-            for (Server s : serversList)
-                serverList.getItems().add(s.getServerName());
-        }
+        addServersList.restart();
     }
+
+    Service addServersList = new Service() {
+        @Override
+        protected Task createTask() {
+            return new Task() {
+                @Override
+                protected Void call() {
+                    serversList = DBOperations.displayServerRecords();
+
+                    //Initialize server list for server dropdown
+
+                    if (serversList.isEmpty()) {
+                        Error.setText("There are no servers added, add a new server");
+                        Error.setFill(Color.BLUE);
+                    } else {
+                        for (Server s : serversList)
+                            serverList.getItems().add(s.getServerName());
+                    }
+                    return null;
+                }
+            };
+        }
+    };
 
     private void changeScene(String windowFXMLFile, ActionEvent event) {
         Parent window = null;
