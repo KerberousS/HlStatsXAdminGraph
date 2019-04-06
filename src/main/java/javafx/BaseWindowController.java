@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -34,7 +35,13 @@ public class BaseWindowController implements Initializable {
     private Text databaseStatus;
 
     @FXML
+    private StackPane dropdownStackPane;
+
+    @FXML
     private ComboBox<String> serverDropdown;
+
+    @FXML
+    private ProgressIndicator progressIndicator;
 
     @FXML
     private Text updateStatus;
@@ -77,16 +84,17 @@ public class BaseWindowController implements Initializable {
         assert serverDropdown != null : "fx:id=\"serverDropdown\" was not injected: check your FXML file 'BaseWindow.fxml'.";
 
         serverDropdown.setDisable(true);
-        ProgressIndicator pi = new ProgressIndicator(0);
-        pi.progressProperty().unbind();
-        pi.progressProperty().bind(addServersList.progressProperty());
-        pi.setVisible(true);
-        baseWindow.getChildren().add(pi);
+        progressIndicator.progressProperty().unbind();
+        progressIndicator.progressProperty().bind(addServersList.progressProperty());
+        progressIndicator.setVisible(true);
 
         checkDBConnection.restart();
         addServersList.restart();
 
-        addServersList.setOnSucceeded(e -> serverDropdown.setDisable(false));
+        addServersList.setOnSucceeded(e -> {
+            serverDropdown.setDisable(false);
+            progressIndicator.setVisible(false);
+                });
     }
 
     private void changeScene(String windowFXMLFile, ActionEvent event) {
@@ -140,7 +148,7 @@ public class BaseWindowController implements Initializable {
                     //Set database status
                     TestJDBCConnection testDB = new TestJDBCConnection();
                     String status = testDB.TestConnection();
-                    if (status.equals("Database connection Established")) {
+                    if (status.equals("DB Status: Connected")) {
                         databaseStatus.setText(status);
                         databaseStatus.setFill(Color.GREEN);
                         chooseServerButton.setDisable(false);

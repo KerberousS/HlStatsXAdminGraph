@@ -139,7 +139,17 @@ public class ChartsWindowController implements Initializable {
 
         //Configure filechooser
         fileChooser.setTitle("Save as...");
-        fileChooser.setInitialFileName("adminchart.png");
+        if (pieChart.isVisible()) {
+            fileChooser.setInitialFileName("adminpiechart.png");
+        } else if (lineChart.isVisible()) {
+            fileChooser.setInitialFileName("adminlinechart.png");
+        } else if (areaChart.isVisible()) {
+            fileChooser.setInitialFileName("adminareachart.png");
+        } else if (barChart.isVisible()) {
+            fileChooser.setInitialFileName("adminbarchart.png");
+        } else {
+            fileChooser.setInitialFileName("adminchart.png");
+        }
         fileChooser.getExtensionFilters().add(extFilter);
 
         //Show filechooser

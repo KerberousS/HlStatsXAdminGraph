@@ -20,7 +20,7 @@
     <center>
         <GridPane alignment="CENTER" vgap="10" hgap="10">
             <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
-                <Text fx:id="databaseStatus"
+                <Text fx:id="databaseStatus" text="DB Status: Checking" fill="blue"
                 GridPane.rowIndex="0" GridPane.columnIndex="0">
                 </Text>
                 <Button text="Configure Database"
@@ -31,9 +31,14 @@
                    GridPane.rowIndex="1" GridPane.columnIndex="0">
             </Label>
 
-            <ComboBox fx:id="serverDropdown" prefWidth="124"
-                      GridPane.rowIndex="2" GridPane.columnIndex="0">
-            </ComboBox>
+            <StackPane fx:id="dropdownStackPane" alignment="CENTER_LEFT"
+                GridPane.rowIndex="2" GridPane.columnIndex="0">
+                <ComboBox fx:id="serverDropdown" prefWidth="124">
+                </ComboBox>
+                <ProgressIndicator fx:id="progressIndicator" visible="true"
+                                   maxWidth="20" maxHeight="20">
+                </ProgressIndicator>
+            </StackPane>
 
                 <Button text="Manage Servers"
                         GridPane.rowIndex="2" GridPane.columnIndex="1"
