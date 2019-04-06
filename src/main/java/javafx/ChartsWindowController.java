@@ -108,30 +108,40 @@ public class ChartsWindowController implements Initializable {
 
     @FXML
     protected void showPieChart(ActionEvent event) {
+        pieChart.setTitle("Admin Pie Chart (From: " + dateFrom + " | To : " + dateTo + ")");
         setChartsVisibility(true, false, false, false);
         setColorButtonsDisableStatus(false, false, false);
     }
 
     @FXML
     protected void showLineChart(ActionEvent event) {
+        lineChart.setTitle("Admin Line Chart (From: " + dateFrom + " | To : " + dateTo + ")");
         setChartsVisibility(false, true, false, false);
         setColorButtonsDisableStatus(false, false, false);
     }
 
     @FXML
     protected void showAreaChart(ActionEvent event) {
+        areaChart.setTitle("Admin Area Chart (From: " + dateFrom + " | To : " + dateTo + ")");
         setChartsVisibility(false, false, true, false);
         setColorButtonsDisableStatus(true, true, false);
     }
 
     @FXML
     protected void showBarChart(ActionEvent event) {
+        barChart.setTitle("Admin Bar Chart (From: " + dateFrom + " | To : " + dateTo + ")");
         setChartsVisibility(false, false, false, true);
         setColorButtonsDisableStatus(false, false, false);
     }
 
     @FXML
     protected void handleSaveScreenshot(ActionEvent event) {
+
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        //Fix scene resize bug
+        chartStackPane.setPrefSize(chartStackPane.getWidth(), chartStackPane.getHeight());
+
         //Create new filechooser
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
@@ -153,7 +163,6 @@ public class ChartsWindowController implements Initializable {
         fileChooser.getExtensionFilters().add(extFilter);
 
         //Show filechooser
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         File file = fileChooser.showSaveDialog(stage);
 
         //Fix image DPI
@@ -164,19 +173,19 @@ public class ChartsWindowController implements Initializable {
         if (file != null) {
             try {
                 if (pieChart.isVisible()) {
-                    WritableImage writableImage = new WritableImage((int)Math.rint(pixelScale*pieChart.getWidth()), (int)Math.rint(pixelScale*pieChart.getHeight()));
-                    WritableImage image = pieChart.snapshot(snapshotParameters, writableImage);
+                    WritableImage writableImage = new WritableImage((int)Math.round(pieChart.getWidth()), (int)Math.round(pieChart.getHeight()));
+                    WritableImage image = pieChart.snapshot(null, writableImage);
                     ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
                 } else if (lineChart.isVisible()) {
-                    WritableImage writableImage = new WritableImage((int)Math.rint(pixelScale*lineChart.getWidth()), (int)Math.rint(pixelScale*lineChart.getHeight()));
+                    WritableImage writableImage = new WritableImage((int)Math.round(pixelScale*lineChart.getWidth()), (int)Math.round(pixelScale*lineChart.getHeight()));
                     WritableImage image = lineChart.snapshot(snapshotParameters, writableImage);
                     ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
                 } else if (areaChart.isVisible()) {
-                    WritableImage writableImage = new WritableImage((int)Math.rint(pixelScale*areaChart.getWidth()), (int)Math.rint(pixelScale*areaChart.getHeight()));
+                    WritableImage writableImage = new WritableImage((int)Math.round(pixelScale*areaChart.getWidth()), (int)Math.round(pixelScale*areaChart.getHeight()));
                     WritableImage image = areaChart.snapshot(snapshotParameters, writableImage);
                     ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
                 } else if (barChart.isVisible()) {
-                    WritableImage writableImage = new WritableImage((int)Math.rint(pixelScale*barChart.getWidth()), (int)Math.rint(pixelScale*barChart.getHeight()));
+                    WritableImage writableImage = new WritableImage((int)Math.round(pixelScale*barChart.getWidth()), (int)Math.round(pixelScale*barChart.getHeight()));
                     WritableImage image = barChart.snapshot(snapshotParameters, writableImage);
                     ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
                 }
@@ -384,6 +393,7 @@ public class ChartsWindowController implements Initializable {
         setDateTo.setDayCellFactory(dayCellFactory);
 
         adminsList = AdminsWindowController.selectedAdminsList;
+        lineChart.setTitle("Admin Line Chart (From: " + dateFrom + " | To : " + dateTo + ")");
 
         Platform.runLater(() -> rePopulateCharts());
         //TODO: CHECK LOADING BAR AFTER GRAPHICAL REWORK

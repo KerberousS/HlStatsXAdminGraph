@@ -26,10 +26,10 @@
     <center>
         <StackPane alignment="CENTER" fx:id="chartStackPane">
             <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
-            <PieChart fx:id="pieChart" maxWidth="Infinity" title="Admins Pie Graph" visible="false">
+            <PieChart fx:id="pieChart" maxWidth="Infinity" visible="false">
             </PieChart>
 
-            <LineChart fx:id="lineChart" createSymbols="false" title="Admins Line Graph" animated="false">
+            <LineChart fx:id="lineChart" maxWidth="Infinity" createSymbols="false" animated="false" visible="false">
                 <xAxis>
                     <CategoryAxis label="Days" fx:id="xLineAxis" />
                 </xAxis>
@@ -38,7 +38,7 @@
                 </yAxis>
             </LineChart>
 
-            <AreaChart fx:id="areaChart" title="Admins Area Graph" visible="false" animated="false">
+            <AreaChart fx:id="areaChart" maxWidth="Infinity" visible="false" animated="false">
                 <xAxis>
                     <CategoryAxis label="Days" fx:id="xAreaAxis" />
                 </xAxis>
@@ -47,7 +47,7 @@
                 </yAxis>
             </AreaChart>
 
-            <StackedBarChart fx:id="barChart" title="Admins Bar Graph" visible="false" animated="false">
+            <StackedBarChart fx:id="barChart" maxWidth="Infinity" visible="false" animated="false">
                 <xAxis>
                     <CategoryAxis label="Days" fx:id="xBarAxis" />
                 </xAxis>
