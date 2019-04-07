@@ -4,6 +4,7 @@ import getinfo.colorOperations;
 import hibernate.Admin;
 import hibernate.DBOperations;
 import hibernate.Server;
+import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,12 +16,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import javafx.application.Application;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,7 +35,10 @@ public class EditAdminWindowController implements Initializable {
     private TextField adminNameTextField;
 
     @FXML
-    private TextField adminLinkTextField;
+    private TextField adminStaticLinkTextField;
+
+    @FXML
+    private TextField adminDynamicLinkTextField;
 
     @FXML
     private ColorPicker adminColorPicker;
@@ -62,13 +65,13 @@ public class EditAdminWindowController implements Initializable {
     @FXML
     protected void handleEditAdminButton(ActionEvent event) {
         String newAdminName = adminNameTextField.getText();
-        String newAdminLink = adminLinkTextField.getText();
+        String newAdminLink = adminStaticLinkTextField.getText()+adminDynamicLinkTextField.getText();
         Color c = adminColorPicker.getValue();
         String newAdminColor = colorOperations.colorToHex(c);
 
         //TODO: Fix admin ADD and admin EDIT LINK!!!
         try {
-            if (newAdminName.isEmpty() || newAdminLink.isEmpty() || newAdminColor.isEmpty()) {
+            if (newAdminName.isEmpty() || adminDynamicLinkTextField.getText().isEmpty()) {
                 updateStatus.setText("Parameters can't be blank!");
                 updateStatus.setFill(Color.RED);
             }
@@ -95,10 +98,16 @@ public class EditAdminWindowController implements Initializable {
         }
     }
 
+    @FXML
+    protected void handleCheckLink(ActionEvent e) {
+        Stage stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+        HostServices hostServices = (HostServices)stage.getProperties().get("hostServices");
+        hostServices.showDocument(adminStaticLinkTextField.getText()+adminDynamicLinkTextField.getText());
+    }
+
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
         assert adminNameTextField != null : "fx:id=\"adminNameTextField\" was not injected: check your FXML file 'EditAdmin.fxml'.";
-        assert adminLinkTextField != null : "fx:id=\"adminLinkTextField\" was not injected: check your FXML file 'EditAdmin.fxml'.";
         assert adminColorPicker != null : "fx:id=\"adminColorPicker\" was not injected: check your FXML file 'EditAdmin.fxml'.";
         assert cancelButton != null : "fx:id=\"cancelButton\" was not injected: check your FXML file 'EditAdmin.fxml'.";
         assert editAdminButton != null : "fx:id=\"editAdminButton\" was not injected: check your FXML file 'EditAdmin.fxml'.";
@@ -106,7 +115,15 @@ public class EditAdminWindowController implements Initializable {
         chosenServer = BaseWindowController.chosenServer;
         chosenAdmin = AdminsWindowController.chosenAdmin;
         adminNameTextField.setText(chosenAdmin.getAdminName());
-        adminLinkTextField.setText(chosenAdmin.getAdminLink());
+
+        adminDynamicLinkTextField.lengthProperty().addListener((observable, oldValue, newValue) -> {
+            //Allow only numbers in dynamic link text
+            adminDynamicLinkTextField.setText(adminDynamicLinkTextField.getText().replaceAll("\\D+",""));
+        });
+
+        String[] adminSplitLink = chosenAdmin.getAdminLink().split("player=");
+        adminStaticLinkTextField.setText(adminSplitLink[0]+"player=");
+        adminDynamicLinkTextField.setText(adminSplitLink[1]);
         adminColorPicker.setValue(Color.valueOf("#" + chosenAdmin.getAdminColor()));
     }
 

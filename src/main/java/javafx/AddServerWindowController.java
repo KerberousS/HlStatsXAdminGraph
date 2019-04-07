@@ -1,6 +1,7 @@
 package javafx;
 
 import hibernate.DBOperations;
+import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,7 +30,10 @@ public class AddServerWindowController implements Initializable {
     private TextField serverNameTextField;
 
     @FXML
-    private TextField serverLinkTextField;
+    private TextField serverDynamicLinkTextField;
+
+    @FXML
+    private TextField serverStaticLinkTextField;
 
     @FXML
     private Button cancelButton;
@@ -49,15 +53,18 @@ public class AddServerWindowController implements Initializable {
     @FXML
     protected void handleAddNewServerButton(ActionEvent event) {
         String serverName = serverNameTextField.getText();
-        String serverLink = serverLinkTextField.getText();
-        System.out.println(serverName);
+        String serverDynamicLink = serverDynamicLinkTextField.getText();
 
-        if (serverName.isEmpty() || serverLink.isEmpty()) {
+        if (serverDynamicLink.contains("hlstats.php")) {
+            String[] fixDynamicLink = serverDynamicLink.split("/hlstats.php");
+            serverDynamicLinkTextField.setText(fixDynamicLink[0]);
+        }
+        if (serverName.isEmpty() || serverDynamicLink.isEmpty()) {
             updateStatus.setText("Parameters can't be blank!");
             updateStatus.setFill(Color.RED);
         } else {
             try {
-                DBOperations.createServerRecord(serverName, serverLink);
+                DBOperations.createServerRecord(serverName, serverDynamicLink+serverStaticLinkTextField.getText());
                 updateStatus.setText("Server " + serverName + " was succesfully created!");
                 updateStatus.setFill(Color.GREEN);
             } catch (Exception e) {
@@ -75,6 +82,12 @@ public class AddServerWindowController implements Initializable {
         }
     }
 
+    @FXML
+    protected void handleCheckLink(ActionEvent e) {
+        Stage stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+        HostServices hostServices = (HostServices)stage.getProperties().get("hostServices");
+        hostServices.showDocument(serverDynamicLinkTextField.getText());
+    }
 
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {

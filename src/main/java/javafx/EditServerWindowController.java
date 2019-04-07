@@ -2,6 +2,7 @@ package javafx;
 
 import hibernate.DBOperations;
 import hibernate.Server;
+import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,7 +31,10 @@ public class EditServerWindowController implements Initializable {
     private TextField serverNameTextField;
 
     @FXML
-    private TextField serverURLTextField;
+    private TextField serverDynamicLinkTextField;
+
+    @FXML
+    private TextField serverStaticLinkTextField;
 
     @FXML
     private Button cancelbutton;
@@ -53,18 +57,23 @@ public class EditServerWindowController implements Initializable {
     @FXML
     protected void handleEditServerButton(ActionEvent event) {
         String newServerName = serverNameTextField.getText();
-        String newServerURL = serverURLTextField.getText();
+        String serverDynamicLink = serverDynamicLinkTextField.getText();
+
+        if (serverDynamicLink.contains("hlstats.php")) {
+            String[] fixDynamicLink = serverDynamicLink.split("/hlstats.php");
+            serverDynamicLinkTextField.setText(fixDynamicLink[0]);
+        }
         try {
-            if (newServerName.isEmpty() || newServerURL.isEmpty()) {
+            if (newServerName.isEmpty() || serverDynamicLink.isEmpty()) {
                 updateStatus.setText("Parameters can't be blank!");
                 updateStatus.setFill(Color.RED);
             }
-            else if (chosenServer.getServerName().equals(newServerName) && chosenServer.getServerHlstatsLink().equals(newServerURL))
+            else if (chosenServer.getServerName().equals(newServerName) && chosenServer.getServerHlstatsLink().equals(serverDynamicLink+serverStaticLinkTextField.getText()))
             {
                 updateStatus.setText("You haven't changed any parameters!");
                 updateStatus.setFill(Color.RED);
             } else {
-                DBOperations.updateServerRecord(chosenServer.getServerID(), newServerName, newServerURL);
+                DBOperations.updateServerRecord(chosenServer.getServerID(), newServerName, serverDynamicLink+serverStaticLinkTextField.getText());
                 updateStatus.setText("Admin has been updated!");
                 updateStatus.setFill(Color.GREEN);
             }
@@ -82,6 +91,13 @@ public class EditServerWindowController implements Initializable {
         }
     }
 
+    @FXML
+    protected void handleCheckLink(ActionEvent e) {
+        Stage stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+        HostServices hostServices = (HostServices)stage.getProperties().get("hostServices");
+        hostServices.showDocument(serverDynamicLinkTextField.getText());
+    }
+
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
         assert serverNameTextField != null : "fx:id=\"serverNameTextField\" was not injected: check your FXML file 'basewindow.fxml'.";
@@ -90,7 +106,9 @@ public class EditServerWindowController implements Initializable {
 
         chosenServer = ManageServerWindowController.chosenServer;
         serverNameTextField.setText(chosenServer.getServerName());
-        serverURLTextField.setText(chosenServer.getServerHlstatsLink());
+
+        String[] serverSplitLink = chosenServer.getServerHlstatsLink().split("/hlstats.php");
+        serverDynamicLinkTextField.setText(serverSplitLink[0]);
     }
 
     private void changeScene(String windowFXMLFile, ActionEvent event) {

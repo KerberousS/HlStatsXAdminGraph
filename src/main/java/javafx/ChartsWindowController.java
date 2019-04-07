@@ -353,6 +353,7 @@ public class ChartsWindowController implements Initializable {
         dateTo = setDateTo.getValue();
 
         setDateFrom.valueProperty().addListener((observableValue, localDate, t1) -> {
+            //FIXME - Change title dynamically
             dateFrom = t1;
             Platform.runLater(() -> rePopulateCharts());
             setColorButtonsDisableStatus(false, false, true);

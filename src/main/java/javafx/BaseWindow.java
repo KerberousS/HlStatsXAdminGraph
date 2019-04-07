@@ -2,14 +2,12 @@ package javafx;
 
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 public class BaseWindow extends Application {
@@ -38,6 +36,9 @@ public class BaseWindow extends Application {
                 stage.setScene(scene);
                 stage.show();
                 stage.setTitle("HlStatsX Admin Graph");
+
+                //Add host services
+                stage.getProperties().put("hostServices", this.getHostServices());
             } catch (IOException e) {
                 e.printStackTrace();
             }

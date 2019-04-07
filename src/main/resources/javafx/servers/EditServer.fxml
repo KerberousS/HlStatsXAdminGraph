@@ -19,18 +19,28 @@
 
                 <Label text="Edit Servers URL:"
                        GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                <TextField fx:id="serverURLTextField"
-                           GridPane.columnIndex="0" GridPane.rowIndex="3"
-                GridPane.columnSpan="2"/>
+            <TextField fx:id="serverDynamicLinkTextField"
+                       GridPane.columnIndex="0" GridPane.rowIndex="3"
+                       GridPane.columnSpan="2"/>
+            <TextField fx:id="serverStaticLinkTextField" text="/hlstats.php?mode=playersessions&amp;player=" disable="true"
+                       GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+            <Button text="Hover for info"
+                    GridPane.columnIndex="0" GridPane.rowIndex="4">
+                <tooltip>
+                    <Tooltip text="Editable part of this link should lead to your main hlstatsx page, if check link shows that page it should be okay!"/>
+                </tooltip>
+            </Button>
+            <Button fx:id="checkLinkButton" alignment="CENTER" onAction="#handleCheckLink" text="Check Link"
+                    GridPane.columnIndex="2" GridPane.rowIndex="4"/>
 
             <Text fx:id="updateStatus" style="-fx-font-weight: bold;"
-                  GridPane.columnIndex="0" GridPane.rowIndex="4"
+                  GridPane.columnIndex="0" GridPane.rowIndex="5"
             GridPane.columnSpan="2"/>
 
                 <Button text="Cancel" fx:id="cancelbutton" onAction="#handleCancelButton"
-                        GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                        GridPane.columnIndex="0" GridPane.rowIndex="6"/>
                 <Button text="Edit Server" fx:id="addnewserverbutton" onAction="#handleEditServerButton"
-                        GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                        GridPane.columnIndex="2" GridPane.rowIndex="6"/>
         </GridPane>
     </center>
 

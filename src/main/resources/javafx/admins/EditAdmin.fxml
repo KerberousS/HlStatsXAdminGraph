@@ -12,40 +12,52 @@
     <center>
         <GridPane alignment="CENTER" vgap="10" hgap="10">
 
-                <Label text="Edit admins name:"
-                       GridPane.columnIndex="0" GridPane.rowIndex="0">
-                </Label>
+            <Label text="Edit admins name:"
+                   GridPane.columnIndex="0" GridPane.rowIndex="0">
+            </Label>
 
-                <TextField fx:id="adminNameTextField"
-                           GridPane.columnIndex="0" GridPane.rowIndex="1">
-                </TextField>
-                <Label text="Admins HlStatsX ID:"
-                       GridPane.columnIndex="0" GridPane.rowIndex="2">
-                </Label>
+            <TextField fx:id="adminNameTextField"
+                       GridPane.columnIndex="0" GridPane.rowIndex="1">
+            </TextField>
+            <Label text="Admins HlStatsX ID:"
+                   GridPane.columnIndex="0" GridPane.rowIndex="2">
+            </Label>
 
-                <TextField fx:id="adminLinkTextField"
-                           GridPane.columnIndex="0" GridPane.rowIndex="3"
-                GridPane.columnSpan="2">
-                </TextField>
-                <Label text="Admins Color:"
-                       GridPane.columnIndex="0" GridPane.rowIndex="4">
-                </Label>
+            <TextField fx:id="adminStaticLinkTextField" disable="true"
+                       GridPane.columnIndex="0" GridPane.rowIndex="3"
+            GridPane.columnSpan="2">
+            </TextField>
+            <TextField fx:id="adminDynamicLinkTextField"
+                       GridPane.columnIndex="2" GridPane.rowIndex="3">
+            </TextField>
+            <Button text="Hover for info"
+                    GridPane.columnIndex="0" GridPane.rowIndex="4">
+                <tooltip>
+                    <Tooltip text="Editable part of this link should be the players ID, if check link shows that players session page it means that link is okay!"/>
+                </tooltip>
+            </Button>
+            <Button fx:id="checkLinkButton" alignment="CENTER" onAction="#handleCheckLink" text="Check Link"
+                    GridPane.columnIndex="2" GridPane.rowIndex="4"/>
 
-                <ColorPicker fx:id="adminColorPicker"
-                             GridPane.columnIndex="0" GridPane.rowIndex="5">
-                </ColorPicker>
+            <Label text="Admins Color:"
+                   GridPane.columnIndex="0" GridPane.rowIndex="5">
+            </Label>
+
+            <ColorPicker fx:id="adminColorPicker"
+                         GridPane.columnIndex="0" GridPane.rowIndex="6">
+            </ColorPicker>
 
             <Text fx:id="updateStatus" style="-fx-font-weight: bold;"
-                  GridPane.columnIndex="0" GridPane.rowIndex="6"
+                  GridPane.columnIndex="0" GridPane.rowIndex="7"
             GridPane.columnSpan="2">
             </Text>
 
                 <Button text="Cancel" fx:id="cancelButton"
-                        GridPane.columnIndex="0" GridPane.rowIndex="7"
+                        GridPane.columnIndex="0" GridPane.rowIndex="8"
                         onAction="#handleCancelButton" />
 
                 <Button text="Edit Admin" fx:id="editAdminButton"
-                        GridPane.columnIndex="1" GridPane.rowIndex="7"
+                        GridPane.columnIndex="1" GridPane.rowIndex="8"
                         onAction="#handleEditAdminButton" />
             </GridPane>
         </center>

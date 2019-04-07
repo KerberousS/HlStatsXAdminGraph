@@ -13,37 +13,50 @@
 
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.Tooltip?>
 <BorderPane fx:id="addAdminWindow" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.AddAdminWindowController">
     <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
 
     <center>
         <GridPane alignment="CENTER" vgap="10" hgap="10">
 
-                    <Label text="Type in a new admin name:"
-                    GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                    <TextField fx:id="adminNameTextField"
-                               GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label text="Type in a new admin name:"
+            GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="adminNameTextField"
+                       GridPane.columnIndex="0" GridPane.rowIndex="1"/>
 
-                    <Label text="Admins HlStatsX ID:"
-                           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                    <TextField fx:id="adminLinkTextField"
-                               GridPane.columnIndex="0" GridPane.rowIndex="3"
-                    GridPane.columnSpan="2"/>
+            <Label text="Admins HlStatsX ID:"
+                   GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="adminStaticLinkTextField" disable="true"
+                       GridPane.columnIndex="0" GridPane.rowIndex="3"
+                       GridPane.columnSpan="2">
+            </TextField>
+            <TextField fx:id="adminDynamicLinkTextField"
+                       GridPane.columnIndex="2" GridPane.rowIndex="3">
+            </TextField>
+            <Button text="Hover for info"
+                    GridPane.columnIndex="0" GridPane.rowIndex="4">
+                <tooltip>
+                    <Tooltip text="Editable part of this link should be the players ID, if check link shows that players session page it means that link is okay!"/>
+                </tooltip>
+            </Button>
+            <Button fx:id="checkLinkButton" alignment="CENTER" onAction="#handleCheckLink" text="Check Link"
+                    GridPane.columnIndex="2" GridPane.rowIndex="4"/>
 
-                    <Label text="Admins Color:"
-                           GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-                    <ColorPicker fx:id="adminColorPicker"
-                                 GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <Label text="Admins Color:"
+                   GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <ColorPicker fx:id="adminColorPicker"
+                         GridPane.columnIndex="0" GridPane.rowIndex="6"/>
 
-                    <Text fx:id="updateStatus" style="-fx-font-weight: bold;"
-                          GridPane.columnIndex="0" GridPane.rowIndex="6"
-                    GridPane.columnSpan="2">
-                    </Text>
+            <Text fx:id="updateStatus" style="-fx-font-weight: bold;"
+                  GridPane.columnIndex="0" GridPane.rowIndex="7"
+            GridPane.columnSpan="2">
+            </Text>
 
-                        <Button fx:id="cancelButton" alignment="BOTTOM_LEFT" onAction="#handleCancelButton" text="Cancel"
-                                GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-                        <Button fx:id="addNewAdminButton" alignment="BOTTOM_RIGHT" onAction="#handleAddNewAdminButton" text="Confirm"
-                                GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+                <Button fx:id="cancelButton" alignment="BOTTOM_LEFT" onAction="#handleCancelButton" text="Cancel"
+                        GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+                <Button fx:id="addNewAdminButton" alignment="BOTTOM_RIGHT" onAction="#handleAddNewAdminButton" text="Confirm"
+                        GridPane.columnIndex="1" GridPane.rowIndex="8"/>
         </GridPane>
     </center>
 

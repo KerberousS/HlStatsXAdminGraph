@@ -48,7 +48,6 @@ public class ManageServerWindowController implements Initializable {
     public static Server chosenServer;
     private List<Server> serversList;
 
-
     //FXML FILES
     private String baseWindowFXMLFile = "BaseWindow.fxml";
     private String addServerFXMLFile = "servers/AddServer.fxml";
