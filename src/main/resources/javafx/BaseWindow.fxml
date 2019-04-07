@@ -47,7 +47,7 @@
                         GridPane.rowIndex="3" GridPane.columnIndex="0"
                         onAction="#handleChooseServerButton" />
 
-            <Text fx:id="updateStatus"
+            <Text fx:id="updateStatus" style="-fx-font-weight: bold;"
                   GridPane.rowIndex="4" GridPane.columnIndex="0"
             GridPane.columnSpan="2">
             </Text>

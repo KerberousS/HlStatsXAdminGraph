@@ -41,10 +41,10 @@ public class DBOperations {
          *
          */
 
-        public static void createServerRecord (String serverName, String serverLink) {
+        public static void createServerRecord (String serverName, String serverLink) throws PersistenceException {
                 long count = 0;
                 Server serverObj = null;
-                try {
+//                try {
                         // Getting Session Object From SessionFactory
                         sessionObj = buildSessionFactory().openSession();
                         // Getting Transaction Object From Session Object
@@ -58,18 +58,18 @@ public class DBOperations {
                         // Committing The Transactions To The Database
                         sessionObj.getTransaction().commit();
                         System.out.println("\nSuccessfully Created '" + count + "' Records In The Database!\n");
-                } catch (Exception sqlException) {
-                        if (null != sessionObj.getTransaction()) {
-                                System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
-                                sessionObj.getTransaction().rollback();
-                        }
-                        sqlException.printStackTrace();
-                } finally {
+//                } catch (Exception sqlException) {
+//                        if (null != sessionObj.getTransaction()) {
+//                                System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
+//                                sessionObj.getTransaction().rollback();
+//                        }
+//                        sqlException.printStackTrace();
+//                } finally {
                         if (sessionObj != null) {
                                 sessionObj.close();
                         }
                 }
-        }
+//        }
 
         @SuppressWarnings("unchecked")
         public static List displayServerRecords() {
@@ -95,8 +95,8 @@ public class DBOperations {
                 return serversList;
         }
 
-        public static void updateServerRecord(Long serverID, String newServerName, String newServerLink) {
-                try {
+        public static void updateServerRecord(Long serverID, String newServerName, String newServerLink) throws PersistenceException {
+//                try {
                         // Getting Session Object From SessionFactory
                         sessionObj = buildSessionFactory().openSession();
                         // Getting Transaction Object From Session Object
@@ -110,18 +110,18 @@ public class DBOperations {
                         // Committing The Transactions To The Database
                         sessionObj.getTransaction().commit();
                         System.out.println("\nServer of ID ?= " + serverID + " Was Successfully Updated In The Database!\n");
-                } catch (Exception sqlException) {
-                        if (null != sessionObj.getTransaction()) {
-                                System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
-                                sessionObj.getTransaction().rollback();
-                        }
-                        sqlException.printStackTrace();
-                } finally {
+//                } catch (Exception sqlException) {
+//                        if (null != sessionObj.getTransaction()) {
+//                                System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
+//                                sessionObj.getTransaction().rollback();
+//                        }
+//                        sqlException.printStackTrace();
+//                } finally {
                         if (sessionObj != null) {
                                 sessionObj.close();
                         }
                 }
-        }
+//        }
 
         public static void deleteServerRecord(Long serverID) {
                 try {

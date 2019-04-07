@@ -12,6 +12,7 @@
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.text.Font?>
 <BorderPane fx:id="addAdminWindow" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.AddAdminWindowController">
     <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
 
@@ -34,8 +35,9 @@
                     <ColorPicker fx:id="adminColorPicker"
                                  GridPane.columnIndex="0" GridPane.rowIndex="5"/>
 
-                    <Text fx:id="updateStatus"
-                          GridPane.columnIndex="0" GridPane.rowIndex="6">
+                    <Text fx:id="updateStatus" style="-fx-font-weight: bold;"
+                          GridPane.columnIndex="0" GridPane.rowIndex="6"
+                    GridPane.columnSpan="2">
                     </Text>
 
                         <Button fx:id="cancelButton" alignment="BOTTOM_LEFT" onAction="#handleCancelButton" text="Cancel"

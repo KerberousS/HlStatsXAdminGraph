@@ -20,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -82,8 +83,15 @@ public class EditAdminWindowController implements Initializable {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            updateStatus.setText("Something went terribly wrong!");
-            updateStatus.setFill(Color.RED);
+            String errorMessage = ExceptionUtils.getRootCause(e).toString();
+            if (errorMessage.contains("exists")){
+                String[] em1 = errorMessage.split("Detail:");
+                updateStatus.setText("Something went terribly wrong! " + em1[1]);
+                updateStatus.setFill(Color.RED);
+            } else {
+                updateStatus.setText("Something went terribly wrong! " + errorMessage);
+                updateStatus.setFill(Color.RED);
+            }
         }
     }
 

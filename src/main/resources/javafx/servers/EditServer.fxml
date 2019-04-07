@@ -23,7 +23,7 @@
                            GridPane.columnIndex="0" GridPane.rowIndex="3"
                 GridPane.columnSpan="2"/>
 
-            <Text fx:id="updateStatus"
+            <Text fx:id="updateStatus" style="-fx-font-weight: bold;"
                   GridPane.columnIndex="0" GridPane.rowIndex="4"
             GridPane.columnSpan="2"/>
 

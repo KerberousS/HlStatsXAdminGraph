@@ -466,7 +466,6 @@ public class ChartsWindowController implements Initializable {
 //                        e -> {
 //                            caption.setTranslateX(e.getSceneX());
 //                            caption.setTranslateY(e.getSceneY());
-//                            //TODO: CHECK THIS AFTER REWORK OF GUI
 //                            double dataValue = data.getPieValue() / adminTimeSumFinal * 100;
 //                            String result = String.format("%.2f", dataValue);
 //                            caption.setText(result + "%");

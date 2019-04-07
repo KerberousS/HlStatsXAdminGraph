@@ -87,8 +87,8 @@ public class ManageServerWindowController implements Initializable {
             chosenServer = serversList.get(serverIndex);
 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setHeaderText("Delete admin");
-            alert.setContentText("Are you sure you want to delete admin \"" + chosenServer.getServerName() + "\"?");
+            alert.setHeaderText("Delete server");
+            alert.setContentText("Are you sure you want to delete server \"" + chosenServer.getServerName() + "\"?");
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK){

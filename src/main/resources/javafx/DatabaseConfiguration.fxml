@@ -29,8 +29,9 @@
             <TextField fx:id="passwordTextField"
                        GridPane.columnIndex="0" GridPane.rowIndex="5"/>
 
-            <Text fx:id="updateStatus"
-                  GridPane.columnIndex="0" GridPane.rowIndex="6">
+            <Text fx:id="updateStatus" style="-fx-font-weight: bold;"
+                  GridPane.columnIndex="0" GridPane.rowIndex="6"
+            GridPane.columnSpan="2">
             </Text>
 
                 <Button text="Cancel" fx:id="cancelButton"
