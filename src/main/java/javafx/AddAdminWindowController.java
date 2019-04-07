@@ -17,6 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -66,7 +67,6 @@ public class AddAdminWindowController implements Initializable {
                 updateStatus.setText("Parameters can't be blank!");
                 updateStatus.setFill(Color.RED);
             } else {
-
                 DBOperations.createAdminRecord(adminName, (chosenServer.getServerHlstatsLink() + adminLink), adminColor, chosenServer.getServerName());
 
                 updateStatus.setText("Admin " + adminName + " was succesfully created!");
@@ -74,8 +74,15 @@ public class AddAdminWindowController implements Initializable {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            updateStatus.setText("Something went terribly wrong!");
-            updateStatus.setFill(Color.RED);
+            String errorMessage = ExceptionUtils.getRootCause(e).toString();
+            if (errorMessage.contains("exists")){
+                String[] em1 = errorMessage.split("Detail:");
+                updateStatus.setText("Something went terribly wrong! " + em1[1]);
+                updateStatus.setFill(Color.RED);
+            } else {
+                updateStatus.setText("Something went terribly wrong! " + errorMessage);
+                updateStatus.setFill(Color.RED);
+            }
         }
     }
 
@@ -86,8 +93,6 @@ public class AddAdminWindowController implements Initializable {
         assert adminColorPicker != null : "fx:id=\"adminColorPicker\" was not injected: check your FXML file 'AddAdmin.fxml'.";
         assert cancelButton != null : "fx:id=\"cancelButton\" was not injected: check your FXML file 'AddAdmin.fxml'.";
         assert addNewAdminButton != null : "fx:id=\"addNewAdminButton\" was not injected: check your FXML file 'AddAdmin.fxml'.";
-
-        //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
 
         chosenServer = BaseWindowController.chosenServer;
     }

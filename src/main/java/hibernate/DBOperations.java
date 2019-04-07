@@ -202,10 +202,10 @@ public class DBOperations {
         *
          */
 
-        public static Boolean createAdminRecord(String adminName, String adminLink, String adminColor, String adminServer) {
+        public static void createAdminRecord(String adminName, String adminLink, String adminColor, String adminServer) throws PersistenceException {
                 long count = 0;
                 Admin adminObj = null;
-                try {
+//                try {
                         // Getting Session Object From SessionFactory
                         sessionObj = buildSessionFactory().openSession();
                         // Getting Transaction Object From Session Object
@@ -224,20 +224,10 @@ public class DBOperations {
                         // Committing The Transactions To The Database
                         sessionObj.getTransaction().commit();
                         System.out.println("\nSuccessfully Created '" + count + "' Records In The Database!\n");
-                        return true;
-                } catch (Exception sqlException) {
-                        if(null != sessionObj.getTransaction()) {
-                                System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
-                                sessionObj.getTransaction().rollback();
-                        }
-                        sqlException.printStackTrace();
-                        return false;
-                } finally {
                         if(sessionObj != null) {
                                 sessionObj.close();
                         }
                 }
-        }
 
         public static List displayAdminRecords(String serverName) {
                 List<Server> adminsList = new ArrayList();
@@ -264,8 +254,8 @@ public class DBOperations {
                 return adminsList;
         }
 
-        public static void updateAdminRecord(Long adminID, String newAdminName, String newAdminColor, String newAdminLink, String newAdminServer) {
-                try {
+        public static void updateAdminRecord(Long adminID, String newAdminName, String newAdminColor, String newAdminLink, String newAdminServer) throws PersistenceException {
+//                try {
                 // Getting Session Object From SessionFactory
                 sessionObj = buildSessionFactory().openSession();
                 // Getting Transaction Object From Session Object
@@ -281,16 +271,15 @@ public class DBOperations {
                 // Committing The Transactions To The Database
                 sessionObj.getTransaction().commit();
                 System.out.println("\nAdmin of ID ?= " + adminID + " Was Successfully Updated In The Database!\n");
-                } catch(Exception sqlException) {
-                if(null != sessionObj.getTransaction()) {
-                System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
-                sessionObj.getTransaction().rollback();
-                }
-                sqlException.printStackTrace();
-                } finally {
-                if(sessionObj != null) {
-                sessionObj.close();
-                }
+//                } catch(Exception sqlException) {
+//                if(null != sessionObj.getTransaction()) {
+//                System.out.println("\n.......Transaction Is Being Rolled Back.......\n");
+//                sessionObj.getTransaction().rollback();
+//                }
+//                sqlException.printStackTrace();
+//                } finally {
+                if (sessionObj != null) {
+                        sessionObj.close();
                 }
         }
 

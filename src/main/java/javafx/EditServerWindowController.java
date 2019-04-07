@@ -79,7 +79,6 @@ public class EditServerWindowController implements Initializable {
         assert serverNameTextField != null : "fx:id=\"serverNameTextField\" was not injected: check your FXML file 'basewindow.fxml'.";
         assert cancelbutton != null : "fx:id=\"cancelbutton\" was not injected: check your FXML file 'basewindow.fxml'.";
         assert addnewserverbutton != null : "fx:id=\"addnewserverbutton\" was not injected: check your FXML file 'basewindow.fxml'.";
-        //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
 
         chosenServer = ManageServerWindowController.chosenServer;
         serverNameTextField.setText(chosenServer.getServerName());

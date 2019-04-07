@@ -65,7 +65,7 @@ public class EditAdminWindowController implements Initializable {
         Color c = adminColorPicker.getValue();
         String newAdminColor = colorOperations.colorToHex(c);
 
-        //TODO: Add functional admin edit
+        //TODO: Fix admin ADD and admin EDIT LINK!!!
         try {
             if (newAdminName.isEmpty() || newAdminLink.isEmpty() || newAdminColor.isEmpty()) {
                 updateStatus.setText("Parameters can't be blank!");
@@ -86,8 +86,6 @@ public class EditAdminWindowController implements Initializable {
             updateStatus.setFill(Color.RED);
         }
     }
-
-    //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
 
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {

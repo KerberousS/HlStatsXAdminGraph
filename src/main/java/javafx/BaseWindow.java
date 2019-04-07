@@ -38,8 +38,6 @@ public class BaseWindow extends Application {
                 stage.setScene(scene);
                 stage.show();
                 stage.setTitle("HlStatsX Admin Graph");
-                //TODO: FIX WHOLE CSS, REDO THE APPLICATION VISUALLY
-                //TODO: FIX WINDOW CHANGES FROM GETCHILDREN TO SCENE
             } catch (IOException e) {
                 e.printStackTrace();
             }

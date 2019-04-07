@@ -19,7 +19,6 @@ import java.io.IOException;
 public class ConfigOperations {
         
         private static final String HIBERNATE_CONFIG_FILEPATH = "./hibernate.cfg.xml";
-        //TODO: ADD LOGGING HERE
 
         private Document accessConfigFile() {
                 //Access Files

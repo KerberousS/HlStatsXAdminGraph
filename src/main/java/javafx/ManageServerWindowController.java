@@ -11,7 +11,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -23,6 +25,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ManageServerWindowController implements Initializable {
@@ -44,7 +47,7 @@ public class ManageServerWindowController implements Initializable {
 
     public static Server chosenServer;
     private List<Server> serversList;
-    //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
+
 
     //FXML FILES
     private String baseWindowFXMLFile = "BaseWindow.fxml";
@@ -83,15 +86,23 @@ public class ManageServerWindowController implements Initializable {
             int serverIndex = serverList.getSelectionModel().getSelectedIndex();
             chosenServer = serversList.get(serverIndex);
 
-            //TODO: Add CONFIRM WINDOW!
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setHeaderText("Delete admin");
+            alert.setContentText("Are you sure you want to delete admin \"" + chosenServer.getServerName() + "\"?");
 
-            DBOperations.deleteServerRecord(chosenServer.getServerID());
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK){
+                DBOperations.deleteServerRecord(chosenServer.getServerID());
 
-            //Initialize server list for server dropdown
-            serverList.getItems().clear();
-            addServersList.restart();
+                //Initialize server list for server dropdown
+                serverList.getItems().clear();
+                addServersList.restart();
+            } else {
+                // Do nothing
+            }
         }
     }
+
 
 
     @Override // This method is called by the FXMLLoader when initialization is complete

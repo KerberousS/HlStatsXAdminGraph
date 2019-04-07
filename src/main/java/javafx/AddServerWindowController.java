@@ -59,7 +59,7 @@ public class AddServerWindowController implements Initializable {
                 DBOperations.createServerRecord(serverName, serverLink);
                 updateStatus.setText("Server " + serverName + " was succesfully created!");
                 updateStatus.setFill(Color.GREEN);
-            } catch (Exception e) { //TODO: FIX THIS VERIFICATION, I ACTUALLY NEED HELP WITH THIS ONE
+            } catch (Exception e) {
                 e.printStackTrace();
                 updateStatus.setText("Something went terribly wrong!");
                 updateStatus.setFill(Color.RED);
@@ -74,7 +74,6 @@ public class AddServerWindowController implements Initializable {
         assert cancelButton != null : "fx:id=\"cancelButton\" was not injected: check your FXML file 'AddServer.fxml'.";
         assert addNewServerButton != null : "fx:id=\"addNewServerButton\" was not injected: check your FXML file 'AddServer.fxml'.";
 
-        //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
     }
 
     private void changeScene(String windowFXMLFile, ActionEvent event) {

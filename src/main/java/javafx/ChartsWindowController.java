@@ -234,30 +234,7 @@ public class ChartsWindowController implements Initializable {
                     }
                 }
             });
-//        } else if (areaChart.isVisible()) {
-//            Platform.runLater(() -> {
-//                for (int i = 0; i < adminsList.size(); i++) {
-//                    //Get nodes
-//                    StringBuilder lookupCSS = new StringBuilder()
-//                            .append(".default-color")
-//                            .append(i);
-//
-//                    Node adminAreaStrokeColor = areaChart.lookup(lookupCSS.append(".chart-series-area-line").toString());
-//                    Node adminAreaSymbolColor = areaChart.lookup(lookupCSS.append(".chart-area-symbol").toString());
-//                    Node adminAreaFillColor = areaChart.lookup(lookupCSS.append(".chart-series-area-fill").toString());
-//                    Node adminLegendSymbol = areaChart.lookup(lookupCSS.append(".chart-legend-item-symbol").toString());
-//
-//                    //Get color
-//                    String adminColor = java.awt.Color.decode("#" + adminsList.get(i).getAdminColor()).toString();
-//                    System.out.println(adminColor);
-//
-//                    //Set new node styles
-//                    adminAreaStrokeColor.setStyle("-fx-stroke: " + adminColor);
-//                    adminAreaSymbolColor.setStyle("-fx-background-color: " + adminColor);
-//                    adminAreaFillColor.setStyle("-fx-fill: " + adminColor); //TODO: ADD ALPHA TO COLOR
-//                    adminLegendSymbol.setStyle("-fx-background-color: " + adminColor);
-//                }
-//            });
+            //Area charts color would require lots of additional work, since it isnt possible to getNodes in it, for the time being i'm skipping it
         } else if (barChart.isVisible()) {
             Platform.runLater(() -> {
                 for (int i = 0; i < adminsList.size(); i++) {

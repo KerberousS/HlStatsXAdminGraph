@@ -3,7 +3,6 @@ package javafx;
 import hibernate.Admin;
 import hibernate.DBOperations;
 import hibernate.Server;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
@@ -17,7 +16,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -28,15 +26,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class AdminsWindowController implements Initializable {
-
-    @FXML
-    private BorderPane adminsWindow;
-
-    @FXML
-    private Text adminText;
 
     @FXML
     private Text Error;
@@ -102,26 +95,33 @@ public class AdminsWindowController implements Initializable {
             int adminIndex = adminsList.getSelectionModel().getSelectedIndex();
             chosenAdmin = adminsRecordsList.get(adminIndex);
 
-            //TODO: CONFIRM WINDOW
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setHeaderText("Delete admin");
+            alert.setContentText("Are you sure you want to delete admin \"" + chosenAdmin.getAdminName() + "\"?");
 
-            DBOperations.deleteAdminRecord(chosenAdmin.getAdminID());
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK){
+                DBOperations.deleteAdminRecord(chosenAdmin.getAdminID());
 
-            //Initialize admins list
-            adminsList.getItems().clear();
-            adminsList.getItems().addAll(DBOperations.displayAdminRecords(chosenServer.getServerName()));
+                //Initialize admins list
+                adminsList.getItems().clear();
+                adminsList.getItems().addAll(DBOperations.displayAdminRecords(chosenServer.getServerName()));
+            } else {
+                // Do nothing
+            }
         }
     }
 
     @FXML
     protected void handleChartsButton(ActionEvent event) {
-        List<Admin> adms = adminsList.getItems();
+        List<Admin> admins = adminsList.getItems();
         selectedAdminsList = new ArrayList<>();
         try {
             if (adminsList.getItems().isEmpty()) {
                 Error.setText("Please add admins first!");
                 Error.setFill(Color.RED);
             } else {
-                for (Admin a : adms) {
+                for (Admin a : admins) {
                     if (a.isSelected()) {
                         selectedAdminsList.add(a);
                     }
@@ -141,7 +141,6 @@ public class AdminsWindowController implements Initializable {
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
         assert adminsList != null : "fx:id=\"adminsList\" was not injected: check your FXML file 'admins.fxml'.";
-        //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
 
         columnAdminID.setCellValueFactory(new PropertyValueFactory<Admin, String>("adminID"));
         columnAdminName.setCellValueFactory(new PropertyValueFactory<Admin, String>("adminName"));
@@ -205,7 +204,7 @@ public class AdminsWindowController implements Initializable {
         });
     }
 
-    Service getAdmins = new Service() {
+    private Service getAdmins = new Service() {
         @Override
         protected Task createTask() {
             return new Task() {

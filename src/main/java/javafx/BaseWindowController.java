@@ -72,7 +72,6 @@ public class BaseWindowController implements Initializable {
             this.changeScene(adminsFXMLFile, event);
         }
     }
-    //TODO: GET EVERYTHING INTO NEW THREADS SO APP WONT FREEZE
 
     @FXML
     protected void handleConfigureDatabaseButton(ActionEvent event) {

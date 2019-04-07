@@ -18,6 +18,7 @@ module administratorgraph {
     requires net.bytebuddy;
     requires log4j;
     requires java.desktop;
+    requires org.apache.commons.lang3;
     exports javafx;
     opens hibernate;
     opens javafx;
