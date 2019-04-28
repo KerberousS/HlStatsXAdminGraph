@@ -1,13 +1,11 @@
 package javafx;
 
-import com.sun.javafx.charts.Legend;
 import getinfo.SummarizeTime;
 import hibernate.Admin;
 import hibernate.DBOperations;
 import hibernate.Server;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
@@ -176,7 +174,7 @@ public class ChartsWindowController implements Initializable {
 
         if (file != null) {
             try {
-                WritableImage writableImage = new WritableImage((int) Math.round(chartsWindow.getWidth()*2), (int) Math.round(chartsWindow.getHeight()*2));
+                WritableImage writableImage = new WritableImage((int) Math.round(chartsWindow.getWidth() * 2), (int) Math.round(chartsWindow.getHeight() * 2));
                 WritableImage image = chartsWindow.snapshot(snapshotParameters, writableImage);
                 ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
             } catch (Exception e) {
@@ -354,12 +352,7 @@ public class ChartsWindowController implements Initializable {
             checkBox.selectedProperty().addListener((ov, old_val, new_val) -> {
                 admin.setSelected(new_val);
 
-                clearChartData();
-                for (Admin a : adminsRecordsList) {
-                    if (a.isSelected()) {
-                        setChartData(a);
-                    }
-                }
+                Platform.runLater(this::rePopulateCharts);
             });
             return new SimpleObjectProperty<>(checkBox);
         });
@@ -369,7 +362,7 @@ public class ChartsWindowController implements Initializable {
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
 
         //Setup Admin Table
-        setUpAdminList();
+        Platform.runLater(this::setUpAdminList);
 
         //Initialize server list for server dropdown
         chosenServer = BaseWindowController.chosenServer;
@@ -411,12 +404,12 @@ public class ChartsWindowController implements Initializable {
         setDateFrom.valueProperty().addListener((observableValue, localDate, t1) -> {
             //FIXME - Change title dynamically
             dateFrom = t1;
-            Platform.runLater(() -> rePopulateCharts());
+            Platform.runLater(this::rePopulateCharts);
         });
 
         setDateTo.valueProperty().addListener((observableValue, localDate, t1) -> {
             dateTo = t1;
-            Platform.runLater(() -> rePopulateCharts());
+            Platform.runLater(this::rePopulateCharts);
         });
 
         // Factory to create Cell of DatePicker
@@ -501,103 +494,80 @@ public class ChartsWindowController implements Initializable {
 //                        });
 //            }
 
-    private void setAdminFullDateTimeList(Admin a) {
-        chartsProgressIndicator.setVisible(true);
-        //Get admin data
-        GetAdminChartDataService getData = new GetAdminChartDataService(a, LocalDate.now().minusDays(27), LocalDate.now());
-        getData.restart();
 
-        getData.setOnFailed(e -> Error.setText("Get data failed " + getData.getMessage()));
-        getData.setOnSucceeded(e -> {
-            a.setAdminTimeList(getData.getValue());
-
-            List<LocalDateTime> adminDateTimes;
-
-            if (!dateFrom.equals(LocalDate.now().minusDays(27)) | !dateTo.equals(LocalDate.now())) {
-                adminDateTimes = SummarizeTime.cutTimesListToPeriod(a.getAdminTimeList(), dateFrom, dateTo);
-            } else {
-                adminDateTimes = a.getAdminTimeList();
-            }
-
-            //Create new Chart series
-            XYChart.Series<String, Number> chartData = new XYChart.Series<>();
-
-            //Set admins name as series title
-            chartData.setName(a.getAdminName());
-
-            //Convert all admin data to chart data
-            for (LocalDateTime at : adminDateTimes) {
-                chartData.getData().add(new XYChart.Data<>(at.toLocalDate().toString(), (at.toLocalTime().getHour() * 60) + (at.toLocalTime().getMinute())));
-            }
-
-            PieChart.Data pieChartData = new PieChart.Data(a.getAdminName() + " (" + SummarizeTime.sumTimeString(a.getAdminTimeList()) + ")", SummarizeTime.adminTimesDurationTotal(a.getAdminTimeList()));
-
-
-            pieChart.getData().add(pieChartData);
-            lineChart.getData().add(chartData); //FIXME
-            areaChart.getData().add(chartData);
-            barChart.getData().add(chartData);
-
-
-            chartsProgressIndicator.setVisible(false);
-        });
+    private Boolean isNewData(Admin a) {
+        return a.getAdminTimeList() == null;
     }
 
     private void setChartData(Admin a) {
-        if (a.getAdminTimeList() == null) {
-            setAdminFullDateTimeList(a);
+        List<LocalDateTime> adminDateTimes;
+
+        if (!dateFrom.equals(LocalDate.now().minusDays(27)) | !dateTo.equals(LocalDate.now())) {
+            adminDateTimes = SummarizeTime.cutTimesListToPeriod(a.getAdminTimeList(), dateFrom, dateTo);
         } else {
-            List<LocalDateTime> adminDateTimes;
-
-            if (!dateFrom.equals(LocalDate.now().minusDays(27)) | !dateTo.equals(LocalDate.now())) {
-                adminDateTimes = SummarizeTime.cutTimesListToPeriod(a.getAdminTimeList(), dateFrom, dateTo);
-            } else {
-                adminDateTimes = a.getAdminTimeList();
-            }
-
-            //Create new Chart series
-            XYChart.Series<String, Number> chartData = new XYChart.Series<>();
-
-            //Set admins name as series title
-            chartData.setName(a.getAdminName());
-
-            //Convert all admin data to chart data
-            for (LocalDateTime at : adminDateTimes) {
-                chartData.getData().add(new XYChart.Data<>(at.toLocalDate().toString(), (at.toLocalTime().getHour() * 60) + (at.toLocalTime().getMinute())));
-            }
-
-            PieChart.Data pieChartData = new PieChart.Data(a.getAdminName() + " (" + SummarizeTime.sumTimeString(a.getAdminTimeList()) + ")", SummarizeTime.adminTimesDurationTotal(a.getAdminTimeList()));
-
-            //Add chart data to charts
-            pieChart.getData().add(pieChartData);
-            lineChart.getData().add(chartData);
-            areaChart.getData().add(chartData);
-            barChart.getData().add(chartData);
+            adminDateTimes = a.getAdminTimeList();
         }
+
+        //Create new Chart series
+        XYChart.Series<String, Number> lineChartData = new XYChart.Series<>();
+        XYChart.Series<String, Number> areaChartData = new XYChart.Series<>();
+        XYChart.Series<String, Number> barChartData = new XYChart.Series<>();
+
+        //Set admins name as series title
+        lineChartData.setName(a.getAdminName());
+        areaChartData.setName(a.getAdminName());
+        barChartData.setName(a.getAdminName());
+
+        //Convert all admin data to chart data
+        for (LocalDateTime at : adminDateTimes) {
+            XYChart.Data<String, Number> data = new XYChart.Data<>(at.toLocalDate().toString(), (at.toLocalTime().getHour() * 60) + (at.toLocalTime().getMinute()));
+            lineChartData.getData().add(data);
+            areaChartData.getData().add(data);
+            barChartData.getData().add(data);
+        }
+
+        PieChart.Data pieChartData = new PieChart.Data(a.getAdminName() + " (" + SummarizeTime.sumTimeString(adminDateTimes) + ")", SummarizeTime.adminTimesDurationTotal(adminDateTimes));
+
+        //Add chart data to charts
+        Platform.runLater(() -> pieChart.getData().add(pieChartData));
+        Platform.runLater(() -> lineChart.getData().add(lineChartData));
+        Platform.runLater(() -> areaChart.getData().add(areaChartData));
+        Platform.runLater(() -> barChart.getData().add(barChartData));
     }
 
 
     private void clearChartData() {
         //Clear all datas
-        pieChart.getData().clear();
-        lineChart.getData().clear();
-        areaChart.getData().clear();
-        barChart.getData().clear();
-
-        //Fix layouts
-        pieChart.layout();
-        lineChart.layout();
-        areaChart.layout();
-        barChart.layout();
+        Platform.runLater(() -> pieChart.getData().clear());
+        Platform.runLater(() -> lineChart.getData().clear());
+        Platform.runLater(() -> areaChart.getData().clear());
+        Platform.runLater(() -> barChart.getData().clear());
     }
 
     private void rePopulateCharts() {
-        clearChartData();
-        for (Admin a : adminsRecordsList) {
-            if (a.isSelected()) {
-                setChartData(a);
+        chartsProgressIndicator.setVisible(true);
+        Platform.runLater(() -> {
+            clearChartData();
+            for (Admin a : adminsRecordsList) {
+                if (a.isSelected()) {
+                    if (isNewData(a)) {
+                        //Get admin data
+                        GetAdminChartDataService getData = new GetAdminChartDataService(a, LocalDate.now().minusDays(27), LocalDate.now());
+                        getData.restart();
+
+                        getData.setOnFailed(e -> Error.setText("Get data failed " + getData.getMessage()));
+                        getData.setOnSucceeded(e -> {
+                            a.setAdminTimeList(getData.getValue());
+                            setChartData(a);
+                            chartsProgressIndicator.setVisible(false);
+                        });
+                    } else {
+                        setChartData(a);
+                        chartsProgressIndicator.setVisible(false);
+                    }
+                }
             }
-        }
+        });
     }
 
     // ** ADMINS LIST CONTROLS ** //

@@ -13,7 +13,7 @@ public class TestJDBCConnection {
         String user = config.getDatabaseUsername();
         String password = config.getDatabasePassword();
 
-        String status = null;
+        String status;
         try {
             System.out.println("Connecting to: " + jdbcURL);
 

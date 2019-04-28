@@ -45,8 +45,6 @@ public class Admin {
         this.adminLink = adminLink;
         this.adminColor = adminColor;
         this.adminServer = adminServer;
-        this.adminSelect = adminSelect;
-        this.adminTimeList = adminTimeList;
     }
 
     public Long getAdminID() { return adminID; }
