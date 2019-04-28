@@ -54,11 +54,11 @@ public class AddAdminWindowController implements Initializable {
 
     private Server chosenServer;
 
-    private String adminsFXMLFile = "admins/admins.fxml";
+    private String chartsFXMLFile = "charts/Charts.fxml";
 
     @FXML
     protected void handleCancelButton(ActionEvent event) {
-        this.changeScene(adminsFXMLFile, event);
+        this.changeScene(chartsFXMLFile, event);
     }
 
     @FXML

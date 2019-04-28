@@ -14,7 +14,7 @@ class GetAdminChartDataService extends Service<List<LocalDateTime>> {
     private Admin admin;
     private LocalDate dateFrom, dateTo;
 
-    public GetAdminChartDataService(Admin admin, LocalDate dateFrom, LocalDate dateTo) {
+    GetAdminChartDataService(Admin admin, LocalDate dateFrom, LocalDate dateTo) {
         this.admin = admin;
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
@@ -22,7 +22,7 @@ class GetAdminChartDataService extends Service<List<LocalDateTime>> {
 
     @Override
     protected Task<List<LocalDateTime>> createTask() {
-        return new Task() {
+        return new Task<>() {
             @Override
             protected List<LocalDateTime> call() {
                 return SummarizeTime.getTimesListFromPeriod(admin.getAdminLink(), dateFrom, dateTo);

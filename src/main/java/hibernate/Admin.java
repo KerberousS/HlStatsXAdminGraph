@@ -1,7 +1,9 @@
 package hibernate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,6 +34,9 @@ public class Admin {
     @Transient
     private Boolean adminSelect;
 
+    @Transient
+    private List<LocalDateTime> adminTimeList;
+
     public Admin() {
     }
 
@@ -41,6 +46,7 @@ public class Admin {
         this.adminColor = adminColor;
         this.adminServer = adminServer;
         this.adminSelect = adminSelect;
+        this.adminTimeList = adminTimeList;
     }
 
     public Long getAdminID() { return adminID; }
@@ -92,5 +98,13 @@ public class Admin {
 
     public void setSelected(Boolean adminSelect) {
         this.adminSelect = adminSelect;
+    }
+
+    public List<LocalDateTime> getAdminTimeList() {
+        return adminTimeList;
+    }
+
+    public void setAdminTimeList(List<LocalDateTime> adminTimeList) {
+        this.adminTimeList = adminTimeList;
     }
 }

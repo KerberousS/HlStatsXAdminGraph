@@ -3,30 +3,26 @@ package getinfo;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-public class AdminTimeCollector {
+class AdminTimeCollector {
 
     private static Logger log = Logger.getLogger(AdminTimeCollector.class.getName());
     private static DateTimeFormatter dayPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static DateTimeFormatter timePattern = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    public static HashMap getAdminDateTimes (String HlstatsURL) {
+    static HashMap<LocalDate, LocalTime> getAdminDateTimes(String HlstatsURL) {
         try {
             Document doc = Jsoup.connect(HlstatsURL).get();
             Elements dateTimeRows = doc.select("td:first-child.bg1,td:nth-child(4).bg2");
 
-            HashMap<LocalDate, LocalTime> dateTime = new HashMap();
+            HashMap<LocalDate, LocalTime> dateTime = new HashMap<>();
             for (int i = 0; i < dateTimeRows.size(); i++) {
                 //Get date
                 String[] splitDateOpenHTMLTag = dateTimeRows.get(i).toString().split("\">");
@@ -36,11 +32,10 @@ public class AdminTimeCollector {
                 //Get time
                 String[] splitTimeOpenHTMLTag = dateTimeRows.get(i + 1).toString().split("nbsp;");
                 String[] splitTimeCloseHTMLTag = splitTimeOpenHTMLTag[1].split("h</"); //23:45:47
-                String serverConnetionTime = splitTimeCloseHTMLTag[0];
+                String serverConnectionTime = splitTimeCloseHTMLTag[0];
 
-                dateTime.put(LocalDate.parse(serverConnectionDate, dayPattern), LocalTime.parse(serverConnetionTime, timePattern));
+                dateTime.put(LocalDate.parse(serverConnectionDate, dayPattern), LocalTime.parse(serverConnectionTime, timePattern));
                 i++;
-
             }
             return dateTime;
         } catch (IOException e) {

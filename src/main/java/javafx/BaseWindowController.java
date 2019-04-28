@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -54,7 +55,7 @@ public class BaseWindowController implements Initializable {
 
     private String databaseConfigurationFXMLFile = "DatabaseConfiguration.fxml";
     private String manageServersFXMLFile = "servers/ManageServers.fxml";
-    private String adminsFXMLFile = "admins/Admins.fxml";
+    private String adminsFXMLFile = "charts/Charts.fxml";
 
     @FXML
     protected void handleManageServerButton(ActionEvent event) {
@@ -81,6 +82,9 @@ public class BaseWindowController implements Initializable {
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
         assert serverDropdown != null : "fx:id=\"serverDropdown\" was not injected: check your FXML file 'BaseWindow.fxml'.";
+
+        updateStatus.setId("textElement");
+        databaseStatus.setId("textElement");
 
         serverDropdown.setDisable(true);
         progressIndicator.progressProperty().unbind();

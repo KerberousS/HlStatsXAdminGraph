@@ -1,106 +1,188 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import java.net.URL?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.AreaChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.StackedBarChart?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.chart.StackedBarChart?>
 <BorderPane fx:id="chartsWindow" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.ChartsWindowController">
-    <padding><Insets bottom="5" left="5" right="5" top="5" /></padding>
-    
+    <padding>
+        <Insets bottom="5" left="5" right="5" top="5" />
+    </padding>
+
     <Text fx:id="caption">
     </Text>
 
     <center>
-        <StackPane alignment="CENTER" fx:id="chartStackPane">
-            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+        <StackPane fx:id="chartStackPane" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+
             <PieChart fx:id="pieChart" maxWidth="Infinity" visible="false">
             </PieChart>
 
-            <LineChart fx:id="lineChart" maxWidth="Infinity" createSymbols="false" animated="false" visible="false">
+            <LineChart fx:id="lineChart" animated="false" maxWidth="Infinity" visible="false">
                 <xAxis>
                     <CategoryAxis label="Days" fx:id="xLineAxis" />
                 </xAxis>
                 <yAxis>
-                    <NumberAxis fx:id="yLineAxis" label="Times (in seconds)" side="LEFT"  />
+                    <NumberAxis fx:id="yLineAxis" label="Times (in minutes)" side="LEFT" />
                 </yAxis>
             </LineChart>
 
-            <AreaChart fx:id="areaChart" maxWidth="Infinity" visible="false" animated="false">
+            <AreaChart fx:id="areaChart" animated="false" maxWidth="Infinity" visible="false">
                 <xAxis>
                     <CategoryAxis label="Days" fx:id="xAreaAxis" />
                 </xAxis>
                 <yAxis>
-                    <NumberAxis fx:id="yAreaAxis" label="Times (in seconds)" side="LEFT" />
+                    <NumberAxis fx:id="yAreaAxis" label="Times (in minutes)" side="LEFT" />
                 </yAxis>
             </AreaChart>
 
-            <StackedBarChart fx:id="barChart" maxWidth="Infinity" visible="false" animated="false">
+            <StackedBarChart fx:id="barChart" animated="false" maxWidth="Infinity" visible="false">
                 <xAxis>
                     <CategoryAxis label="Days" fx:id="xBarAxis" />
                 </xAxis>
                 <yAxis>
-                    <NumberAxis fx:id="yBarAxis" label="Times (in seconds)" side="LEFT" />
+                    <NumberAxis fx:id="yBarAxis" label="Times (in minutes)" side="LEFT" />
                 </yAxis>
             </StackedBarChart>
+
+            <ProgressIndicator fx:id="chartsProgressIndicator" maxWidth="Infinity" visible="false">
+            </ProgressIndicator>
+
         </StackPane>
     </center>
 
-    <top>
-        <HBox alignment="TOP_CENTER" spacing="5">
-            <Label text="From: ">
-            </Label>
-
-            <DatePicker fx:id="setDateFrom">
-            </DatePicker>
-
-            <Label text="To: ">
-            </Label>
-
-            <DatePicker fx:id="setDateTo" BorderPane.alignment="CENTER">
-            </DatePicker>
-        </HBox>
-    </top>
-
-    <right>
-    <VBox alignment="CENTER_RIGHT" spacing="10">
-        <Button fx:id="pieChartButton" onAction="#showPieChart" text="Pie Chart" />
-        <Button fx:id="lineChartButton" onAction="#showLineChart" text="Line Chart" />
-        <Button fx:id="areaChartButton" onAction="#showAreaChart" text="Area Chart" />
-        <Button fx:id="barChartButton" onAction="#showBarChart" text="Bar Chart" />
-    </VBox>
-    </right>
-
-    <bottom>
-    <HBox spacing="10">
-        <Button onAction="#handleCloseButton" text="Go back" />
-
-        <Text fx:id="Error">
-        </Text>
-    </HBox>
-    </bottom>
-
     <left>
-    <VBox alignment="CENTER_LEFT" spacing="10">
-        <Button fx:id="naturalColorButton" onAction="#handleNaturalAdminColor" text="Natural Colors" />
-        <Button fx:id="randomColorButton" onAction="#handleRandomAdminColor" text="Random Colors" />
-        <Button fx:id="defaultColorButton" onAction="#handleDefaultChartColor" text="Default Colors" />
-        <Button fx:id="saveToScreenshot" onAction="#handleSaveScreenshot" text="Save screenshot" />
-    </VBox>
-    </left>
+        <GridPane alignment="CENTER" hgap="10" vgap="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <!--<ListView prefWidth="275" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0"-->
+            <!--style="-fx-background-color:black;">-->
+                <StackPane fx:id="listStackPane" prefWidth="275" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0">
 
+                    <TableView fx:id="adminsList">
+
+                        <columns>
+                            <TableColumn fx:id="columnAdminSelect" prefWidth="50" text="Select">
+                            </TableColumn>
+                            <TableColumn fx:id="columnAdminName" prefWidth="100" text="Name">
+                            </TableColumn>
+                            <TableColumn fx:id="columnAdminColor" prefWidth="50" text="Color">
+                            </TableColumn>
+                            <TableColumn fx:id="columnAdminLink" prefWidth="75" text="ID">
+                            </TableColumn>
+                        </columns>
+                    </TableView>
+
+                    <ProgressIndicator fx:id="adminsListProgressIndicator" maxWidth="Infinity" visible="false">
+                    </ProgressIndicator>
+
+                </StackPane>
+            <!--</ListView>-->
+
+            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                <Text fx:id="adminError" textAlignment="CENTER">
+                </Text>
+            </VBox>
+
+            <Button fx:id="addAdminButton" onAction="#handleAdminAdd" prefWidth="85" text="Add" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <Button fx:id="editAdminButton" onAction="#handleAdminEdit" prefWidth="85" text="Edit" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button fx:id="deleteAdminButton" onAction="#handleAdminDelete" prefWidth="85" text="Delete" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+
+            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="3">
+                <Label text="Choose chart type:" />
+                <ComboBox fx:id="chartsComboBox" prefWidth="275">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Pie Chart" />
+                            <String fx:value="Line Chart" />
+                            <String fx:value="Area Chart" />
+                            <String fx:value="Bar Chart" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            </VBox>
+            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="4">
+                <Label text="From: ">
+                </Label>
+
+                <DatePicker fx:id="setDateFrom" prefWidth="275">
+                </DatePicker>
+            </VBox>
+
+            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="5">
+                <Label text="To: ">
+                </Label>
+
+                <DatePicker fx:id="setDateTo" prefWidth="275" BorderPane.alignment="CENTER">
+                </DatePicker>
+            </VBox>
+
+
+            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="6">
+                <Label text="Choose color type:" />
+                <ComboBox fx:id="colorComboBox" prefWidth="275">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:id="naturalColorOption" fx:value="Natural Colors" />
+                            <String fx:id="randomColorOption" fx:value="Random Colors"/>
+                            <String fx:id="defaultColorOption" fx:value="Default Colors" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            </VBox>
+
+            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="7">
+                <Button fx:id="saveToScreenshot" onAction="#handleSaveScreenshot" prefWidth="275" text="Save screenshot" />
+            </VBox>
+            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="8">
+                <Button onAction="#handleCloseButton" prefWidth="275" text="Go back" />
+            </VBox>
+
+            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="9">
+                <Text fx:id="Error">
+                </Text>
+            </VBox>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+        </GridPane>
+    </left>
     <stylesheets>
         <URL value="@../basewindow.css" />
     </stylesheets>

@@ -229,8 +229,8 @@ public class DBOperations {
                         }
                 }
 
-        public static List displayAdminRecords(String serverName) {
-                List<Server> adminsList = new ArrayList();
+        public static List<Admin> displayAdminRecords(String serverName) {
+                List<Admin> adminsList = new ArrayList();
                 try {
                         // Getting Session Object From SessionFactory
                         sessionObj = buildSessionFactory().openSession();

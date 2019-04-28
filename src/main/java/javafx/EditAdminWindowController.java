@@ -53,13 +53,13 @@ public class EditAdminWindowController implements Initializable {
     private Text updateStatus;
 
     private Server chosenServer;
-    private Admin chosenAdmin;
+    private Admin chosenAdmin = ChartsWindowController.chosenAdmin;
 
-    private String adminsFXMLFile = "admins/admins.fxml";
+    private String chartsFXMLFile = "charts/Charts.fxml";
 
     @FXML
     protected void handleCancelButton(ActionEvent event) {
-        this.changeScene(adminsFXMLFile, event);
+        this.changeScene(chartsFXMLFile, event);
     }
 
     @FXML
@@ -111,11 +111,12 @@ public class EditAdminWindowController implements Initializable {
         assert adminColorPicker != null : "fx:id=\"adminColorPicker\" was not injected: check your FXML file 'EditAdmin.fxml'.";
         assert cancelButton != null : "fx:id=\"cancelButton\" was not injected: check your FXML file 'EditAdmin.fxml'.";
         assert editAdminButton != null : "fx:id=\"editAdminButton\" was not injected: check your FXML file 'EditAdmin.fxml'.";
-
         chosenServer = BaseWindowController.chosenServer;
-        chosenAdmin = AdminsWindowController.chosenAdmin;
+
         adminNameTextField.setText(chosenAdmin.getAdminName());
 
+        //Fix no css on text
+        updateStatus.setId("textElement");
         adminDynamicLinkTextField.lengthProperty().addListener((observable, oldValue, newValue) -> {
             //Allow only numbers in dynamic link text
             adminDynamicLinkTextField.setText(adminDynamicLinkTextField.getText().replaceAll("\\D+",""));
