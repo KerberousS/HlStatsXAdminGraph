@@ -204,7 +204,7 @@ public class DBOperations {
 
         public static void createAdminRecord(String adminName, String adminLink, String adminColor, String adminServer) throws PersistenceException {
                 long count = 0;
-                Admin adminObj = null;
+                Admin adminObj;
 //                try {
                         // Getting Session Object From SessionFactory
                         sessionObj = buildSessionFactory().openSession();
@@ -214,11 +214,7 @@ public class DBOperations {
                         // Creating Transaction Entities
 //                for(int j = 101; j <= 105; j++) {
 //                count = count + 1;
-                        adminObj = new Admin();
-                        adminObj.setAdminName(adminName);
-                        adminObj.setAdminLink(adminLink);
-                        adminObj.setAdminColor(adminColor);
-                        adminObj.setAdminServer(adminServer);
+                        adminObj = new Admin(adminName, adminLink, adminColor, adminServer);
                         sessionObj.save(adminObj);
 
                         // Committing The Transactions To The Database

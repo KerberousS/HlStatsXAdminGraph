@@ -55,11 +55,9 @@ public class EditAdminWindowController implements Initializable {
     private Server chosenServer;
     private Admin chosenAdmin = ChartsWindowController.chosenAdmin;
 
-    private String chartsFXMLFile = "charts/Charts.fxml";
-
     @FXML
     protected void handleCancelButton(ActionEvent event) {
-        this.changeScene(chartsFXMLFile, event);
+        ((Stage) ((Node)event.getSource()).getScene().getWindow()).close();
     }
 
     @FXML
@@ -69,7 +67,6 @@ public class EditAdminWindowController implements Initializable {
         Color c = adminColorPicker.getValue();
         String newAdminColor = colorOperations.colorToHex(c);
 
-        //TODO: Fix admin ADD and admin EDIT LINK!!!
         try {
             if (newAdminName.isEmpty() || adminDynamicLinkTextField.getText().isEmpty()) {
                 updateStatus.setText("Parameters can't be blank!");
@@ -99,10 +96,8 @@ public class EditAdminWindowController implements Initializable {
     }
 
     @FXML
-    protected void handleCheckLink(ActionEvent e) {
-        Stage stage = (Stage)((Node)e.getSource()).getScene().getWindow();
-        HostServices hostServices = (HostServices)stage.getProperties().get("hostServices");
-        hostServices.showDocument(adminStaticLinkTextField.getText()+adminDynamicLinkTextField.getText());
+    protected void handleCheckLink() {
+        BaseWindow.hostServices.showDocument(adminStaticLinkTextField.getText()+adminDynamicLinkTextField.getText());
     }
 
     @Override // This method is called by the FXMLLoader when initialization is complete
@@ -126,19 +121,5 @@ public class EditAdminWindowController implements Initializable {
         adminStaticLinkTextField.setText(adminSplitLink[0]+"player=");
         adminDynamicLinkTextField.setText(adminSplitLink[1]);
         adminColorPicker.setValue(Color.valueOf("#" + chosenAdmin.getAdminColor()));
-    }
-
-    private void changeScene(String windowFXMLFile, ActionEvent event) {
-        Parent window = null;
-        try {
-            window = FXMLLoader.load(getClass().getResource(windowFXMLFile));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Scene scene = new Scene(window);
-
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
     }
 }

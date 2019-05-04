@@ -1,5 +1,8 @@
 package hibernate;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -36,6 +39,9 @@ public class Admin {
 
     @Transient
     private List<LocalDateTime> adminTimeList;
+
+    @Transient
+    public SimpleBooleanProperty selectedProperty = new SimpleBooleanProperty();
 
     public Admin() {
     }
@@ -96,6 +102,7 @@ public class Admin {
 
     public void setSelected(Boolean adminSelect) {
         this.adminSelect = adminSelect;
+        this.selectedProperty.setValue(adminSelect);
     }
 
     public List<LocalDateTime> getAdminTimeList() {

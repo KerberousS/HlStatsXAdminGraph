@@ -92,7 +92,7 @@ public class SummarizeTime {
                         LocalDateTime minimalAdminDateTime = LocalDateTime.of(dp, LocalTime.MIN);
                         fullAdminDateTime.add(minimalAdminDateTime);
                     }
-                    } else if (adminTimeDates.isEmpty() || adminTimeDates.size()==0){
+                    } else if (adminTimeDates.isEmpty()){
                         LocalDateTime minimalAdminDateTime = LocalDateTime.of(dp, LocalTime.MIN);
                         fullAdminDateTime.add(minimalAdminDateTime);
                     }

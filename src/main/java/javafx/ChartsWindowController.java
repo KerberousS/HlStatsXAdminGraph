@@ -4,8 +4,15 @@ import getinfo.SummarizeTime;
 import hibernate.Admin;
 import hibernate.DBOperations;
 import hibernate.Server;
+import javafx.application.HostServices;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
@@ -19,16 +26,15 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import javafx.scene.transform.Transform;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -85,26 +91,21 @@ public class ChartsWindowController implements Initializable {
     private ProgressIndicator adminsListProgressIndicator;
 
     @FXML
-    private TableView<Admin> adminsList;
-    @FXML
-    private TableColumn<Admin, String> columnAdminName;
-    @FXML
-    private TableColumn<Admin, String> columnAdminLink;
-    @FXML
-    private TableColumn<Admin, Rectangle> columnAdminColor;
-    @FXML
-    private TableColumn<Admin, CheckBox> columnAdminSelect;
+    private ListView<Admin> adminsListView;
 
     @FXML
     private Text adminError;
 
     private Server chosenServer;
-    private List<Admin> adminsRecordsList;
 
     static Admin chosenAdmin;
 
-    private static LocalDate dateFrom;
-    private static LocalDate dateTo;
+    private LocalDate dateFrom;
+    private LocalDate dateTo;
+
+    private ObservableList<Admin> adminObservableList;
+
+    public static HostServices hostServices;
 
     @FXML
     protected void handleCloseButton(ActionEvent event) {
@@ -113,25 +114,25 @@ public class ChartsWindowController implements Initializable {
     }
 
     @FXML
-    protected void showPieChart() {
+    private void showPieChart() {
         pieChart.setTitle("Admin Pie Chart (From: " + dateFrom + " | To : " + dateTo + ")");
         setChartsVisibility(true, false, false, false);
     }
 
     @FXML
-    protected void showLineChart() {
+    private void showLineChart() {
         lineChart.setTitle("Admin Line Chart (From: " + dateFrom + " | To : " + dateTo + ")");
         setChartsVisibility(false, true, false, false);
     }
 
     @FXML
-    protected void showAreaChart() {
+    private void showAreaChart() {
         areaChart.setTitle("Admin Area Chart (From: " + dateFrom + " | To : " + dateTo + ")");
         setChartsVisibility(false, false, true, false);
     }
 
     @FXML
-    protected void showBarChart() {
+    private void showBarChart() {
         barChart.setTitle("Admin Bar Chart (From: " + dateFrom + " | To : " + dateTo + ")");
         setChartsVisibility(false, false, false, true);
     }
@@ -139,10 +140,10 @@ public class ChartsWindowController implements Initializable {
     @FXML
     protected void handleSaveScreenshot(ActionEvent event) {
 
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
         //Fix scene resize bug
         chartsWindow.setPrefSize(chartsWindow.getWidth(), chartsWindow.getHeight());
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         //Create new filechooser
         FileChooser fileChooser = new FileChooser();
@@ -329,44 +330,26 @@ public class ChartsWindowController implements Initializable {
 //        }
 //    }
 
-    private void setUpAdminList() {
-        //** ADMINS LIST **//
-        columnAdminName.setCellValueFactory(new PropertyValueFactory<>("adminName"));
-        columnAdminLink.setCellValueFactory(arg0 -> {
-            Admin a = arg0.getValue();
-            String[] linkParts = a.getAdminLink().split("player=");
-            String adminLinkID = linkParts[1];
-            return new SimpleObjectProperty<>(adminLinkID);
-        });
-        columnAdminColor.setCellValueFactory(arg0 -> {
-            Admin a = arg0.getValue();
-            Rectangle rectangle = new Rectangle(15, 15, 15, 15);
-            rectangle.setFill(Color.valueOf(a.getAdminColor()));
-            return new SimpleObjectProperty<>(rectangle);
-        });
-        columnAdminSelect.setCellValueFactory(arg0 -> {
-            Admin admin = arg0.getValue();
-            admin.setSelected(false);
-            CheckBox checkBox = new CheckBox();
-            checkBox.selectedProperty().setValue(admin.isSelected());
-            checkBox.selectedProperty().addListener((ov, old_val, new_val) -> {
-                admin.setSelected(new_val);
-
-                Platform.runLater(this::rePopulateCharts);
-            });
-            return new SimpleObjectProperty<>(checkBox);
-        });
-    }
-
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
 
-        //Setup Admin Table
-        Platform.runLater(this::setUpAdminList);
+        //Setup Admin List View
+        adminObservableList = FXCollections.observableArrayList(
+                (Admin a) -> new ObservableBooleanValue[]{a.selectedProperty});
+        adminObservableList.addListener((ListChangeListener<Admin>) change -> {
+                    System.out.println("Admin was changed test: " + change);
+                    for (Admin a : adminObservableList) {
+                        System.out.println(a + "is secleted?" + a.isSelected());
+                        System.out.println(a + "is selectedproperty?" + a.selectedProperty.get());
+                    }
+                });
+
+
+        adminsListView.setItems(adminObservableList);
+        adminsListView.setCellFactory(adminListView -> new AdminListViewCell());
 
         //Initialize server list for server dropdown
         chosenServer = BaseWindowController.chosenServer;
-        adminsList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         //Set up progress bars
         adminsListProgressIndicator.progressProperty().bind(getAdmins.progressProperty());
@@ -402,7 +385,6 @@ public class ChartsWindowController implements Initializable {
         dateTo = setDateTo.getValue();
 
         setDateFrom.valueProperty().addListener((observableValue, localDate, t1) -> {
-            //FIXME - Change title dynamically
             dateFrom = t1;
             Platform.runLater(this::rePopulateCharts);
         });
@@ -417,7 +399,7 @@ public class ChartsWindowController implements Initializable {
         setDateFrom.setDayCellFactory(dayCellFactory);
         setDateTo.setDayCellFactory(dayCellFactory);
 
-        //TODO: CHECK LOADING BAR AFTER GRAPHICAL REWORK
+
     }
 
     // Factory to create Cell of DatePicker
@@ -538,17 +520,17 @@ public class ChartsWindowController implements Initializable {
 
     private void clearChartData() {
         //Clear all datas
-        Platform.runLater(() -> pieChart.getData().clear());
-        Platform.runLater(() -> lineChart.getData().clear());
-        Platform.runLater(() -> areaChart.getData().clear());
-        Platform.runLater(() -> barChart.getData().clear());
+        pieChart.getData().clear();
+        lineChart.getData().clear();
+        areaChart.getData().clear();
+        barChart.getData().clear();
     }
 
     private void rePopulateCharts() {
         chartsProgressIndicator.setVisible(true);
         Platform.runLater(() -> {
             clearChartData();
-            for (Admin a : adminsRecordsList) {
+            for (Admin a : adminObservableList) {
                 if (a.isSelected()) {
                     if (isNewData(a)) {
                         //Get admin data
@@ -573,6 +555,8 @@ public class ChartsWindowController implements Initializable {
     // ** ADMINS LIST CONTROLS ** //
 
     private void populateAdminsList() {
+        adminsListProgressIndicator.setVisible(true);
+        adminObservableList.clear();
         getAdmins.restart();
 
         //On fail
@@ -583,14 +567,11 @@ public class ChartsWindowController implements Initializable {
 
         //On succeed
         getAdmins.setOnSucceeded(e -> {
-            if (adminsRecordsList.isEmpty()) {
-                adminsList.setPlaceholder(new Label("There are no admins added, add a new admin"));
+            if (adminObservableList.isEmpty()) {
+                adminsListView.setPlaceholder(new Label("There are no admins added, right click to add new admin"));
                 adminsListProgressIndicator.setVisible(false);
             } else {
-                for (Admin a : adminsRecordsList) {
-                    adminsList.getItems().add(a);
-                    adminsListProgressIndicator.setVisible(false);
-                }
+                adminsListProgressIndicator.setVisible(false);
             }
         });
     }
@@ -601,7 +582,9 @@ public class ChartsWindowController implements Initializable {
             return new Task() {
                 @Override
                 protected Void call() {
-                    adminsRecordsList = DBOperations.displayAdminRecords(chosenServer.getServerName());
+                    Platform.runLater(() -> {
+                        adminObservableList.addAll(DBOperations.displayAdminRecords(chosenServer.getServerName()));
+                    });
                     return null;
                 }
             };
@@ -611,35 +594,76 @@ public class ChartsWindowController implements Initializable {
     @FXML
     protected void handleAdminAdd(ActionEvent event) {
         String addAdminFXMLFile = "admins/AddAdmin.fxml";
-        this.changeScene(addAdminFXMLFile, event);
+
+        // New window (Stage)
+        Parent newWindow = null;
+        try {
+            newWindow = FXMLLoader.load(getClass().getResource(addAdminFXMLFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assert newWindow != null;
+        Scene secondScene = new Scene(newWindow, 450, 350); //Create a new scene in a newly created stackpane
+
+        Stage addAdminStage = new Stage();
+
+        addAdminStage.setScene(secondScene);
+        addAdminStage.initModality(Modality.WINDOW_MODAL);
+        addAdminStage.initOwner(chartsWindow.getScene().getWindow());
+
+        addAdminStage.centerOnScreen();
+
+        addAdminStage.show();
+
+        addAdminStage.setOnHidden(ev -> populateAdminsList());
     }
 
     @FXML
-    protected void handleAdminEdit(ActionEvent event) {
-        if (adminsList.getSelectionModel().getSelectedItem() == null) {
+    protected void handleAdminEdit() { //TODO: Make this appear in new small window, do the same with "add"
+        if (adminsListView.getSelectionModel().getSelectedItem() == null) {
             adminError.setText("Please choose an Admin first!");
             adminError.setStyle("-fx-font-weight: bold;");
             adminError.setFill(Color.RED);
             Platform.runLater(this::clearAdminErrorText);
         } else {
-            int adminIndex = adminsList.getSelectionModel().getSelectedIndex();
-            chosenAdmin = adminsRecordsList.get(adminIndex);
+            chosenAdmin = adminsListView.getSelectionModel().getSelectedItem();
 
+
+            // New window (Stage)
             String editAdminFXMLFile = "admins/EditAdmin.fxml";
-            this.changeScene(editAdminFXMLFile, event);
+
+            Parent newWindow = null;
+            try {
+                newWindow = FXMLLoader.load(getClass().getResource(editAdminFXMLFile));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            assert newWindow != null;
+            Scene secondScene = new Scene(newWindow, 450, 350); //Create a new scene in a newly created stackpane
+
+            Stage editAdminStage = new Stage();
+
+            editAdminStage.setScene(secondScene);
+            editAdminStage.initModality(Modality.WINDOW_MODAL);
+            editAdminStage.initOwner(chartsWindow.getScene().getWindow());
+
+            editAdminStage.centerOnScreen();
+
+            editAdminStage.show();
+
+            editAdminStage.setOnHidden(ev -> populateAdminsList());
         }
     }
 
     @FXML
     protected void handleAdminDelete() {
-        if (adminsList.getSelectionModel().getSelectedItem() == null) {
+        if (adminsListView.getSelectionModel().getSelectedItem() == null) {
             adminError.setText("Please choose an Admin first!");
             adminError.setFill(Color.RED);
             adminError.setStyle("-fx-font-weight: bold;");
             Platform.runLater(this::clearAdminErrorText);
         } else {
-            int adminIndex = adminsList.getSelectionModel().getSelectedIndex();
-            chosenAdmin = adminsRecordsList.get(adminIndex);
+            chosenAdmin = adminsListView.getSelectionModel().getSelectedItem();
 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText("Delete admin");
@@ -647,11 +671,9 @@ public class ChartsWindowController implements Initializable {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                DBOperations.deleteAdminRecord(chosenAdmin.getAdminID());
+                DBOperations.deleteAdminRecord(chosenAdmin.getAdminID()); //Delete admin
 
-                //Initialize admins list
-                adminsList.getItems().clear();
-                adminsList.getItems().addAll(DBOperations.displayAdminRecords(chosenServer.getServerName()));
+                populateAdminsList(); //Repopulate admins list
             }
         }
     }

@@ -58,7 +58,7 @@ public class AddAdminWindowController implements Initializable {
 
     @FXML
     protected void handleCancelButton(ActionEvent event) {
-        this.changeScene(chartsFXMLFile, event);
+        ((Stage) ((Node)event.getSource()).getScene().getWindow()).close();
     }
 
     @FXML

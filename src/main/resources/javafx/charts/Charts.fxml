@@ -25,9 +25,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="chartsWindow" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.ChartsWindowController">
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ListCell?>
+<?import com.sun.javafx.scene.control.ContextMenuContent.MenuBox?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ContextMenu?>
+<BorderPane fx:id="chartsWindow" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="javafx.ChartsWindowController">
     <padding>
-        <Insets bottom="5" left="5" right="5" top="5" />
+        <Insets bottom="5" left="5" right="5" top="5"/>
     </padding>
 
     <Text fx:id="caption">
@@ -36,36 +43,36 @@
     <center>
         <StackPane fx:id="chartStackPane" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="0">
             <padding>
-                <Insets bottom="10" left="10" right="10" top="10" />
+                <Insets bottom="10" left="10" right="10" top="10"/>
             </padding>
 
             <PieChart fx:id="pieChart" maxWidth="Infinity" visible="false">
             </PieChart>
 
-            <LineChart fx:id="lineChart" animated="false" maxWidth="Infinity" visible="false">
+            <LineChart fx:id="lineChart" animated="false" maxWidth="Infinity">
                 <xAxis>
-                    <CategoryAxis label="Days" fx:id="xLineAxis" />
+                    <CategoryAxis label="Days" fx:id="xLineAxis"/>
                 </xAxis>
                 <yAxis>
-                    <NumberAxis fx:id="yLineAxis" label="Times (in minutes)" side="LEFT" />
+                    <NumberAxis fx:id="yLineAxis" label="Times (in minutes)" side="LEFT"/>
                 </yAxis>
             </LineChart>
 
             <AreaChart fx:id="areaChart" animated="false" maxWidth="Infinity" visible="false">
                 <xAxis>
-                    <CategoryAxis label="Days" fx:id="xAreaAxis" />
+                    <CategoryAxis label="Days" fx:id="xAreaAxis"/>
                 </xAxis>
                 <yAxis>
-                    <NumberAxis fx:id="yAreaAxis" label="Times (in minutes)" side="LEFT" />
+                    <NumberAxis fx:id="yAreaAxis" label="Times (in minutes)" side="LEFT"/>
                 </yAxis>
             </AreaChart>
 
             <StackedBarChart fx:id="barChart" animated="false" maxWidth="Infinity" visible="false">
                 <xAxis>
-                    <CategoryAxis label="Days" fx:id="xBarAxis" />
+                    <CategoryAxis label="Days" fx:id="xBarAxis"/>
                 </xAxis>
                 <yAxis>
-                    <NumberAxis fx:id="yBarAxis" label="Times (in minutes)" side="LEFT" />
+                    <NumberAxis fx:id="yBarAxis" label="Times (in minutes)" side="LEFT"/>
                 </yAxis>
             </StackedBarChart>
 
@@ -76,29 +83,26 @@
     </center>
 
     <left>
-        <GridPane alignment="CENTER" hgap="10" vgap="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
-            <!--<ListView prefWidth="275" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0"-->
-            <!--style="-fx-background-color:black;">-->
-                <StackPane fx:id="listStackPane" prefWidth="275" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0">
+        <GridPane alignment="CENTER" hgap="10" vgap="10">
+            <StackPane fx:id="listViewStackPane" prefWidth="275" GridPane.columnIndex="0" GridPane.columnSpan="3"
+                       GridPane.rowIndex="0">
 
-                    <TableView fx:id="adminsList">
+                <ListView fx:id="adminsListView">
+                    <contextMenu>
+                        <ContextMenu fx:id="listViewContextMenu">
+                            <items>
+                                <MenuItem fx:id="addAdminButton" onAction="#handleAdminAdd" text="Add admin"></MenuItem>
+                                <MenuItem fx:id="editAdminButton" onAction="#handleAdminEdit" text="Edit admin"></MenuItem>
+                                <MenuItem fx:id="deleteAdminButton" onAction="#handleAdminDelete" text="Delete admin"></MenuItem>
+                            </items>
+                        </ContextMenu>
+                    </contextMenu>
+                </ListView>
 
-                        <columns>
-                            <TableColumn fx:id="columnAdminSelect" prefWidth="50" text="Select">
-                            </TableColumn>
-                            <TableColumn fx:id="columnAdminName" prefWidth="100" text="Name">
-                            </TableColumn>
-                            <TableColumn fx:id="columnAdminColor" prefWidth="50" text="Color">
-                            </TableColumn>
-                            <TableColumn fx:id="columnAdminLink" prefWidth="75" text="ID">
-                            </TableColumn>
-                        </columns>
-                    </TableView>
+                <ProgressIndicator fx:id="adminsListProgressIndicator" maxWidth="Infinity" visible="false">
+                </ProgressIndicator>
 
-                    <ProgressIndicator fx:id="adminsListProgressIndicator" maxWidth="Infinity" visible="false">
-                    </ProgressIndicator>
-
-                </StackPane>
+            </StackPane>
             <!--</ListView>-->
 
             <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="1">
@@ -106,19 +110,16 @@
                 </Text>
             </VBox>
 
-            <Button fx:id="addAdminButton" onAction="#handleAdminAdd" prefWidth="85" text="Add" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-            <Button fx:id="editAdminButton" onAction="#handleAdminEdit" prefWidth="85" text="Edit" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Button fx:id="deleteAdminButton" onAction="#handleAdminDelete" prefWidth="85" text="Delete" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
             <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="3">
-                <Label text="Choose chart type:" />
+                <Label text="Choose chart type:"/>
                 <ComboBox fx:id="chartsComboBox" prefWidth="275">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="Pie Chart" />
-                            <String fx:value="Line Chart" />
-                            <String fx:value="Area Chart" />
-                            <String fx:value="Bar Chart" />
+                            <String fx:value="Pie Chart"/>
+                            <String fx:value="Line Chart"/>
+                            <String fx:value="Area Chart"/>
+                            <String fx:value="Bar Chart"/>
                         </FXCollections>
                     </items>
                 </ComboBox>
@@ -141,50 +142,51 @@
 
 
             <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="6">
-                <Label text="Choose color type:" />
+                <Label text="Choose color type:"/>
                 <ComboBox fx:id="colorComboBox" prefWidth="275">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
-                            <String fx:id="naturalColorOption" fx:value="Natural Colors" />
+                            <String fx:id="naturalColorOption" fx:value="Natural Colors"/>
                             <String fx:id="randomColorOption" fx:value="Random Colors"/>
-                            <String fx:id="defaultColorOption" fx:value="Default Colors" />
+                            <String fx:id="defaultColorOption" fx:value="Default Colors"/>
                         </FXCollections>
                     </items>
                 </ComboBox>
             </VBox>
 
             <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="7">
-                <Button fx:id="saveToScreenshot" onAction="#handleSaveScreenshot" prefWidth="275" text="Save screenshot" />
+                <Button fx:id="saveToScreenshot" onAction="#handleSaveScreenshot" prefWidth="275"
+                        text="Save screenshot"/>
             </VBox>
             <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="8">
-                <Button onAction="#handleCloseButton" prefWidth="275" text="Go back" />
+                <Button onAction="#handleCloseButton" prefWidth="275" text="Go back"/>
             </VBox>
 
             <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="9">
                 <Text fx:id="Error">
                 </Text>
             </VBox>
-         <columnConstraints>
-            <ColumnConstraints />
-            <ColumnConstraints />
-            <ColumnConstraints />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-         </rowConstraints>
+            <columnConstraints>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+            </rowConstraints>
         </GridPane>
     </left>
     <stylesheets>
-        <URL value="@../basewindow.css" />
+        <URL value="@../basewindow.css"/>
     </stylesheets>
 
 </BorderPane>

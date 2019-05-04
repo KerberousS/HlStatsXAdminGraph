@@ -1,6 +1,7 @@
 package javafx;
 
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,6 +12,8 @@ import javafx.fxml.FXMLLoader;
 import java.io.IOException;
 
 public class BaseWindow extends Application {
+
+    public static HostServices hostServices;
 
     public static void main(String[] args) {
         Application.launch(BaseWindow.class, args);
@@ -38,7 +41,7 @@ public class BaseWindow extends Application {
                 stage.setTitle("HlStatsX Admin Graph");
 
                 //Add host services
-                stage.getProperties().put("hostServices", this.getHostServices());
+                hostServices = this.getHostServices();
             } catch (IOException e) {
                 e.printStackTrace();
             }
