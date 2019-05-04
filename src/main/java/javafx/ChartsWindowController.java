@@ -339,7 +339,7 @@ public class ChartsWindowController implements Initializable {
         adminObservableList.addListener((ListChangeListener<Admin>) change -> {
                     System.out.println("Admin was changed test: " + change);
                     for (Admin a : adminObservableList) {
-                        System.out.println(a + "is secleted?" + a.isSelected());
+                        System.out.println(a + "is selected?" + a.isSelected());
                         System.out.println(a + "is selectedproperty?" + a.selectedProperty.get());
                     }
                 });
@@ -398,8 +398,6 @@ public class ChartsWindowController implements Initializable {
         Callback<DatePicker, DateCell> dayCellFactory = this.getDayCellFactory();
         setDateFrom.setDayCellFactory(dayCellFactory);
         setDateTo.setDayCellFactory(dayCellFactory);
-
-
     }
 
     // Factory to create Cell of DatePicker

@@ -47,7 +47,6 @@ public class AdminListViewCell extends ListCell<Admin> {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
 
             adminName.setText(a.getAdminName());
@@ -55,7 +54,6 @@ public class AdminListViewCell extends ListCell<Admin> {
             adminLink.setText(linkParts[1]);
 
             adminColor.setFill(Color.valueOf(a.getAdminColor()));
-            a.setSelected(false);
             adminSelect.selectedProperty().addListener((ov, old_val, new_val) -> {
                 a.setSelected(new_val);
                 super.updateItem(a, false);
