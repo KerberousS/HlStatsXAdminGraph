@@ -1,17 +1,12 @@
 package javafx;
 
-import getinfo.SummarizeTime;
+import timecollector.SummarizeTime;
 import hibernate.Admin;
 import hibernate.DBOperations;
 import hibernate.Server;
 import javafx.application.HostServices;
 import javafx.application.Platform;
-import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableBooleanValue;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -334,19 +329,10 @@ public class ChartsWindowController implements Initializable {
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
 
         //Setup Admin List View
-        adminObservableList = FXCollections.observableArrayList(
-                (Admin a) -> new ObservableBooleanValue[]{a.selectedProperty});
-        adminObservableList.addListener((ListChangeListener<Admin>) change -> {
-                    System.out.println("Admin was changed test: " + change);
-                    for (Admin a : adminObservableList) {
-                        System.out.println(a + "is selected?" + a.isSelected());
-                        System.out.println(a + "is selectedproperty?" + a.selectedProperty.get());
-                    }
-                });
-
+        adminObservableList = FXCollections.observableArrayList();
 
         adminsListView.setItems(adminObservableList);
-        adminsListView.setCellFactory(adminListView -> new AdminListViewCell());
+        adminsListView.setCellFactory(adminListView -> new AdminListViewCell((admin, value) -> rePopulateCharts()));
 
         //Initialize server list for server dropdown
         chosenServer = BaseWindowController.chosenServer;

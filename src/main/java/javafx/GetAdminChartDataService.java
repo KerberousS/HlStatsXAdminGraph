@@ -1,6 +1,6 @@
 package javafx;
 
-import getinfo.SummarizeTime;
+import timecollector.SummarizeTime;
 import hibernate.Admin;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;

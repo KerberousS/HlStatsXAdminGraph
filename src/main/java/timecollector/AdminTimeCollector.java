@@ -1,4 +1,4 @@
-package getinfo;
+package timecollector;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;

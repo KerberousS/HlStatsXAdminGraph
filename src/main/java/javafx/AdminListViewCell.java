@@ -31,6 +31,12 @@ public class AdminListViewCell extends ListCell<Admin> {
 
     private FXMLLoader fxmlLoader;
 
+    private AdminItemListener adminItemListener;
+
+    public AdminListViewCell(AdminItemListener adminItemListener) {
+        this.adminItemListener = adminItemListener;
+    }
+
     @Override
     protected void updateItem(Admin a, boolean empty) {
         super.updateItem(a, empty);
@@ -53,10 +59,11 @@ public class AdminListViewCell extends ListCell<Admin> {
             String [] linkParts = a.getAdminLink().split("player=");
             adminLink.setText(linkParts[1]);
 
+            a.setSelected(false);
             adminColor.setFill(Color.valueOf(a.getAdminColor()));
             adminSelect.selectedProperty().addListener((ov, old_val, new_val) -> {
                 a.setSelected(new_val);
-                super.updateItem(a, false);
+                adminItemListener.onAdminSelected(a, new_val);
             });
 
             setText(null);

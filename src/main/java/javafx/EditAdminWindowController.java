@@ -1,17 +1,12 @@
 package javafx;
 
-import getinfo.colorOperations;
 import hibernate.Admin;
 import hibernate.DBOperations;
 import hibernate.Server;
-import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
@@ -20,9 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import javafx.application.Application;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -65,7 +58,7 @@ public class EditAdminWindowController implements Initializable {
         String newAdminName = adminNameTextField.getText();
         String newAdminLink = adminStaticLinkTextField.getText()+adminDynamicLinkTextField.getText();
         Color c = adminColorPicker.getValue();
-        String newAdminColor = colorOperations.colorToHex(c);
+        String newAdminColor = String.format("#%02X%02X%02X", c.getRed(), c.getGreen(), c.getBlue());
 
         try {
             if (newAdminName.isEmpty() || adminDynamicLinkTextField.getText().isEmpty()) {

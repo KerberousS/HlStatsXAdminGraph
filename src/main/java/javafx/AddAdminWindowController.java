@@ -1,11 +1,8 @@
 package javafx;
 
-import getinfo.colorOperations;
 import hibernate.DBOperations;
 import hibernate.Server;
 import javafx.application.HostServices;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -66,7 +63,7 @@ public class AddAdminWindowController implements Initializable {
         String adminName = adminNameTextField.getText();
         String adminDynamicLink = adminDynamicLinkTextField.getText();
         Color c = adminColorPicker.getValue();
-        String adminColor = colorOperations.colorToHex(c);
+        String adminColor = String.format("#%02X%02X%02X", c.getRed(), c.getGreen(), c.getBlue());
 
         try {
             if (adminName.isEmpty() || adminDynamicLink.isEmpty()) {

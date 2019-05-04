@@ -1,4 +1,4 @@
-package getinfo;
+package timecollector;
 
 import java.time.*;
 import java.time.LocalDate;
