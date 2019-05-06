@@ -331,8 +331,8 @@ public class ChartsWindowController implements Initializable {
         //Setup Admin List View
         adminObservableList = FXCollections.observableArrayList();
 
-        adminsListView.setItems(adminObservableList);
         adminsListView.setCellFactory(adminListView -> new AdminListViewCell((admin, value) -> rePopulateCharts()));
+        adminsListView.setItems(adminObservableList);
 
         //Initialize server list for server dropdown
         chosenServer = BaseWindowController.chosenServer;
@@ -539,8 +539,16 @@ public class ChartsWindowController implements Initializable {
     // ** ADMINS LIST CONTROLS ** //
 
     private void populateAdminsList() {
+
         adminsListProgressIndicator.setVisible(true);
+
+        adminsListView.getItems().clear();
         adminObservableList.clear();
+        adminsListView.refresh();
+
+        System.out.println("Adminlist size is: " + adminsListView.getItems().size());
+        System.out.println("Adminobservable list size is: " + adminObservableList.size());
+        
         getAdmins.restart();
 
         //On fail
@@ -567,7 +575,7 @@ public class ChartsWindowController implements Initializable {
                 @Override
                 protected Void call() {
                     Platform.runLater(() -> {
-                        adminObservableList.addAll(DBOperations.displayAdminRecords(chosenServer.getServerName()));
+                        adminObservableList.setAll(DBOperations.displayAdminRecords(chosenServer.getServerName()));
                     });
                     return null;
                 }

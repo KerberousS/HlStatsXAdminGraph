@@ -40,9 +40,6 @@ public class Admin {
     @Transient
     private List<LocalDateTime> adminTimeList;
 
-    @Transient
-    public SimpleBooleanProperty selectedProperty = new SimpleBooleanProperty();
-
     public Admin() {
     }
 
@@ -102,7 +99,6 @@ public class Admin {
 
     public void setSelected(Boolean adminSelect) {
         this.adminSelect = adminSelect;
-        this.selectedProperty.setValue(adminSelect);
     }
 
     public List<LocalDateTime> getAdminTimeList() {

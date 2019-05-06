@@ -58,7 +58,7 @@ public class EditAdminWindowController implements Initializable {
         String newAdminName = adminNameTextField.getText();
         String newAdminLink = adminStaticLinkTextField.getText()+adminDynamicLinkTextField.getText();
         Color c = adminColorPicker.getValue();
-        String newAdminColor = String.format("#%02X%02X%02X", c.getRed(), c.getGreen(), c.getBlue());
+        String newAdminColor = Color.valueOf(c.toString()).toString();
 
         try {
             if (newAdminName.isEmpty() || adminDynamicLinkTextField.getText().isEmpty()) {
@@ -113,6 +113,6 @@ public class EditAdminWindowController implements Initializable {
         String[] adminSplitLink = chosenAdmin.getAdminLink().split("player=");
         adminStaticLinkTextField.setText(adminSplitLink[0]+"player=");
         adminDynamicLinkTextField.setText(adminSplitLink[1]);
-        adminColorPicker.setValue(Color.valueOf("#" + chosenAdmin.getAdminColor()));
+        adminColorPicker.setValue(Color.valueOf(chosenAdmin.getAdminColor()));
     }
 }

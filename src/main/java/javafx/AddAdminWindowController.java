@@ -63,7 +63,7 @@ public class AddAdminWindowController implements Initializable {
         String adminName = adminNameTextField.getText();
         String adminDynamicLink = adminDynamicLinkTextField.getText();
         Color c = adminColorPicker.getValue();
-        String adminColor = String.format("#%02X%02X%02X", c.getRed(), c.getGreen(), c.getBlue());
+        String adminColor = Color.valueOf(c.toString()).toString();
 
         try {
             if (adminName.isEmpty() || adminDynamicLink.isEmpty()) {
