@@ -115,7 +115,7 @@ public class ChartsWindowController implements Initializable {
     }
 
     @FXML
-    private void showLineChart() {
+    private void showLineChart() {        //TODO: CHECK IF ANIMATION WORKS AFTER FIRST ADMIN HAS BEEN ADDED
         lineChart.setTitle("Admin Line Chart (From: " + dateFrom + " | To : " + dateTo + ")");
         setChartsVisibility(false, true, false, false);
     }
@@ -325,13 +325,20 @@ public class ChartsWindowController implements Initializable {
 //        }
 //    }
 
+    public class AdminListCellFactory implements Callback<ListView<Admin>, ListCell<Admin>> {
+        @Override
+        public ListCell<Admin> call(ListView<Admin> adminListView) {
+            return new AdminListViewCell((admin, value) -> rePopulateCharts());
+        }
+    }
+
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
 
         //Setup Admin List View
         adminObservableList = FXCollections.observableArrayList();
 
-        adminsListView.setCellFactory(adminListView -> new AdminListViewCell((admin, value) -> rePopulateCharts()));
+        adminsListView.setCellFactory(new AdminListCellFactory());
         adminsListView.setItems(adminObservableList);
 
         //Initialize server list for server dropdown
@@ -542,13 +549,8 @@ public class ChartsWindowController implements Initializable {
 
         adminsListProgressIndicator.setVisible(true);
 
-        adminsListView.getItems().clear();
         adminObservableList.clear();
-        adminsListView.refresh();
 
-        System.out.println("Adminlist size is: " + adminsListView.getItems().size());
-        System.out.println("Adminobservable list size is: " + adminObservableList.size());
-        
         getAdmins.restart();
 
         //On fail
@@ -564,6 +566,9 @@ public class ChartsWindowController implements Initializable {
                 adminsListProgressIndicator.setVisible(false);
             } else {
                 adminsListProgressIndicator.setVisible(false);
+                for (Admin a:adminObservableList) {
+                    a.setSelected(false);
+                }
             }
         });
     }

@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Callback;
 
 import java.io.IOException;
 
@@ -59,12 +60,13 @@ public class AdminListViewCell extends ListCell<Admin> {
             String [] linkParts = a.getAdminLink().split("player=");
             adminLink.setText(linkParts[1]);
 
-            a.setSelected(false);
             adminColor.setFill(Color.valueOf(a.getAdminColor()));
-            adminSelect.selectedProperty().addListener((ov, old_val, new_val) -> {
-                a.setSelected(new_val);
-                adminItemListener.onAdminSelected(a, new_val);
+            adminSelect.setOnAction(actionEvent -> {
+                boolean val = adminSelect.isSelected();
+                a.setSelected(adminSelect.isSelected()); //TODO: FIX ADMIN SELECT AFTER REPOPULATE
+                adminItemListener.onAdminSelected(a, val);
             });
+            adminSelect.setSelected(a.isSelected());
 
             setText(null);
             setGraphic(adminCellGridPane);
