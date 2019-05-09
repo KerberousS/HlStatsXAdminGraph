@@ -31,6 +31,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.layout.HBox?>
 <BorderPane fx:id="chartsWindow" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="javafx.ChartsWindowController">
     <padding>
@@ -91,9 +92,9 @@
                     <contextMenu>
                         <ContextMenu fx:id="listViewContextMenu">
                             <items>
-                                <MenuItem fx:id="addAdminButton" onAction="#handleAdminAdd" text="Add admin"></MenuItem>
-                                <MenuItem fx:id="editAdminButton" onAction="#handleAdminEdit" text="Edit admin"></MenuItem>
-                                <MenuItem fx:id="deleteAdminButton" onAction="#handleAdminDelete" text="Delete admin"></MenuItem>
+                                <MenuItem fx:id="addAdminButton" onAction="#handleAdminAdd" text="Add admin"/>
+                                <MenuItem fx:id="editAdminButton" onAction="#handleAdminEdit" text="Edit admin"/>
+                                <MenuItem fx:id="deleteAdminButton" onAction="#handleAdminDelete" text="Delete admin"/>
                             </items>
                         </ContextMenu>
                     </contextMenu>
@@ -122,6 +123,9 @@
                             <String fx:value="Bar Chart"/>
                         </FXCollections>
                     </items>
+                    <value>
+                        <String fx:value="Line Chart"/>
+                    </value>
                 </ComboBox>
             </VBox>
             <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="4">
@@ -143,15 +147,23 @@
 
             <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="6">
                 <Label text="Choose color type:"/>
-                <ComboBox fx:id="colorComboBox" prefWidth="275">
-                    <items>
-                        <FXCollections fx:factory="observableArrayList">
-                            <String fx:id="naturalColorOption" fx:value="Natural Colors"/>
-                            <String fx:id="randomColorOption" fx:value="Random Colors"/>
-                            <String fx:id="defaultColorOption" fx:value="Default Colors"/>
-                        </FXCollections>
-                    </items>
-                </ComboBox>
+                <HBox>
+                    <spacing>10</spacing>
+                    <ComboBox fx:id="colorComboBox" prefWidth="225">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:id="naturalColorOption" fx:value="Natural Colors"/>
+                                <String fx:id="randomColorOption" fx:value="Random Colors"/>
+                                <String fx:id="defaultColorOption" fx:value="Default Colors"/>
+                            </FXCollections>
+                        </items>
+                        <value>
+                            <String fx:value="Default Colors"/>
+                        </value>
+                    </ComboBox>
+                    <Button text="♻" onAction="#handleRecycleButton" prefWidth="40" alignment="CENTER">
+                    </Button>
+                </HBox>
             </VBox>
 
             <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="7">
@@ -166,23 +178,7 @@
                 <Text fx:id="Error">
                 </Text>
             </VBox>
-            <columnConstraints>
-                <ColumnConstraints/>
-                <ColumnConstraints/>
-                <ColumnConstraints/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-            </rowConstraints>
+
         </GridPane>
     </left>
     <stylesheets>

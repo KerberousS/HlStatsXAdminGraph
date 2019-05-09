@@ -71,6 +71,10 @@ public class EditAdminWindowController implements Initializable {
                 updateStatus.setFill(Color.RED);
             } else {
                 DBOperations.updateAdminRecord(chosenAdmin.getAdminID(), newAdminName, newAdminColor, newAdminLink, chosenServer.getServerName());
+                chosenAdmin.setAdminName(newAdminName);
+                chosenAdmin.setAdminColor(newAdminColor);
+                chosenAdmin.setAdminLink(newAdminLink);
+
                 updateStatus.setText("Admin updated");
                 updateStatus.setFill(Color.GREEN);
             }
