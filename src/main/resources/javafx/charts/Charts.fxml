@@ -128,22 +128,23 @@
                     </value>
                 </ComboBox>
             </VBox>
-            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="4">
-                <Label text="From: ">
-                </Label>
+            <HBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="4" spacing="15">
+                <VBox>
+                    <Label text="From: ">
+                    </Label>
 
-                <DatePicker fx:id="setDateFrom" prefWidth="275">
-                </DatePicker>
-            </VBox>
+                    <DatePicker fx:id="setDateFrom" prefWidth="130">
+                    </DatePicker>
+                </VBox>
 
-            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="5">
-                <Label text="To: ">
-                </Label>
+                <VBox>
+                    <Label text="To: ">
+                    </Label>
 
-                <DatePicker fx:id="setDateTo" prefWidth="275" BorderPane.alignment="CENTER">
-                </DatePicker>
-            </VBox>
-
+                    <DatePicker fx:id="setDateTo" prefWidth="130" BorderPane.alignment="CENTER">
+                    </DatePicker>
+                </VBox>
+            </HBox>
 
             <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="6">
                 <Label text="Choose color type:"/>
@@ -166,15 +167,15 @@
                 </HBox>
             </VBox>
 
-            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="7">
+            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="8">
                 <Button fx:id="saveToScreenshot" onAction="#handleSaveScreenshot" prefWidth="275"
                         text="Save screenshot"/>
             </VBox>
-            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="8">
+            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="9">
                 <Button onAction="#handleCloseButton" prefWidth="275" text="Go back"/>
             </VBox>
 
-            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="9">
+            <VBox GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="10">
                 <Text fx:id="Error">
                 </Text>
             </VBox>

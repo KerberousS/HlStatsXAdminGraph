@@ -191,7 +191,7 @@ public class ChartsWindowController implements Initializable {
         return adminColor;
     }
 
-    protected void handleNaturalAdminColor() {
+    private void handleNaturalAdminColor() {
         if (pieChart.isVisible()) {
             Platform.runLater(() -> {
                 for (int i = 0; i < pieChart.getData().size(); i++) {
@@ -309,11 +309,11 @@ public class ChartsWindowController implements Initializable {
     }
 
     //TODO: FIX COLORS
-    protected void handleDefaultChartColor() {
+    private void handleDefaultChartColor() {
         rePopulateCharts();
     }
 
-    protected void handleRandomAdminColor() {
+    private void handleRandomAdminColor() {
         if (pieChart.isVisible()) {
             Platform.runLater(() -> {
                 for (int i = 0; i < pieChart.getData().size(); i++) {
